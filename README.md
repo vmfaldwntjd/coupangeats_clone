@@ -27,3 +27,9 @@
 
 3. 환경 구축 완료 100%
 - EC2, RDS 생성 및 서브도메인 생성, 기존 메인 도메인에 springboot 템플릿 적용.
+
+## 220523 코어 개발 일지
+    1. erd 테이블 추가(res_info 테이블, user_address 테이블, res_operating_time테이블)
+    2. ec2 인스턴스 생성 100%
+    3. rds 구축 95% → vpc관련 설정 따로 해야할 듯
+    4. 스프링 부트에 ssl적용 완료a
