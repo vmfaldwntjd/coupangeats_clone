@@ -44,3 +44,6 @@
 - 도나 : 회원가입/로그인 API 구현 및 ERD 설계 완료
 - 노바 : 홈 Fragment UI 완성 및 회원가입/로그인 API 연동
 - 코어 :  dev/prod서버 구축 완료
+6. 이슈: 스프링템플릿 폴더에 대한 git rository ssh인증 clone 이슈 해결 (mac 환경)(22.05.22)
+로컬에서 변경한 스프링템플릿의 내용을 git repository에 올리고 그 변경된 내용을 서버 쪽으로 끌어오기 위해서 git pull명령어를 사용해야 합니다. 그 전에 git clone으로 git repository에 있는 내용들을 먼저 가져와야 하는데 mac에서는 ssh인증 방식을 사용합니다. 그래서 ssh-keygen 명령을 통해서 ssh key를 생성하고 github에 저장까지 완료한 뒤 ssh에 관한 git clone을 사용했는데 여전히 권한이 거부되었다는 이슈가 발생하였습니다. (딱히 해당 레퍼지토리에 대한 설정 변경도 없었습니다.)
+ 구글링을 해본 결과 이것은 github 문제인 것으로 생각되어 다시 스프링템플릿에 대한 git repository를 다시 만들고 ssh clone을 성공하였습니다.
