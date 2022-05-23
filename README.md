@@ -30,8 +30,8 @@
 
 4. 개발 이슈
   1. 환경 구축 중 mysql_secure_installation의 MySQL Failed! Error: SET PASSWORD has no significance for user ‘root’@’localhost’ as the authentication method used doesn’t store authentication data in the MySQL server. 에러 발생
-    - 원인은 mysql 정책 변경에 의한 기본 password 설정으로 추정 중.
-    - 새로운 putty session으로 mysql_secure_installation을 kill, 이후 sudo로 mysql 접속하여 root 계정의 password를 변경, 설치를 다시 할 수 있었음.
+      - 원인은 mysql 정책 변경에 의한 기본 password 설정으로 추정 중.
+      - 새로운 putty session으로 mysql_secure_installation을 kill, 이후 sudo로 mysql 접속하여 root 계정의 password를 변경, 설치를 다시 할 수 있었음.
 
 
 ### 2022-05-23
@@ -51,22 +51,22 @@
     - 회원가입 API, 이메일 유저 조회 API, 핸드폰 유저 조회 API 구현
     - 유저 조회의 경우 하나의 Response 객체를 공유하고 있어 필요하지 않은 정보는 null 반환 -> 타당성 재고 필요
 
-5. 개발 이슈
-  1. 환경 구축 이슈
-    1. dev 서버 구축 확인 중 404 Not Found 출력
-      - 프록시 서버 설정 없이 80포트로 접속, 해당 url에 매핑된 결과가 없어 404 error가 출력되었음.
-      - application.yml에 설정된 9000번 포트로 접속으로 문제 없음 확인. 이후 프록시 서버 설정으로 80포트 접속도 무사히 확인.
-    2. dev 서버 구축 확인 중 connect ECONNREFUSED 발생
-      - 서버 실행 없이 접속 시도로 인한 접속요청 반려였음. 서버 실행 후 무사 접속되는 것 확인.
-    3. 프록시 서버 설정 이후 502 Bad Gateway 발생
-      - springboot 서버 실행 없이 접속 시도. nginx 서버는 실행중이었기 때문에 오류 메시지를 받을 수 있었다. 서버 실행 후 무사 접속 확인.
-  2. spring boot 빌드 이슈
-      - Could not create connection to database server 에러
-      - 데이터 베이스 접속이 불가능하다는 오류로, db driver 버전 문제, 접속 username, password 문제 등 원인이 다양하다.
-      - 관련 정보를 모두 확인했으나 실행이 되지 않아 어려움을 느꼈으며 콘솔의 에러 메시지에서 timezone에 대한 정보를 확인 후 datasource url의 마지막에 &serverTimezone=UTC  추가하여 해결함. mysql connector 8.0부터 기본 타임존 설정이 지정되지 않아 생긴 문제라는 듯.
-  3. API 서버 구현중 UserService의 @Transactional 이슈
-      - 사용자 정보를 올바르게 삽입하고 나서 jwt를 발급, 저장해야한다고 생각하기때문에 createUser의 경우 userDao의 메소드가 두가지가 실행됨.
-      - 따라서 createUser 메소드의 상단에 @Transactional을 기입해줬으나 유저 정보 기입단계에서 refresh_token NOT NULL 설정에 의한 DB 에러가 반환, 유저정보는 들어갔지만 결과 출력 창이 오류메시지를 보이는 이슈가 발생했다.
+5. 개발 이슈   
+  #### 5.1. 환경 구축 이슈   
+    - dev 서버 구축 확인 중 404 Not Found 출력
+      > 프록시 서버 설정 없이 80포트로 접속, 해당 url에 매핑된 결과가 없어 404 error가 출력되었음.
+      > application.yml에 설정된 9000번 포트로 접속으로 문제 없음 확인. 이후 프록시 서버 설정으로 80포트 접속도 무사히 확인.
+    - dev 서버 구축 확인 중 connect ECONNREFUSED 발생
+      > 서버 실행 없이 접속 시도로 인한 접속요청 반려였음. 서버 실행 후 무사 접속되는 것 확인.
+    - 프록시 서버 설정 이후 502 Bad Gateway 발생
+      > springboot 서버 실행 없이 접속 시도. nginx 서버는 실행중이었기 때문에 오류 메시지를 받을 수 있었다. 서버 실행 후 무사 접속 확인.         
+  #### 5.2. spring boot 빌드 이슈   
+    - Could not create connection to database server 에러
+    - 데이터 베이스 접속이 불가능하다는 오류로, db driver 버전 문제, 접속 username, password 문제 등 원인이 다양하다.
+    - 관련 정보를 모두 확인했으나 실행이 되지 않아 어려움을 느꼈으며 콘솔의 에러 메시지에서 timezone에 대한 정보를 확인 후 datasource url의 마지막에 &serverTimezone=UTC  추가하여 해결함. mysql connector 8.0부터 기본 타임존 설정이 지정되지 않아 생긴 문제라는 듯.   
+  #### 5.3 API 서버 구현중 UserService의 @Transactional 이슈     
+    - 사용자 정보를 올바르게 삽입하고 나서 jwt를 발급, 저장해야한다고 생각하기때문에 createUser의 경우 userDao의 메소드가 두가지가 실행됨.
+    - 따라서 createUser 메소드의 상단에 @Transactional을 기입해줬으나 유저 정보 기입단계에서 refresh_token NOT NULL 설정에 의한 DB 에러가 반환, 유저정보는 들어갔지만 결과 출력 창이 오류메시지를 보이는 이슈가 발생했다.
     - @Transactional 어노테이션에 대한 이해도 부족으로 해결되진 않았으며 관련된 원인인 refresh_token을 nullable로 설정.
 
 
