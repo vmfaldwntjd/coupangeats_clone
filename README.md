@@ -70,7 +70,20 @@
     - @Transactional 어노테이션에 대한 이해도 부족으로 해결되진 않았으며 관련된 원인인 refresh_token을 nullable로 설정.
 
 
-
+### 2022-05-24
+1. API 명세서 핵심기능 위주의 26개 API list-up 완료.
+2. ERD 수정사항
+  - advertisement 테이블명 event테이블로 변경
+  - event 테이블 이벤트 시작/종료 날짜 추가
+  - user_address 테이블 선택 주소 여부 필드 추가
+  - restaurant 치타 배달 여부, 블루 리본 여부 필드 is_selected 추가
+  - 자주 묻는 질문 관련 테이블  frequently_asked_questions,   main_inquiry, order_receipt 테이블 전부 삭제.
+    -  static 정보는 html으로 출력한다.
+  - cart, cart_menu 테이블 추가
+    - cart_menu 테이블은 계층형 테이블 조회시 셀프조인이 필요함
+    - cart는 결제를 넘기기 전 임시 데이터 저장공간같은 개념이라 nullable의 필드가 많다.
+  - res_category 테이블
+    - 카테고리별 설명 description 필드 추가
 
 
 
