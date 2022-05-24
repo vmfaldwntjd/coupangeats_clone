@@ -90,7 +90,9 @@
   - 가게 내 메뉴 카테고리 테이블 명 res_category에서 res_kinds로 변경 (사유 : 가게가 속한 카테고리 res_category와 이름 중복)
 
 3. API 구현 상황
-  - local 환경에서 로그인 API 개발 완료 및 2,3번 API response 수정.
+  - 로그인 API 개발 완료 및 2,3번 API response 수정 완료.
+  - 개발 환경에 따른 설정 분리를 위한 applcation-local.yml, application-dev.yml, application-prod.yml 생성.
+  - git 업로드 완료 및 prod 서버 반영 완료.
 
 4. 개발 이슈
  - 깃허브 master branch 생성, There isn’t anything to compare 으로 인한 pull request 불가 오류
@@ -107,7 +109,11 @@
     - 깃 push를 위해 token으로 로그인하려 했으나 반려됨. Jetbrain에서 리다이렉트하는 Log in via github는 인증 화면으로 넘어가지 않는 오류가 발생.
     - 생성한 토큰의 scope를 업데이트 해주는 것으로 해결.
   - push rejected 이슈 발생 Repository not found
-    -  
+    -  깃의 readme.md가 업데이트되었으나 이를 pull 하지 않은 채로 push를 시도해서 일어난 오류. update를 시도하였으나 Can't update main has no tracked branch 발생.
+    -  정확한 원인은 아직도 알 수 없었으나 인텔리제이가 당시 인식하는 local branch와 remote branch가 어딘가 잘못되어 있었던 것으로 추정된다.
+    -  인텔리제이 하단의 git 단락에서 이것저것 클릭하다가 얼떨결에 해결됨(..). 존재하는 올바른 main branch에서 update를 받은것으로 추정된다.
+  - 인텔리제이 실행 안됨
+    - 프로젝트 로딩 도중 cancel 클릭으로 비정상적 종료됨. 작업관리자의 백그라운드 프로세스를 확인, 종료함으로 해결.
 
 
 * * *
