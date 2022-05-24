@@ -8,5 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class GetPhoneUserRes {
+    private boolean isUserExist;
     private String userEmail;
 }

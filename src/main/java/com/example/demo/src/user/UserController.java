@@ -9,8 +9,6 @@ import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 
 import static com.example.demo.config.BaseResponseStatus.*;
 import static com.example.demo.utils.ValidationRegex.*;
@@ -45,36 +43,36 @@ public class UserController {
     // Body
     @ResponseBody
     @PostMapping("/sign-up")
-    public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
+    public BaseResponse<PostSignUpRes> createUser(@RequestBody PostSignUpReq postSignUpReq) {
 
         //이메일
-        if(postUserReq.getEmail() == null) {
+        if(postSignUpReq.getEmail() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
-        if(!isRegexEmail(postUserReq.getEmail())){
+        if(!isRegexEmail(postSignUpReq.getEmail())){
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
 
         //핸드폰 번호
-        if(postUserReq.getPhone() == null) {
+        if(postSignUpReq.getPhone() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_PHONE);
         }
-        if(!isRegexPhone(postUserReq.getPhone())){
+        if(!isRegexPhone(postSignUpReq.getPhone())){
             return new BaseResponse<>(POST_USERS_INVALID_PHONE);
         }
 
         //비밀번호
-        if(postUserReq.getPassword() == null) {
+        if(postSignUpReq.getPassword() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_PASSWORD);
         }
-        if (!isRegexPassword(postUserReq.getPassword())) {
+        if (!isRegexPassword(postSignUpReq.getPassword())) {
             return new BaseResponse<>(POST_USERS_INVALID_PASSWORD);
         }
 
 
         try{
-            PostUserRes postUserRes = userService.createUser(postUserReq);
-            return new BaseResponse<>(postUserRes);
+            PostSignUpRes postSignUpRes = userService.createUser(postSignUpReq);
+            return new BaseResponse<>(postSignUpRes);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -86,51 +84,61 @@ public class UserController {
      * @return BaseResponse<GetPhoneUserRes>
      */
     /**
-     * 2. 핸드폰번호 유저 조회
+     * 3. 핸드폰번호 유저 조회
      * [GET] /users?phone={phone}
      * @return BaseResponse<GetPhoneUserRes>
      */
     @ResponseBody
     @GetMapping("")
-    public BaseResponse<GetUserRes> checkUserByPhone(@RequestParam(required = false) String phone, @RequestParam(required = false) String email){
+    public BaseResponse checkUserByPhone(@RequestParam(required = false) String phone, @RequestParam(required = false) String email){
         try {
             if(email != null){
-                GetUserRes getUserRes = userProvider.getUserByEmail(email);
-                return new BaseResponse<>(getUserRes);
+                GetEmailUserRes getEmailUserRes = new GetEmailUserRes(userProvider.checkEmail(email) == 1? true : false);
+                return new BaseResponse<>(getEmailUserRes);
             }
 
             if(phone != null){
-                GetUserRes getUserRes = userProvider.getUserByPhone(phone);
-                return new BaseResponse<>(getUserRes);
+                if(userProvider.checkPhone(phone) == 0) {
+                    return new BaseResponse(new GetPhoneUserRes(false, null));
+                }
+                GetPhoneUserRes getPhoneUserRes = userProvider.getUserByPhone(phone);
+                return new BaseResponse<>(getPhoneUserRes);
             }
 
             // 쿼리스트링이 아무것도 없을 때... 전체 유저를 조회해야할 듯. 다음은 수정이 필요합니다.
-            System.out.println("전체 유저 조회");
+            System.out.println("users - 쿼리 스트링이 없습니다.");
             return new BaseResponse<>(REQUEST_ERROR);
-
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
     }
 
 
-//    /**
-//     * 로그인 API
-//     * [POST] /users/logIn
-//     * @return BaseResponse<PostLoginRes>
-//     */
-//    @ResponseBody
-//    @PostMapping("/logIn")
-//    public BaseResponse<PostLoginRes> logIn(@RequestBody PostLoginReq postLoginReq){
-//        try{
-//            // TODO: 로그인 값들에 대한 형식적인 validatin 처리해주셔야합니다!
-//            // TODO: 유저의 status ex) 비활성화된 유저, 탈퇴한 유저 등을 관리해주고 있다면 해당 부분에 대한 validation 처리도 해주셔야합니다.
-//            PostLoginRes postLoginRes = userProvider.logIn(postLoginReq);
-//            return new BaseResponse<>(postLoginRes);
-//        } catch (BaseException exception){
-//            return new BaseResponse<>(exception.getStatus());
-//        }
-//    }
+    /**
+     * 4. 로그인 API
+     * [POST] /users/sign-in
+     * @return BaseResponse<PostUserRes>
+     */
+    @ResponseBody
+    @PostMapping("/sign-in")
+    public BaseResponse<PostSignUpRes> signIn(@RequestBody PostSignInReq postSignInReq){
+        // TODO: 로그인 값들에 대한 형식적인 validatin 처리해주셔야합니다!
+        // TODO: 유저의 status ex) 비활성화된 유저, 탈퇴한 유저 등을 관리해주고 있다면 해당 부분에 대한 validation 처리도 해주셔야합니다.
+        //이메일
+        if(postSignInReq.getEmail() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+        }
+        if(!isRegexEmail(postSignInReq.getEmail())){
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
+
+        try{
+            PostSignUpRes postLoginRes = userService.signIn(postSignInReq);
+            return new BaseResponse<>(postLoginRes);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 //
 //    /**
 //     * 유저정보변경 API

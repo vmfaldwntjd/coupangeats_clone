@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.List;
 
 @Repository
 public class UserDao {
@@ -57,32 +56,20 @@ public class UserDao {
 //                getUserParams);
 //    }
 
-    public GetUserRes getUserByPhone(String phone){
+    public GetPhoneUserRes getUserByPhone(String phone){
         String getUserByPhoneQuery = "select email from user where phone = ?";
         return this.jdbcTemplate.queryForObject(getUserByPhoneQuery,
-                (rs, rowNum) -> new GetUserRes(
-                        null,
-                        null,
-                        rs.getString("email"),
-                null),
+                (rs, rowNum) -> new GetPhoneUserRes(
+                        true,
+                        rs.getString("email")),
                 phone);
     }
 
-    public GetUserRes getUserByEmail(String phone){
-        String getUserByPhoneQuery = "select user_id from user where email = ?";
-        return this.jdbcTemplate.queryForObject(getUserByPhoneQuery,
-                (rs, rowNum) -> new GetUserRes(
-                        rs.getInt("user_id"),
-                        null,
-                        null,
-                        null),
-                phone);
-    }
     
 
-    public int createUser(PostUserReq postUserReq){
+    public int createUser(PostSignUpReq postSignUpReq){
         String createUserQuery = "insert into user (email, name, phone, password) VALUES (?,?,?,?)";
-        Object[] createUserParams = new Object[]{postUserReq.getEmail(), postUserReq.getName(), postUserReq.getPhone(), postUserReq.getPassword()};
+        Object[] createUserParams = new Object[]{postSignUpReq.getEmail(), postSignUpReq.getName(), postSignUpReq.getPhone(), postSignUpReq.getPassword()};
         this.jdbcTemplate.update(createUserQuery, createUserParams);
 
         String lastInsertIdQuery = "select last_insert_id()";
@@ -118,19 +105,20 @@ public class UserDao {
         return this.jdbcTemplate.update(modifyUserNameQuery,modifyUserNameParams);
     }
 
-    public User getPwd(PostLoginReq postLoginReq){
-        String getPwdQuery = "select userIdx, password,email,userName,ID from UserInfo where ID = ?";
-        String getPwdParams = postLoginReq.getId();
+    public User getPwd(PostSignInReq postSignInReq){
+        String getPwdQuery = "select user_id, name, email, password, status, phone from user where email = ?";
+        String getPwdParam = postSignInReq.getEmail();
 
         return this.jdbcTemplate.queryForObject(getPwdQuery,
                 (rs,rowNum)-> new User(
-                        rs.getInt("userIdx"),
-                        rs.getString("ID"),
-                        rs.getString("userName"),
+                        rs.getInt("user_id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
                         rs.getString("password"),
-                        rs.getString("email")
+                        rs.getString("status"),
+                        rs.getString("phone")
                 ),
-                getPwdParams
+                getPwdParam
                 );
 
     }

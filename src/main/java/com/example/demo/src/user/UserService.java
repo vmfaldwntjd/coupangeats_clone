@@ -35,46 +35,60 @@ public class UserService {
 
     //POST
     @Transactional
-    public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
+    public PostSignUpRes createUser(PostSignUpReq postSignUpReq) throws BaseException {
         //중복
-        if(userProvider.checkEmail(postUserReq.getEmail()) ==1){
+        if(userProvider.checkEmail(postSignUpReq.getEmail()) ==1){
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
         }
         //중복
-        if(userProvider.checkPhone(postUserReq.getPhone()) ==1){
+        if(userProvider.checkPhone(postSignUpReq.getPhone()) ==1){
             throw new BaseException(POST_USERS_EXISTS_PHONE);
         }
 
         String pwd;
         try{
             //암호화
-            pwd = new SHA256().encrypt(postUserReq.getPassword());
-            postUserReq.setPassword(pwd);
+            pwd = new SHA256().encrypt(postSignUpReq.getPassword());
+            postSignUpReq.setPassword(pwd);
 
         } catch (Exception ignored) {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
         try{
-            int userId = userDao.createUser(postUserReq);
+            int userId = userDao.createUser(postSignUpReq);
             //jwt 발급.
             String jwt = jwtService.createJwt(userId);
             String refreshJwt = jwtService.createRefreshJwt();
             userDao.setRefreshToken(userId, refreshJwt);
-            return new PostUserRes(userId, jwt, refreshJwt);
+            return new PostSignUpRes(userId, jwt, refreshJwt);
         } catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public void modifyUserName(PatchUserReq patchUserReq) throws BaseException {
-        try{
-            int result = userDao.modifyUserName(patchUserReq);
-            if(result == 0){
-                throw new BaseException(MODIFY_FAIL_USERNAME);
-            }
-        } catch(Exception exception){
-            throw new BaseException(DATABASE_ERROR);
+
+    public PostSignUpRes signIn(PostSignInReq postSignInReq) throws BaseException{
+        User user = userDao.getPwd(postSignInReq);
+
+        String encryptPwd;
+        try {
+            encryptPwd=new SHA256().encrypt(postSignInReq.getPassword());
+        } catch (Exception ignored) {
+            throw new BaseException(PASSWORD_DECRYPTION_ERROR);
         }
+
+        if(user.getPassword().equals(encryptPwd)){
+            int userId = user.getUserId();
+            String jwt = jwtService.createJwt(userId);
+            String refreshJwt = jwtService.createRefreshJwt();
+
+            return new PostSignUpRes(userId, jwt, refreshJwt);
+        }
+        else{
+            throw new BaseException(FAILED_TO_LOGIN);
+        }
+
     }
+
 }
