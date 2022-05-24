@@ -89,6 +89,18 @@
   - 가게 관련 테이블 접두사 res로 통일 (사유 : 통일성과 철자상 오타발생 방지)
   - 가게 내 메뉴 카테고리 테이블 명 res_category에서 res_kinds로 변경 (사유 : 가게가 속한 카테고리 res_category와 이름 중복)
 
+3. API 구현 상황
+  - local 환경에서 로그인 API 개발 완료 및 2,3번 API response 수정.  
+
+4. 개발 이슈
+ - 깃허브 master branch 생성, There isn’t anything to compare 으로 인한 pull request 불가 오류
+    - push 전 세번의 commit으로, 비교하는 것은 마지막 commit의 readme 삭제 사항 뿐으로 main에 master branch를 병합할 수 없었습니다.
+    -  There isn’t anything to compare 를 키워드로 검색한 블로그 https://jeongkyun-it.tistory.com/128 의 내용에 따라 git 명령어를 수행, main에 프로젝트 내용을 push 하는 것은 가능하였으나 기존에 존재하던 Readme가 삭제되는 이슈가 발생했습니다.
+ - 깃허브 Readme 삭제 이슈
+    - 상위에 기재된 이슈에 따라 기존에 작성한 개발일지 Readme와 그 commit 기록이 삭제되었습니다.
+    - git push 취소 방법을 알아보았으나 로컬에 저장된 기록의 마지막 결과를 강제로 가져오는 방법뿐으로 이전의 readme는 복구할 수 없었습니다.
+    - 미리 복사해둔 readme 텍스트 파일을 붙여넣는 것으로 임시 해결하였습니다.
+
 
 * * *
 
