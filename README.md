@@ -124,7 +124,7 @@
 이슈발생 
 1. 이슈: aquery erd 사이트에서 만든 테이블들을 datagrip으로 import 하려는 데 오류 발생
     → order 테이블 쿼리문 오류가 생겼다.(SQL syntax error)
-    해결: 확인해본 결과 Mysql에 order라는 예약어가 존재해서 이름이 겹친 것이었다. ` `를 넣어줘서 해결
+    해결: 확인해본 결과 Mysql에 order라는 예약어가 존재해서 이름이 겹친 것이었다. order의 이름을 \``order`\`로 변경해서 해결
 
 2. 이슈: datagrip에서 테이블을 import하는 중 다음 에러 문구를 접하였다.: Incorrect table definition; there can be only one auto column and it must be defined as a key
     해결: ERD테이블에서 AI(Auto Increment)로 지정된 키는 반드시 PK로 지정이 되야한다고 한다. res_category_id에 pk를 추가
