@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="be715e1e-b037-4a6b-991a-1225c189b90c" name="rising-test" url="https://dev.coupangeats-clone.shop">
+        <fileTransfer rootFolder="/var/www/html/dev/api-server-spring-boot-final-2" accessType="SFTP" host="15.165.158.38" port="22" sshConfigId="2100e57e-917c-480d-9a41-b70910bb5062" sshConfig="ubuntu@15.165.158.38:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="9ad13a9d-c600-469d-8071-515abb1bfe98" name="prod-rising-test" url="http://coupangeats-clone.shop">
+        <fileTransfer rootFolder="/var/www/api-server-spring-boot-final-2" accessType="SFTP" host="15.165.158.38" port="22" sshConfigId="2100e57e-917c-480d-9a41-b70910bb5062" sshConfig="ubuntu@15.165.158.38:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
