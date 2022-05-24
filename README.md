@@ -8,7 +8,7 @@
   - 개인 스케줄에 의해 환경 구축 22일 11시로 마감일 수정
 2. ERD 설계
 
-### 2022-05-22 
+### 2022-05-22
 
 #### 위클리 스크럼 1차 진행
 진행 상황 및 다음 목표 공유
@@ -51,20 +51,20 @@
     - 회원가입 API, 이메일 유저 조회 API, 핸드폰 유저 조회 API 구현
     - 유저 조회의 경우 하나의 Response 객체를 공유하고 있어 필요하지 않은 정보는 null 반환 -> 타당성 재고 필요
 
-5. 개발 이슈   
-  #### 5.1. 환경 구축 이슈   
+5. 개발 이슈
+  #### 5.1. 환경 구축 이슈
     - dev 서버 구축 확인 중 404 Not Found 출력
       > 프록시 서버 설정 없이 80포트로 접속, 해당 url에 매핑된 결과가 없어 404 error가 출력되었음.
       > application.yml에 설정된 9000번 포트로 접속으로 문제 없음 확인. 이후 프록시 서버 설정으로 80포트 접속도 무사히 확인.
     - dev 서버 구축 확인 중 connect ECONNREFUSED 발생
       > 서버 실행 없이 접속 시도로 인한 접속요청 반려였음. 서버 실행 후 무사 접속되는 것 확인.
     - 프록시 서버 설정 이후 502 Bad Gateway 발생
-      > springboot 서버 실행 없이 접속 시도. nginx 서버는 실행중이었기 때문에 오류 메시지를 받을 수 있었다. 서버 실행 후 무사 접속 확인.         
-  #### 5.2. spring boot 빌드 이슈   
+      > springboot 서버 실행 없이 접속 시도. nginx 서버는 실행중이었기 때문에 오류 메시지를 받을 수 있었다. 서버 실행 후 무사 접속 확인.
+  #### 5.2. spring boot 빌드 이슈
     - Could not create connection to database server 에러
     - 데이터 베이스 접속이 불가능하다는 오류로, db driver 버전 문제, 접속 username, password 문제 등 원인이 다양하다.
-    - 관련 정보를 모두 확인했으나 실행이 되지 않아 어려움을 느꼈으며 콘솔의 에러 메시지에서 timezone에 대한 정보를 확인 후 datasource url의 마지막에 &serverTimezone=UTC  추가하여 해결함. mysql connector 8.0부터 기본 타임존 설정이 지정되지 않아 생긴 문제라는 듯.   
-  #### 5.3 API 서버 구현중 UserService의 @Transactional 이슈     
+    - 관련 정보를 모두 확인했으나 실행이 되지 않아 어려움을 느꼈으며 콘솔의 에러 메시지에서 timezone에 대한 정보를 확인 후 datasource url의 마지막에 &serverTimezone=UTC  추가하여 해결함. mysql connector 8.0부터 기본 타임존 설정이 지정되지 않아 생긴 문제라는 듯.
+  #### 5.3 API 서버 구현중 UserService의 @Transactional 이슈
     - 사용자 정보를 올바르게 삽입하고 나서 jwt를 발급, 저장해야한다고 생각하기때문에 createUser의 경우 userDao의 메소드가 두가지가 실행됨.
     - 따라서 createUser 메소드의 상단에 @Transactional을 기입해줬으나 유저 정보 기입단계에서 refresh_token NOT NULL 설정에 의한 DB 에러가 반환, 유저정보는 들어갔지만 결과 출력 창이 오류메시지를 보이는 이슈가 발생했다.
     - @Transactional 어노테이션에 대한 이해도 부족으로 해결되진 않았으며 관련된 원인인 refresh_token을 nullable로 설정.
@@ -89,6 +89,17 @@
   - 가게 관련 테이블 접두사 res로 통일 (사유 : 통일성과 철자상 오타발생 방지)
   - 가게 내 메뉴 카테고리 테이블 명 res_category에서 res_kinds로 변경 (사유 : 가게가 속한 카테고리 res_category와 이름 중복)
 
+3. API 구현 상황
+  - local 환경에서 로그인 API 개발 완료 및 2,3번 API response 수정.
+
+4. 개발 이슈
+ - 깃허브 master branch 생성, There isn’t anything to compare 으로 인한 pull request 불가 오류
+    - push 전 세번의 commit으로, 비교하는 것은 마지막 commit의 readme 삭제 사항 뿐으로 main에 master branch를 병합할 수 없었습니다.
+    -  There isn’t anything to compare 를 키워드로 검색한 블로그 https://jeongkyun-it.tistory.com/128 의 내용에 따라 git 명령어를 수행, main에 프로젝트 내용을 push 하는 것은 가능하였으나 기존에 존재하던 Readme가 삭제되는 이슈가 발생했습니다.
+ - 깃허브 Readme 삭제 이슈
+    - 상위에 기재된 이슈에 따라 기존에 작성한 개발일지 Readme와 그 commit 기록이 삭제되었습니다.
+    - git push 취소 방법을 알아보았으나 로컬에 저장된 기록의 마지막 결과를 강제로 가져오는 방법뿐으로 이전의 readme는 복구할 수 없었습니다.
+    - 미리 복사해둔 readme 텍스트 파일을 붙여넣는 것으로 임시 해결하였습니다.
 
 * * *
 
@@ -114,7 +125,7 @@
 
 ### 2022-05-23
 1. erd 테이블에 대한 설명 영상 제작
-2. 이슈: dev/prod의 서브 도메인을 스프링 부트에 적용하려는 순간 nginx를 재시작 하는 명령어가 
+2. 이슈: dev/prod의 서브 도메인을 스프링 부트에 적용하려는 순간 nginx를 재시작 하는 명령어가
 실행이 안 된다. -> 구글링을 해도 답이 나오지 않자 spring 지식-in에 질문을 게시한 상태.
 3. 피드백을 받으면서 일단 작업을 로컬에서 작동하기로 하였다.
 4. rds를 통해서 datagrip을 통한 쿼리 작성 시작.
@@ -124,7 +135,7 @@
 2. rds에서 db파라미터 그룹 추가하고 시간 등 각종 설정 완료
 3. datagrip으로 erd 설계에 따른 모든 테이블 생성완료
 
-이슈발생 
+이슈발생
 1. 이슈: aquery erd 사이트에서 만든 테이블들을 datagrip으로 import 하려는 데 오류 발생
     → order 테이블 쿼리문 오류가 생겼다.(SQL syntax error)
     해결: 확인해본 결과 Mysql에 order라는 예약어가 존재해서 이름이 겹친 것이었다. order의 이름을 \``order`\`로 변경해서 해결
