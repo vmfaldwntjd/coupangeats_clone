@@ -101,6 +101,15 @@
     - git push 취소 방법을 알아보았으나 로컬에 저장된 기록의 마지막 결과를 강제로 가져오는 방법뿐으로 이전의 readme는 복구할 수 없었습니다.
     - 미리 복사해둔 readme 텍스트 파일을 붙여넣는 것으로 임시 해결하였습니다.
 
+### 2022-05-25
+1. 개발 이슈
+  - 인텔리제이 깃허브 연동 오류 Incorrect credentials. Insufficient scopes granted to token 이슈 발생.
+    - 깃 push를 위해 token으로 로그인하려 했으나 반려됨. Jetbrain에서 리다이렉트하는 Log in via github는 인증 화면으로 넘어가지 않는 오류가 발생.
+    - 생성한 토큰의 scope를 업데이트 해주는 것으로 해결.
+  - push rejected 이슈 발생 Repository not found
+    -  
+
+
 * * *
 
 ## Core 개발 일지
