@@ -1,216 +1,133 @@
-# Spring Boot Template
-본 템플릿은 소프트스퀘어드 서버 교육용 Spring Boot 템플릿 입니다. (2021 ver.)
-
-## ✨Common
-### REST API
-REST API의 기본 구성 원리를 반드시 구글링하여 익힌 뒤에 Route를 구성하자.
-
-### Folder Structure
-- `src`: 메인 로직
-  `src`에는 도메인 별로 패키지를 구성하도록 했다. **도메인**이란 회원(User), 게시글(Post), 댓글(Comment), 주문(Order) 등 소프트웨어에 대한 요구사항 혹은 문제 영역이라고 생각하면 된다. 각자 설계할 APP을 분석하고 필요한 도메인을 도출하여 `src` 폴더를 구성하자.
-- `config` 및 `util` 폴더: 메인 로직은 아니지만 `src` 에서 필요한 부차적인 파일들을 모아놓은 폴더
-- 도메인 폴더 구조
-> Route - Controller - Provider/Service - DAO
-
-- Route: Request에서 보낸 라우팅 처리
-- Controller: Request를 처리하고 Response 해주는 곳. (Provider/Service에 넘겨주고 다시 받아온 결과값을 형식화), 형식적 Validation
-- Provider/Service: 비즈니스 로직 처리, 의미적 Validation
-- DAO: Data Access Object의 줄임말. Query가 작성되어 있는 곳.
-
-- 메소드 네이밍룰
-  이 템플릿에서는 사용되는 메소드 명명 규칙은 User 도메인을 참고하자. 항상 이 규칙을 따라야 하는 것은 아니지만, 네이밍은 통일성 있게 해주는 게 좋다.
-
-
-### Comparison
-3개 템플릿 모두 다음과 같이 Request에 대해 DB 단까지 거친 뒤, 다시 Controller로 돌아와 Response 해주는 구조를 갖는다. 구조를 먼저 이해하고 템플릿을 사용하자.
-> `Request` -> Route -> Controller -> Service/Provider -> DAO -> DB
-
-> DB -> DAO -> Service/Provider -> Controller -> Route -> `Response`
-
-다음은 각 템플릿 별 차이점을 비교 기술해 놓은 것이다.
-#### PHP (패키지매니저 = composer)
-> Request(시작) / Response(끝) ⇄ Router (index.php) ⇄ Controller  ⇄ Service (CUD) / Provider (R) ⇄ PDO (DB)
-
-#### Node.js (패키지매니저 = npm)
-> Request(시작) / Response(끝)  ⇄ Router (*Route.js) ⇄ Controller (*Controller.js) ⇄ Service (CUD) / Provider (R) ⇄ DAO (DB)
-
-#### Springboot java (패키지매니저 = Maven (= Spring 선호), Gradle (Springboot 선호))
-> Request(시작) / Response(끝) ⇄ Controller(= Router + Controller) ⇄ Service (CUD) / Provider (R) ⇄ DAO (DB)
-
-### Validation
-서버 API 구성의 기본은 Validation을 잘 처리하는 것이다. 외부에서 어떤 값을 날리든 Validation을 잘 처리하여 서버가 터지는 일이 없도록 유의하자.
-값, 형식, 길이 등의 형식적 Validation은 Controller에서,
-DB에서 검증해야 하는 의미적 Validation은 Provider 혹은 Service에서 처리하면 된다.
-
-## ✨Structure
-앞에 (*)이 붙어있는 파일(or 폴더)은 추가적인 과정 이후에 생성된다.
-```text
-api-server-spring-boot
-  > * build
-  > gradle
-  > * logs
-    | app.log // warn, error 레벨에 해당하는 로그가 작성 되는 파일
-    | app-%d{yyyy-MM-dd}.%i.gz
-    | error.log // error 레벨에 해당하는 로그가 작성 되는 파일
-    | error-%d{yyyy-MM-dd}.%i.gz
-  > src.main.java.com.example.demo
-    > config
-      > secret
-        | Secret.java // git에 추적되지 않아야 할 시크릿 키 값들이 작성되어야 하는 곳
-      | BaseException.java // Controller, Service, Provider 에서 Response 용으로 공통적으로 사용 될 익셉션 클래스
-      | BaseResponse.java // Controller 에서 Response 용으로 공통적으로 사용되는 구조를 위한 모델 클래스
-      | BaseResponseStatus.java // Controller, Service, Provider 에서 사용 할 Response Status 관리 클래스 
-      | Constant.java // 공통적으로 사용될 상수 값들을 관리하는 곳
-    > src
-      > test
-        | TestController.java // logger를 어떻게 써야하는지 보여주는 테스트 클래스
-      > user
-        > models
-          | GetUserRes.java        
-          | PostUserReq.java 
-          | PostUserRes.java 
-        | UserController.java
-        | UserProvider.java
-        | UserService.java
-        | UserDao.java
-      | WebSecurityConfig.java // spring-boot-starter-security, jwt 를 사용하기 위한 클래스 
-    > utils
-      | AES128.java // 암호화 관련 클래스
-      | JwtService.java // jwt 관련 클래스
-      | ValidateRegex.java // 정규표현식 관련 클래
-    | DemoApplication // SpringBootApplication 서버 시작 지점
-  > resources
-    | application.yml // Database 연동을 위한 설정 값 세팅 및 Port 정의 파일
-    | logback-spring.xml // logger 사용시 console, file 설정 값 정의 파일
-build.gradle // gradle 빌드시에 필요한 dependency 설정하는 곳
-.gitignore // git 에 포함되지 않아야 하는 폴더, 파일들을 작성 해놓는 곳
-
-```
-## ✨Description
-
-### Annotation
-스프링 부트는 `어노테이션`을 다양하게 아는 것이 중요하다. SpringBoot의 시작점을 알리는 `@SpringBootApplication` 어노테이션 뿐만 아니라 `스프링 부트 어노테이션` 등의 키워드로 구글링 해서 **스프링 부트에서 자주 사용되는 다양한 어노테이션을 이해하고 외워두자.**
-
-### Lombok
-Java 라이브러리로 반복되는 getter, setter, toString 등의 메서드 작성 코드를 줄여주는 라이브러리이다. 기본적으로 각 도메인의 model 폴더 내에 생성하는 클래스에 lombok을 사용하여 코드를 효율적으로 짤 수 있도록 구성했다. 자세한 내용은 구글링과 model > PostUser, User를 통해 이해하자.
-
-
-### src - main - resources
-템플릿은 크게 log 폴더와 src 폴더로 나뉜다. log는 통신 시에 발생하는 오류들을 기록하는 곳이다. 실제 메인 코드는 src에 담겨있다. src > main > resources를 먼저 살펴보자.
-
-`application.yml`
-
-에서 **포트 번호를 정의**하고 **DataBase 연동**을 위한 값을 설정한다.
-
-`logback-spring.xml`
-
-logs 폴더에 로그 기록을 어떤 형식으로 남길 것인지 설정한다. logs 폴더에 어떻게 기록이 남겨져 있는지 확인해보시라. (커스텀 하지 않아도 된다면`logback-spring.xml` 를 수정할 필요는 없다.)
-
-### src - main - java
-
-`com.example.demo` 패키지에는 크게 `config` 폴더, `src` 폴더와 이 프로젝트의 시작점인 `DemoApplication.java`가 있다.
-
-`DemoApplication.java` 은 스프링 부트 프로젝트의 시작을 알리는 `@SpringBootApplication` 어노테이션을 사용하고 있다. (구글링 통해 `@SpringBootApplication`의 다른 기능도 살펴보자.)
-
-`src`폴더에는 실제 **API가 동작하는 프로세스**를 담았고 `config` 폴더에는 `src`에서 필요한 Secret key, Base 클래스, 상수 클래스를, `util` 폴더에는 JWT, 암호화, 정규표현식 등의 클래스를 모아놨다.
-
-`src`를 자세하게 살펴보자. `src`는 각 **도메인**별로 패키지를 구분해 놓는다. 현재는 `user` 도메인과 `test` 도메인이 있다. **도메인**이란 게시글, 댓글, 회원, 정산, 결제 등 소프트웨어에 대한 요구사항 혹은 문제 영역이라고 생각하면 된다.
-
-이 도메인들은 API 통신에서 어떤 프로세스로 처리되는가? API 통신의 기본은 Request → Response이다. 스프링 부트에서 **어떻게 Request를 받아서, 어떻게 처리하고, 어떻게 Response 하는지**를 중점적으로 살펴보자. 전반적인 API 통신 프로세스는 다음과 같다.
-
-> **Request** → `XXXController.java`(=Router+Controller) → `Service` (CUD) / `Provider` (R) (=Business Logic) → `Dao` (DB) → **Response**
-
-#### 1. Controller / `UserController.java`  / @RestController
-
-> 1) API 통신의 **Routing** 처리
-> 2) Request를 다른 계층에 넘기고 처리된 결과 값을 Response 해주는 로직
->  + Request의 **형식적 Validation** 처리 (DB를 거치지 않고도 검사할 수 있는)
-
-**1) `@Autowired`**
-
-UserController의 생성자에 `@Autowired` 어노테이션이 붙어있다. 이는 **의존성 주입**을 위한 것으로, `UserController`  뿐만 아니라 다음에 살펴볼 `UserService`, `UserProvider`의 생성자에도 각각 붙어 있는 것을 확인할 수 있다. 간단히 요약하면 객체 생성을 자동으로 해주는 역할이다. 자세한 프로세스는 구글링을 통해 살펴보자.
-
-나머지 어노테이션들 역시 구글링을 통해 이해하자.
-
-**2) `BaseResponse`**
-
-Response할 때, 공통 부분은 묶고 다른 부분은 제네릭을 통해 구현함으로써 반복되는 코드를 줄여준다. (`BaseResponse.java` 코드 살펴 볼 것. 여기에 쓰이는`BaseResponseStatus` 는 `enum`을 통해 Status 값을 관리하고 있다.)
-
-**3) 메소드 네이밍룰**
-
-이 템플릿에서는 사용되는 메소드 명명 규칙은 다음과 같다.
-
-> HTTP Method + 핵심 URI
-
-- **GET** `/users` 를 처리하는 메소드명 → getUsers
-- **PATCH** `/users` 를 처리하는 메소드명 →patchUsers
-
-항상 이 규칙을 따라야 하는 것은 아니지만, 네이밍은 통일성 있게 해주는 게 좋다.
-
-**4) Res, Req 네이밍룰**
-
-각 메소드에서 사용되는 Res, Req 모델의 명명 규칙도 메소드 명과 비슷하다.
-
-> HTTP Method + 핵심 URI +**Res/Req**
-
-**Patch** `/users/:userId` → PatchUserRes / PatchUserReq
-
-이 Res, Req 모델은 `(도메인명) / models` 폴더에 만들면 된다.
-
-#### 2. Service 와 Provider / `UserService.java` `UserProvider.java` / @Service
-
-> 1) **비즈니스 로직**을 다루는 곳 (DB 접근[CRUD], DB에서 받아온 것 형식화)
->  + Request의 **의미적** **Validation** 처리 (DB를 거쳐야 검사할 수 있는)
-
-`Service`와 `Provider`는 비즈니스 로직을 다루는 곳이다. **CRUD** 중 **R(Read)** 에 해당하는 코드가 긴 경우가 많기 때문에 **R(Read)** 만 따로 분리해 `Service`는 **CUD(Create, Update, Delete)** 를, `Provider`는 **R(Read)** 를 다루도록 했다. 유지 보수가 용이해진다.
-
-`Provider`
-> **R(Read)** 와 관련된 곳이다. DB에서 select 해서 얻어온 값을 가공해서 뱉어준다.
-
-`Service`
-> **CUD(Create, Update, Delete)** 와 관련된 곳이다. **CUD**에서 **R**이 필요한 경우가 있는데, 그럴 때는 `Provider`에 구성되어 있는 것을 `Service`에서 사용하면 된다.
-
-**1) 메소드명**
-
-메소드의 prefix로 다음 규칙을 따르고 있다.
-
-C → createXXX `createInfo`
-
-R → retrieveXXX `retrieveInfoList`
-
-U → updateXXX `updateInfo`
-
-D → deleteXXX `deleteInfo`
-
-**2) BaseException**
-
-`BaseException`을 통해 `Service`나 `Provider`에서 `Controller`에 Exception을 던진다. 마찬가지로 Status 값은 `BaseResponseStatus` 의 `enum`을 통해 관리한다.
-
-#### 3. DAO / `UserDao.java`
-JdbcTemplate을 사용하여 구성되어 있다. 자세한 내용은 이곳 [공식 문서](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html) 와 템플릿의 기본 예제를 참고하자.
-
-## ✨Usage
-### API 만들기 예제
-로컬에서 DemoApplication을 실행시킨다. (로컬 서버 구동 시)
-
-[DB 연결 없이 TEST]
-1. src > test > TestController.java에 구성되어 있는 API를 테스트해보자.
-2. 포스트맨을 통해 GET localhost:9000/test/log로 테스트가 잘 되는지 확인한다.
-
-[DB 연결 이후 TEST]
-1. resources > application.yml에서 본인의 DB 정보를 입력한다.
-2. DB에 TEST를 위한 간단한 테이블을 하나 만든다.
-3. UserController.java, UserProvider.java, UserService.java, UserDao.java를 구성하여 해당 테이블의 값들을 불러오는 로직을 만든다.
-4. 포스트맨을 통해 본인이 만든 API 테스트가 잘 되는지 확인한다.
-
-### nohup
-무중단 서비스를 위해 nohup을 사용한다. 자세한 내용은 환경 구축 실습 영상을 참고하자.
-
-### Error
-서버 Error를 마주했다면, 원인을 파악할 수 있는 다양한 방법들을 통해 문제 원인을 찾자.
-- 컴파일 에러 확인
-- log 폴더 확인
-- 그 외 방법들
-
-## ✨License
-- 본 템플릿의 소유권은 소프트스퀘어드에 있습니다. 본 자료에 대한 상업적 이용 및 무단 복제, 배포 및 변경을 원칙적으로 금지하며 이를 위반할 때에는 형사처벌을 받을 수 있습니다.
+#coupangeats_server_core_dona
+
+# 개발일지
+
+## Dona 개발 일지
+### 2022-05-21
+1. 기획서 변동 사항
+  - 개인 스케줄에 의해 환경 구축 22일 11시로 마감일 수정
+2. ERD 설계
+
+### 2022-05-22 
+
+#### 위클리 스크럼 1차 진행
+진행 상황 및 다음 목표 공유
+- 목표
+  - 도나 : 회원가입/로그인 API 구현 및 ERD 설계 완료
+  - 노바 : 홈 Fragment UI 완성 및 회원가입/로그인 API 연동
+  - 코어 :  dev/prod서버 구축 완료
+
+1. 기획서 변동 사항
+  - 회원가입 스크린 샷 추가
+
+2. ERD 설계 (약 50% 구축)
+  - 주문 기능 관련 테이블 추가
+  - user 관련 테이블 추가 및 수정(필드 추가, 이용약관 테이블, 유저 주소 테이블 등 추가)
+  - 이미지 테이블 추가
+
+3. 환경 구축 완료 80%
+  - EC2, RDS 생성 및 서브도메인 생성, 기존 메인 도메인에 springboot 템플릿 적용.
+
+4. 개발 이슈
+  1. 환경 구축 중 mysql_secure_installation의 MySQL Failed! Error: SET PASSWORD has no significance for user ‘root’@’localhost’ as the authentication method used doesn’t store authentication data in the MySQL server. 에러 발생
+      - 원인은 mysql 정책 변경에 의한 기본 password 설정으로 추정 중.
+      - 새로운 putty session으로 mysql_secure_installation을 kill, 이후 sudo로 mysql 접속하여 root 계정의 password를 변경, 설치를 다시 할 수 있었음.
+
+
+### 2022-05-23
+1. dev/prod 환경 구축 완료
+    - dev : 9000포트 사용. 같은 RDS의 donaDB 스키마 사용.
+    - prod : 3000포트 사용. 같은 RDS의 coupangeats 스키마 사용
+
+2. 기획서 변동사항
+    - 메인 화면 구성 협의
+    - 서버 개발 역할 분담 변경(개발 환경 및 user API 구축 담당 도나로 변경)
+
+3. ERD 설계 (90%)
+    - aquerytool 최대 테이블 수 제한으로 인해 일부 기능 제약. 우선순위에 따라 기능 제외 예정.
+    - review, review_image, account 테이블 추가 및 기존 테이블 구성 추가
+
+4. API 구현
+    - 회원가입 API, 이메일 유저 조회 API, 핸드폰 유저 조회 API 구현
+    - 유저 조회의 경우 하나의 Response 객체를 공유하고 있어 필요하지 않은 정보는 null 반환 -> 타당성 재고 필요
+
+5. 개발 이슈   
+  #### 5.1. 환경 구축 이슈   
+    - dev 서버 구축 확인 중 404 Not Found 출력
+      > 프록시 서버 설정 없이 80포트로 접속, 해당 url에 매핑된 결과가 없어 404 error가 출력되었음.
+      > application.yml에 설정된 9000번 포트로 접속으로 문제 없음 확인. 이후 프록시 서버 설정으로 80포트 접속도 무사히 확인.
+    - dev 서버 구축 확인 중 connect ECONNREFUSED 발생
+      > 서버 실행 없이 접속 시도로 인한 접속요청 반려였음. 서버 실행 후 무사 접속되는 것 확인.
+    - 프록시 서버 설정 이후 502 Bad Gateway 발생
+      > springboot 서버 실행 없이 접속 시도. nginx 서버는 실행중이었기 때문에 오류 메시지를 받을 수 있었다. 서버 실행 후 무사 접속 확인.         
+  #### 5.2. spring boot 빌드 이슈   
+    - Could not create connection to database server 에러
+    - 데이터 베이스 접속이 불가능하다는 오류로, db driver 버전 문제, 접속 username, password 문제 등 원인이 다양하다.
+    - 관련 정보를 모두 확인했으나 실행이 되지 않아 어려움을 느꼈으며 콘솔의 에러 메시지에서 timezone에 대한 정보를 확인 후 datasource url의 마지막에 &serverTimezone=UTC  추가하여 해결함. mysql connector 8.0부터 기본 타임존 설정이 지정되지 않아 생긴 문제라는 듯.   
+  #### 5.3 API 서버 구현중 UserService의 @Transactional 이슈     
+    - 사용자 정보를 올바르게 삽입하고 나서 jwt를 발급, 저장해야한다고 생각하기때문에 createUser의 경우 userDao의 메소드가 두가지가 실행됨.
+    - 따라서 createUser 메소드의 상단에 @Transactional을 기입해줬으나 유저 정보 기입단계에서 refresh_token NOT NULL 설정에 의한 DB 에러가 반환, 유저정보는 들어갔지만 결과 출력 창이 오류메시지를 보이는 이슈가 발생했다.
+    - @Transactional 어노테이션에 대한 이해도 부족으로 해결되진 않았으며 관련된 원인인 refresh_token을 nullable로 설정.
+
+
+### 2022-05-24
+1. API 명세서 핵심기능 위주의 26개 API list-up 완료.
+2. ERD 수정사항
+  - advertisement 테이블명 event테이블로 변경
+  - event 테이블 이벤트 시작/종료 날짜 추가
+  - user_address 테이블 선택 주소 여부 필드 추가
+  - restaurant 치타 배달 여부, 블루 리본 여부 필드 is_selected 추가
+  - 자주 묻는 질문 관련 테이블  frequently_asked_questions,   main_inquiry, order_receipt 테이블 전부 삭제.
+    -  static 정보는 html으로 출력한다.
+  - cart, cart_menu 테이블 추가
+    - cart_menu 테이블은 계층형 테이블 조회시 셀프조인이 필요함
+    - cart는 결제를 넘기기 전 임시 데이터 저장공간같은 개념이라 nullable의 필드가 많다.
+  - res_category 테이블
+    - 카테고리별 설명 description 필드 추가
+  - 광고 테이블 필드명 수정
+  - PK 설정 수정(1차 피드백 반영, 모든 테이블에 id 필드 설정)
+  - 가게 관련 테이블 접두사 res로 통일 (사유 : 통일성과 철자상 오타발생 방지)
+  - 가게 내 메뉴 카테고리 테이블 명 res_category에서 res_kinds로 변경 (사유 : 가게가 속한 카테고리 res_category와 이름 중복)
+
+
+* * *
+
+## Core 개발 일지
+### 2022-05-21
+1. 기획 작성 -> 원래는 서버 구축도 완료할 예정이었으나 ERD 작성을 마무리하고 서버 구축 및 rds,
+  도메인 생성 완료 예정
+2. ERD 설계 진행 30%
+
+### 2022-05-22
+1. erd 테이블 추가(res_info 테이블, user_address 테이블, res_operating_time테이블)
+2. ec2 인스턴스 생성 100%
+3. rds 구축 95% → vpc관련 설정 따로 해야할 듯
+4. 스프링 부트에 ssl적용 완료
+5. 위클리 스크럼 진행
+ -> 진행 목표 설정
+- 도나 : 회원가입/로그인 API 구현 및 ERD 설계 완료
+- 노바 : 홈 Fragment UI 완성 및 회원가입/로그인 API 연동
+- 코어 :  dev/prod서버 구축 완료
+6. 이슈: 스프링템플릿 폴더에 대한 git rository ssh인증 clone 이슈 해결 (mac 환경)(22.05.22)
+로컬에서 변경한 스프링템플릿의 내용을 git repository에 올리고 그 변경된 내용을 서버 쪽으로 끌어오기 위해서 git pull명령어를 사용해야 합니다. 그 전에 git clone으로 git repository에 있는 내용들을 먼저 가져와야 하는데 mac에서는 ssh인증 방식을 사용합니다. 그래서 ssh-keygen 명령을 통해서 ssh key를 생성하고 github에 저장까지 완료한 뒤 ssh에 관한 git clone을 사용했는데 여전히 권한이 거부되었다는 이슈가 발생하였습니다. (딱히 해당 레퍼지토리에 대한 설정 변경도 없었습니다.)
+ 구글링을 해본 결과 이것은 github 문제인 것으로 생각되어 다시 스프링템플릿에 대한 git repository를 다시 만들고 ssh clone을 성공하였습니다.
+
+### 2022-05-23
+1. erd 테이블에 대한 설명 영상 제작
+2. 이슈: dev/prod의 서브 도메인을 스프링 부트에 적용하려는 순간 nginx를 재시작 하는 명령어가 
+실행이 안 된다. -> 구글링을 해도 답이 나오지 않자 spring 지식-in에 질문을 게시한 상태.
+3. 피드백을 받으면서 일단 작업을 로컬에서 작동하기로 하였다.
+4. rds를 통해서 datagrip을 통한 쿼리 작성 시작.
+
+### 2022-05-24
+1. 가비아에서 만든 도메인 사이트 및 prod 서브 도메인에 https 적용 완료
+2. rds에서 db파라미터 그룹 추가하고 시간 등 각종 설정 완료
+3. datagrip으로 erd 설계에 따른 모든 테이블 생성완료
+
+이슈발생 
+1. 이슈: aquery erd 사이트에서 만든 테이블들을 datagrip으로 import 하려는 데 오류 발생
+    → order 테이블 쿼리문 오류가 생겼다.(SQL syntax error)
+    해결: 확인해본 결과 Mysql에 order라는 예약어가 존재해서 이름이 겹친 것이었다. order의 이름을 \``order`\`로 변경해서 해결
+
+2. 이슈: datagrip에서 테이블을 import하는 중 다음 에러 문구를 접하였다.: Incorrect table definition; there can be only one auto column and it must be defined as a key
+    해결: ERD테이블에서 AI(Auto Increment)로 지정된 키는 반드시 PK로 지정이 되야한다고 한다. res_category_id에 pk를 추가
