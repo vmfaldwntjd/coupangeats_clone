@@ -49,7 +49,8 @@ public enum BaseResponseStatus {
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
 
-
+    // [POST] /users/sign-in/jwt
+    FAILED_TO_LOGIN_BY_JWT(false, 3015, "존재하지 않는 user id의 jwt입니다."),
 
     /**
      * 4000 : Database, Server 오류

@@ -4,7 +4,6 @@ package com.example.demo.src.user;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
-import com.example.demo.utils.SHA256;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +69,7 @@ public class UserProvider {
 
     public GetPhoneUserRes getUserByPhone(String phone) throws BaseException {
         try {
-            GetPhoneUserRes getUserRes = userDao.getUserByPhone(phone);
+            GetPhoneUserRes getUserRes = userDao.getUserEmailByPhone(phone);
             return getUserRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);

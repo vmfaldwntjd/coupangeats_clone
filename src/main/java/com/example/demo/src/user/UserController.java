@@ -43,7 +43,7 @@ public class UserController {
     // Body
     @ResponseBody
     @PostMapping("/sign-up")
-    public BaseResponse<PostSignUpRes> createUser(@RequestBody PostSignUpReq postSignUpReq) {
+    public BaseResponse<PostSignUpInRes> createUser(@RequestBody PostSignUpReq postSignUpReq) {
 
         //이메일
         if(postSignUpReq.getEmail() == null) {
@@ -71,8 +71,8 @@ public class UserController {
 
 
         try{
-            PostSignUpRes postSignUpRes = userService.createUser(postSignUpReq);
-            return new BaseResponse<>(postSignUpRes);
+            PostSignUpInRes postSignUpInRes = userService.createUser(postSignUpReq);
+            return new BaseResponse<>(postSignUpInRes);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -121,7 +121,7 @@ public class UserController {
      */
     @ResponseBody
     @PostMapping("/sign-in")
-    public BaseResponse<PostSignUpRes> signIn(@RequestBody PostSignInReq postSignInReq){
+    public BaseResponse<PostSignUpInRes> signIn(@RequestBody PostSignInReq postSignInReq){
         // TODO: 로그인 값들에 대한 형식적인 validatin 처리해주셔야합니다!
         // TODO: 유저의 status ex) 비활성화된 유저, 탈퇴한 유저 등을 관리해주고 있다면 해당 부분에 대한 validation 처리도 해주셔야합니다.
         //이메일
@@ -133,12 +133,30 @@ public class UserController {
         }
 
         try{
-            PostSignUpRes postLoginRes = userService.signIn(postSignInReq);
+            PostSignUpInRes postLoginRes = userService.signIn(postSignInReq);
             return new BaseResponse<>(postLoginRes);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    /**
+     * jwt 자동 로그인 API
+     * [POST] /users/sign-in/Jwt
+     * @return BaseResponse<PostLoginRes>
+     */
+    @ResponseBody
+    @PostMapping("/sign-in/jwt")
+    public BaseResponse<PostSignInJwtRes> signInByJwt(){
+        //로그인 값 - jwt validation은 interceptor에서 처리
+        try{
+            PostSignInJwtRes postSignInJwtRes = userService.signInByJwt();
+            return new BaseResponse<>(postSignInJwtRes);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 //
 //    /**
 //     * 유저정보변경 API
