@@ -163,3 +163,4 @@
 1. API 명세서 17개 리스트업 진행
 -> 고객 지원, 자주 묻는 질문 등의 API 리스트도 새로 만들고 싶었으나 aquery tool에서 만들 수 있는
 ERD의 개수 제한으로 인해서 일단 여기까지만 제작
+2. erd 에서 res_delivery_fee 테이블에서 restaurant_id가 fk처라기 되어 있지 않아 fk처리
