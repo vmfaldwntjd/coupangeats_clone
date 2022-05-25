@@ -146,7 +146,7 @@ public class UserController {
      * @return BaseResponse<PostLoginRes>
      */
     @ResponseBody
-    @PostMapping("/sign-in/jwt")
+    @GetMapping("/sign-in/jwt")
     public BaseResponse<PostSignInJwtRes> signInByJwt(){
         //로그인 값 - jwt validation은 interceptor에서 처리
         try{
