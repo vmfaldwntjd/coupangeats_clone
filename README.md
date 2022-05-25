@@ -104,7 +104,28 @@
     - 미리 복사해둔 readme 텍스트 파일을 붙여넣는 것으로 임시 해결하였습니다.
 
 ### 2022-05-25
-1. 개발 이슈
+1. API 구현 - jwt 자동 로그인 구현
+- 프론트 측과의 협의로 구성 변경 예정
+> access token   
+유효기간 3일 -> 30일   
+DB 저장 구조   
+refresh token -> access token, refresh token 두가지 저장   
+로그인시 반환 값   
+회원가입시 최초 발급 및 DB에 저장된 accesstoken 반환
+
+2. ERD 설계 수정
+- 몇가지 테이블 갱신시간 nullable 설정 및 user_address 테이블 is_selected 디폴트값 0으로 설정.
+- aquery event 테이블 is_top 필드 추가
+    - 상단 광고 배너와 중간 광고 배너의 의미적 분류를 위함
+    - 쿠팡에서 판정하는 기준은 정확히 알수없기때문에 임의의 필드를 주기로 결정
+- category 테이블 카테고리 사진 url category_image_url 필드 추가
+    - 카테고리 정보에 1:1로만 존재하는 정보이기 때문에 다른 테이블과 달리 필드로 url추가.
+- restaurant 테이블 기본 배달 시간 delivery_time 필드 추가
+    - 해당 시간 +-5분으로 추정 배달시간 출력
+    - 기본값 20으로 설정. 단위는 분(m)
+
+
+3. 개발 이슈
 - 인텔리제이 깃허브 연동 오류 Incorrect credentials. Insufficient scopes granted to token 이슈 발생.
   - 깃 push를 위해 token으로 로그인하려 했으나 반려됨. Jetbrain에서 리다이렉트하는 Log in via github는 인증 화면으로 넘어가지 않는 오류가 발생.
   - 생성한 토큰의 scope를 업데이트 해주는 것으로 해결.
