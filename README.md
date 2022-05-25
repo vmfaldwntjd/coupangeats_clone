@@ -158,3 +158,8 @@
 
 2. 이슈: datagrip에서 테이블을 import하는 중 다음 에러 문구를 접하였다.: Incorrect table definition; there can be only one auto column and it must be defined as a key
     해결: ERD테이블에서 AI(Auto Increment)로 지정된 키는 반드시 PK로 지정이 되야한다고 한다. res_category_id에 pk를 추가
+
+### 2022-05-25
+1. API 명세서 17개 리스트업 진행
+-> 고객 지원, 자주 묻는 질문 등의 API 리스트도 새로 만들고 싶었으나 aquery tool에서 만들 수 있는
+ERD의 개수 제한으로 인해서 일단 여기까지만 제작
