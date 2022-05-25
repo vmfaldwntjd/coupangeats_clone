@@ -56,9 +56,9 @@ public class UserDao {
 //                getUserParams);
 //    }
 
-    public GetPhoneUserRes getUserByPhone(String phone){
-        String getUserByPhoneQuery = "select email from user where phone = ?";
-        return this.jdbcTemplate.queryForObject(getUserByPhoneQuery,
+    public GetPhoneUserRes getUserEmailByPhone(String phone){
+        String getUserEmailByPhoneQuery = "select email from user where phone = ?";
+        return this.jdbcTemplate.queryForObject(getUserEmailByPhoneQuery,
                 (rs, rowNum) -> new GetPhoneUserRes(
                         true,
                         rs.getString("email")),
@@ -105,11 +105,11 @@ public class UserDao {
         return this.jdbcTemplate.update(modifyUserNameQuery,modifyUserNameParams);
     }
 
-    public User getPwd(PostSignInReq postSignInReq){
-        String getPwdQuery = "select user_id, name, email, password, status, phone from user where email = ?";
-        String getPwdParam = postSignInReq.getEmail();
+    public User getUser(PostSignInReq postSignInReq){
+        String getUserQuery = "select user_id, name, email, password, status, phone from user where email = ?";
+        String getUserParam = postSignInReq.getEmail();
 
-        return this.jdbcTemplate.queryForObject(getPwdQuery,
+        return this.jdbcTemplate.queryForObject(getUserQuery,
                 (rs,rowNum)-> new User(
                         rs.getInt("user_id"),
                         rs.getString("name"),
@@ -118,10 +118,16 @@ public class UserDao {
                         rs.getString("status"),
                         rs.getString("phone")
                 ),
-                getPwdParam
+                getUserParam
                 );
-
     }
 
+    public int checkId(int userId){
+        String checkIdQuery = "select exists(select user_id from user where user_id = ?)";
+        int checkIdParams = userId;
+        return this.jdbcTemplate.queryForObject(checkIdQuery,
+                int.class,
+                checkIdParams);
+    }
 
 }

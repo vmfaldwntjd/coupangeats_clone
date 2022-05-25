@@ -35,7 +35,7 @@ public class UserService {
 
     //POST
     @Transactional
-    public PostSignUpRes createUser(PostSignUpReq postSignUpReq) throws BaseException {
+    public PostSignUpInRes createUser(PostSignUpReq postSignUpReq) throws BaseException {
         //중복
         if(userProvider.checkEmail(postSignUpReq.getEmail()) ==1){
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
@@ -60,7 +60,7 @@ public class UserService {
             String jwt = jwtService.createJwt(userId);
             String refreshJwt = jwtService.createRefreshJwt();
             userDao.setRefreshToken(userId, refreshJwt);
-            return new PostSignUpRes(userId, jwt, refreshJwt);
+            return new PostSignUpInRes(userId, jwt, refreshJwt);
         } catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
@@ -68,8 +68,8 @@ public class UserService {
     }
 
 
-    public PostSignUpRes signIn(PostSignInReq postSignInReq) throws BaseException{
-        User user = userDao.getPwd(postSignInReq);
+    public PostSignUpInRes signIn(PostSignInReq postSignInReq) throws BaseException{
+        User user = userDao.getUser(postSignInReq);
 
         String encryptPwd;
         try {
@@ -83,12 +83,25 @@ public class UserService {
             String jwt = jwtService.createJwt(userId);
             String refreshJwt = jwtService.createRefreshJwt();
 
-            return new PostSignUpRes(userId, jwt, refreshJwt);
+            return new PostSignUpInRes(userId, jwt, refreshJwt);
         }
         else{
             throw new BaseException(FAILED_TO_LOGIN);
         }
+    }
 
+    public PostSignInJwtRes signInByJwt() throws BaseException{
+        try{
+            int userId = jwtService.getUserId();
+            if(userDao.checkId(userId) != 1){
+                throw new BaseException(FAILED_TO_LOGIN_BY_JWT);
+            }
+            String jwt = jwtService.createJwt(userId);
+            return new PostSignInJwtRes(userId, jwt);
+        }
+        catch (Exception exception){
+            throw new BaseException(FAILED_TO_LOGIN);
+        }
     }
 
 }
