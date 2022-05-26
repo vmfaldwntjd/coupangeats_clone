@@ -30,14 +30,14 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
 
-    POST_USERS_EMPTY_PHONE(false, 2018, "핸드폰 번호를 입력해주세요"),
-    POST_USERS_INVALID_PHONE(false, 2019, "핸드폰 번호 형식을 확인해주세요"),
+    POST_USERS_EMPTY_PHONE(false, 2018, "핸드폰 번호를 입력해주세요."),
+    POST_USERS_INVALID_PHONE(false, 2019, "핸드폰 번호 형식을 확인해주세요."),
     POST_USERS_EXISTS_PHONE(false, 2020, "중복된 핸드폰 번호입니다."),
 
-    POST_USERS_EMPTY_PASSWORD(false, 2021, "비밀번호를 입력해주세요"),
-    POST_USERS_INVALID_PASSWORD(false, 2022, "비밀번호 형식을 확인해주세요"),
+    POST_USERS_EMPTY_PASSWORD(false, 2021, "비밀번호를 입력해주세요."),
+    POST_USERS_INVALID_PASSWORD(false, 2022, "비밀번호 형식을 확인해주세요."),
 
-
+    RESTAURANTS_EMPTY_CATEGORY_ID(false, 2023, "카테고리 번호를 입력해주세요."),
 
     /**
      * 3000 : Response 오류
