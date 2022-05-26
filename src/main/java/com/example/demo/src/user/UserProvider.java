@@ -28,27 +28,6 @@ public class UserProvider {
     }
 
 
-//
-//    public List<GetUserRes> getUsersByEmail(String email) throws BaseException{
-//        try{
-//            List<GetUserRes> getUsersRes = userDao.getUsersByEmail(email);
-//            return getUsersRes;
-//        }
-//        catch (Exception exception) {
-//            throw new BaseException(DATABASE_ERROR);
-//        }
-//                    }
-//
-//
-//    public GetUserRes getUser(int userIdx) throws BaseException {
-//        try {
-//            GetUserRes getUserRes = userDao.getUser(userIdx);
-//            return getUserRes;
-//        } catch (Exception exception) {
-//            throw new BaseException(DATABASE_ERROR);
-//        }
-//    }
-
     public int checkEmail(String email) throws BaseException{
         try{
             return userDao.checkEmail(email);
@@ -77,5 +56,14 @@ public class UserProvider {
     }
 
 
+    public GetUserAddressRes getUserAddress(int userId, Boolean isSelected) throws BaseException{
+        try {
+            GetUserAddressRes getUserAddressRes = userDao.getUserAddress(userId, isSelected);
+            return getUserAddressRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
 }

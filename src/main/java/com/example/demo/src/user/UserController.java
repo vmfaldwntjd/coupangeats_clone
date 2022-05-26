@@ -141,48 +141,52 @@ public class UserController {
     }
 
     /**
-     * jwt 자동 로그인 API
+     * 5. jwt 자동 로그인 API
      * [POST] /users/sign-in/Jwt
-     * @return BaseResponse<PostLoginRes>
+     * @return BaseResponse<PostSignInJwtRes>
      */
     @ResponseBody
     @GetMapping("/sign-in/jwt")
-    public BaseResponse<PostSignInJwtRes> signInByJwt(){
+    public BaseResponse<GetSignInJwtRes> signInByJwt(){
         //로그인 값 - jwt validation은 interceptor에서 처리
         try{
-            PostSignInJwtRes postSignInJwtRes = userService.signInByJwt();
-            return new BaseResponse<>(postSignInJwtRes);
+            GetSignInJwtRes getSignInJwtRes = userService.signInByJwt();
+            return new BaseResponse<>(getSignInJwtRes);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
     }
 
-//
-//    /**
-//     * 유저정보변경 API
-//     * [PATCH] /users/:userIdx
-//     * @return BaseResponse<String>
-//     */
-//    @ResponseBody
-//    @PatchMapping("/{userIdx}")
-//    public BaseResponse<String> modifyUserName(@PathVariable("userIdx") int userIdx, @RequestBody User user){
-//        try {
-//            //jwt에서 idx 추출.
-//            int userIdxByJwt = jwtService.getUserIdx();
-//            //userIdx와 접근한 유저가 같은지 확인
-//            if(userIdx != userIdxByJwt){
-//                return new BaseResponse<>(INVALID_USER_JWT);
-//            }
-//            //같다면 유저네임 변경
-//            PatchUserReq patchUserReq = new PatchUserReq(userIdx,user.getUserName());
-//            userService.modifyUserName(patchUserReq);
-//
-//            String result = "";
-//        return new BaseResponse<>(result);
-//        } catch (BaseException exception) {
-//            return new BaseResponse<>((exception.getStatus()));
-//        }
-//    }
+    /**
+     * 6. 현재 유저 대표 주소 조회 API
+     * [GET] /users/:userId/addresses?isSelected=true
+     * @return BaseResponse<GetUserAddresseRes>
+     *     주소 전체 조회는 jwt가 있어야한다.
+     *
+     * 22. 유저 주소 전체 조회 API - 보류
+     * [GET] /users/:userId/addresses
+     * @return BaseResponse<List<GetUserAddressInfoRes>>
+     */
+    @ResponseBody
+    @GetMapping("/{userId}/addresses")
+    public BaseResponse getUserAddress(@PathVariable int userId, @RequestParam(required = false) Boolean isSelected){
+
+        try{
+            int userIdByJwt = jwtService.getUserId();
+            if(userId != userIdByJwt){
+                return new BaseResponse(INVALID_USER_JWT);
+            }
+
+            if(isSelected != null){
+                GetUserAddressRes getUserAddressRes = userProvider.getUserAddress(userId, isSelected);
+                return new BaseResponse(getUserAddressRes);
+            }
+
+            return new BaseResponse(null);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 
 }

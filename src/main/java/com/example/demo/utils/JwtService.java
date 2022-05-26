@@ -18,7 +18,7 @@ import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class JwtService {
-    int tokenValidMillisecond = 1000; // access 토큰 만료시간 3일
+    int tokenValidMillisecond = 1000*60*60*24*30; // access 토큰 만료시간 30일
     long refreshTokenValidMillisecond = 1000*60*60*24*365; // refresh 토큰 만료시간 1년
     /*
     JWT 생성
