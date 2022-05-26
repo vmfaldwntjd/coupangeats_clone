@@ -6,8 +6,8 @@ com/example/demo/src/user/model/GetPhoneUserRes.java
  com.example.demo.src.user.model.GetPhoneUserRes
 com/example/demo/utils/ValidationRegex.java
  com.example.demo.utils.ValidationRegex
-com/example/demo/config/WebConfig.java
- com.example.demo.config.WebConfig
+com/example/demo/src/user/UserDao.java
+ com.example.demo.src.user.UserDao
 com/example/demo/src/user/model/PostSignUpInRes.java
  com.example.demo.src.user.model.PostSignUpInRes
 com/example/demo/src/user/model/PostSignInReq.java
@@ -44,11 +44,23 @@ com/example/demo/config/interceptor/JwtAuthInterceptor.java
  com.example.demo.config.interceptor.JwtAuthInterceptor
 com/example/demo/utils/JwtService.java
  com.example.demo.utils.JwtService
-com/example/demo/src/user/UserDao.java
- com.example.demo.src.user.UserDao
+com/example/demo/src/event/EventService.java
+ com.example.demo.src.event.EventService
+com/example/demo/src/event/EventController.java
+ com.example.demo.src.event.EventController
+com/example/demo/src/event/model/GetEventTopRes.java
+ com.example.demo.src.event.model.GetEventTopRes
 com/example/demo/src/user/UserService.java
  com.example.demo.src.user.UserService
-com/example/demo/src/user/UserController.java
- com.example.demo.src.user.UserController
+com/example/demo/src/event/EventProvider.java
+ com.example.demo.src.event.EventProvider
+com/example/demo/config/WebConfig.java
+ com.example.demo.config.WebConfig
 com/example/demo/src/user/UserProvider.java
  com.example.demo.src.user.UserProvider
+com/example/demo/src/user/UserController.java
+ com.example.demo.src.user.UserController
+com/example/demo/src/event/query/EventQuery.java
+ com.example.demo.src.event.query.EventQuery
+com/example/demo/src/event/EventDao.java
+ com.example.demo.src.event.EventDao
