@@ -104,17 +104,53 @@
     - 미리 복사해둔 readme 텍스트 파일을 붙여넣는 것으로 임시 해결하였습니다.
 
 ### 2022-05-25
-1. 개발 이슈
-  - 인텔리제이 깃허브 연동 오류 Incorrect credentials. Insufficient scopes granted to token 이슈 발생.
-    - 깃 push를 위해 token으로 로그인하려 했으나 반려됨. Jetbrain에서 리다이렉트하는 Log in via github는 인증 화면으로 넘어가지 않는 오류가 발생.
-    - 생성한 토큰의 scope를 업데이트 해주는 것으로 해결.
-  - push rejected 이슈 발생 Repository not found
-    -  깃의 readme.md가 업데이트되었으나 이를 pull 하지 않은 채로 push를 시도해서 일어난 오류. update를 시도하였으나 Can't update main has no tracked branch 발생.
-    -  정확한 원인은 아직도 알 수 없었으나 인텔리제이가 당시 인식하는 local branch와 remote branch가 어딘가 잘못되어 있었던 것으로 추정된다.
-    -  인텔리제이 하단의 git 단락에서 이것저것 클릭하다가 얼떨결에 해결됨(..). 존재하는 올바른 main branch에서 update를 받은것으로 추정된다.
-  - 인텔리제이 실행 안됨
-    - 프로젝트 로딩 도중 cancel 클릭으로 비정상적 종료됨. 작업관리자의 백그라운드 프로세스를 확인, 종료함으로 해결.
+1. API 구현 - jwt 자동 로그인 구현
+- 프론트 측과의 협의로 구성 변경 예정
+> access token   
+유효기간 3일 -> 30일   
+DB 저장 구조   
+refresh token -> access token, refresh token 두가지 저장   
+로그인시 반환 값   
+회원가입시 최초 발급 및 DB에 저장된 accesstoken 반환
 
+2. ERD 설계 수정
+- 몇가지 테이블 갱신시간 nullable 설정 및 user_address 테이블 is_selected 디폴트값 0으로 설정.
+- aquery event 테이블 is_top 필드 추가
+    - 상단 광고 배너와 중간 광고 배너의 의미적 분류를 위함
+    - 쿠팡에서 판정하는 기준은 정확히 알수없기때문에 임의의 필드를 주기로 결정
+- category 테이블 카테고리 사진 url category_image_url 필드 추가
+    - 카테고리 정보에 1:1로만 존재하는 정보이기 때문에 다른 테이블과 달리 필드로 url추가.
+- restaurant 테이블 기본 배달 시간 delivery_time 필드 추가
+    - 해당 시간 +-5분으로 추정 배달시간 출력
+    - 기본값 20으로 설정. 단위는 분(m)
+
+
+3. 개발 이슈
+- 인텔리제이 깃허브 연동 오류 Incorrect credentials. Insufficient scopes granted to token 이슈 발생.
+  - 깃 push를 위해 token으로 로그인하려 했으나 반려됨. Jetbrain에서 리다이렉트하는 Log in via github는 인증 화면으로 넘어가지 않는 오류가 발생.
+  - 생성한 토큰의 scope를 업데이트 해주는 것으로 해결.
+- push rejected 이슈 발생 Repository not found
+  -  깃의 readme.md가 업데이트되었으나 이를 pull 하지 않은 채로 push를 시도해서 일어난 오류. update를 시도하였으나 Can't update main has no tracked branch 발생.
+  -  정확한 원인은 아직도 알 수 없었으나 인텔리제이가 당시 인식하는 local branch와 remote branch가 어딘가 잘못되어 있었던 것으로 추정된다.
+  -  인텔리제이 하단의 git 단락에서 이것저것 클릭하다가 얼떨결에 해결됨(..). 존재하는 올바른 main branch에서 update를 받은것으로 추정된다.
+- 인텔리제이 실행 안됨
+  - 프로젝트 로딩 도중 cancel 클릭으로 비정상적 종료됨. 작업관리자의 백그라운드 프로세스를 확인, 종료함으로 해결.
+- .gitignore 미설정 오류
+  - 초기 프로젝트 업로드시 .gitignore을 txt 파일로 생성하는 실수로 .gitignore이 반영되지 않는 오류가 발생.
+  - git은 한번 추적을 시작한 파일은 계속해서 추적하기때문에 다음의 두가지 방법이 가능하다.
+    - git 추적 중단 명령
+    > git update-index --assume-unchanged {filename}   
+    - 삭제 & 복구를 통한 .gitignore 설정
+    > rm {filename}   
+    git add . && git commit -m "delete file" // 이후 파일 복구
+  - 따라서 reame.md와 .git 폴더를 제외한 모든 프로젝트 파일을 옮겨서 commit, 복구 후 commit을 실행, class, jar 등 gitignore에 등록된 파일이 제외되었다.
+- prod 서버 build 시도 중 could not be found or load main class org.gradle.wrapper.GradleWrapperMain 에러 발생
+  - .gitignore에 의해 gradle 실행 파일(.jar)가 제외된 것으로 판단. 간단한 검색으로 gradle wrapper를 실행하면 된다는 글을 찾음.
+  - apt 명령어를 통해 gradle 설치. 4.4.1 버전 설치. 로컬 환경은 6번대로 역시 빌드시 "Spring boot plugin requires Gradle 5 ~"의 상위 버전을 요구하는 에러 메시지와 함께 build faild.
+  - 상위 6번 버전 재설치후 build wrap으로 해결.
+- prod 서버 build 시도 중 Permission denied 발생.
+  - 실행 명령어에 대한 권한 부여 chmod +x ./gradlew를 해결책으로 찾았지만 이 역시 Operation not permitted 에러 발생
+  - 프로젝트 폴더 전체에 대한 권한 설정 sudo chmod -R 777 coupangeats-server-core-dona 실행으로 해결.
 
 * * *
 
@@ -164,3 +200,5 @@
 -> 고객 지원, 자주 묻는 질문 등의 API 리스트도 새로 만들고 싶었으나 aquery tool에서 만들 수 있는
 ERD의 개수 제한으로 인해서 일단 여기까지만 제작
 2. erd 에서 res_delivery_fee 테이블에서 restaurant_id가 fk처라기 되어 있지 않아 fk처리
+3. 기획서의 있는 각 화면 당 erd에서의 필요한 칼럼(column)을 명세서를 참고하여 spread sheet
+에 작성 완료 -> 추후에 추가 필요
