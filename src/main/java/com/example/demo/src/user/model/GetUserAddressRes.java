@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostSignInJwtRes {
+public class GetUserAddressRes {
     private int userId;
-    private String jwt;
+    private String addressName;
 }

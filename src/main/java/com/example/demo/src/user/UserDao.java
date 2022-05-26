@@ -2,6 +2,7 @@ package com.example.demo.src.user;
 
 
 import com.example.demo.src.user.model.*;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -76,9 +77,10 @@ public class UserDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class);
     }
 
-    public int setRefreshToken(int userId, String refreshJwt){
-        String setUserRefreshTokenQuery = "update user set refresh_token = ? where user_id = ?";
-        return this.jdbcTemplate.update(setUserRefreshTokenQuery, refreshJwt, userId);
+    public int setTokens(int userId, String jwt, String refreshJwt){
+        String setUserTokensQuery = "update user set access_token = ?, refresh_token = ? where user_id = ?";
+        Object[] setUserTokensParams = new Object[]{jwt, refreshJwt, userId};
+        return this.jdbcTemplate.update(setUserTokensQuery, setUserTokensParams);
     }
 
     public int checkEmail(String email){
@@ -95,6 +97,21 @@ public class UserDao {
         return this.jdbcTemplate.queryForObject(checkPhoneQuery,
                 int.class,
                 checkPhoneParams);
+    }
+
+    public String getUserAccessToken(int userId){
+        String getUserAccessTokenQuery = "select access_token from user where user_id = ?";
+        int getUserAccessTokenParam = userId;
+        return this.jdbcTemplate.queryForObject(getUserAccessTokenQuery,
+                String.class,
+                getUserAccessTokenParam);
+    }
+    public String getUserRefreshToken(int userId){
+        String getUserRefreshTokenQuery = "select refresh_token from user where user_id = ?";
+        int getUserRefreshTokenParam = userId;
+        return this.jdbcTemplate.queryForObject(getUserRefreshTokenQuery,
+                String.class,
+                getUserRefreshTokenParam);
     }
 
 
@@ -130,4 +147,15 @@ public class UserDao {
                 checkIdParams);
     }
 
+    public GetUserAddressRes getUserAddress(int userId, Boolean isSelected){
+        String getUserAddressQuery = "select user_id, address_name from user_address where user_id = ? AND is_selected = ?";
+
+        Object[] getUserAddressParams = new Object[]{userId, isSelected};
+        return this.jdbcTemplate.queryForObject(getUserAddressQuery,
+                (rs, rowNum) -> new GetUserAddressRes(
+                        rs.getInt("user_id"),
+                        rs.getString("address_name")
+                ),
+                getUserAddressParams);
+    }
 }
