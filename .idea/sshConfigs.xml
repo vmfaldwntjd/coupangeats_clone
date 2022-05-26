@@ -2,7 +2,7 @@
 <project version="4">
   <component name="SshConfigs">
     <configs>
-      <sshConfig host="15.165.158.38" id="2100e57e-917c-480d-9a41-b70910bb5062" keyPath="C:\Users\teepi\Documents\Rising Camp\라이징 테스트\키페어\dona_rising_test_key.pem" port="22" nameFormat="DESCRIPTIVE" username="ubuntu" />
+      <sshConfig host="15.165.158.38" id="2100e57e-917c-480d-9a41-b70910bb5062" keyPath="C:\Users\teepi\Documents\Rising Camp\rising-test Documents\키페어\dona_rising_test_key.pem" port="22" nameFormat="DESCRIPTIVE" username="ubuntu" />
     </configs>
   </component>
 </project>

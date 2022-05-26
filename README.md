@@ -152,6 +152,19 @@ refresh token -> access token, refresh token 두가지 저장
   - 실행 명령어에 대한 권한 부여 chmod +x ./gradlew를 해결책으로 찾았지만 이 역시 Operation not permitted 에러 발생
   - 프로젝트 폴더 전체에 대한 권한 설정 sudo chmod -R 777 coupangeats-server-core-dona 실행으로 해결.
 
+
+### 2022-05-26
+1. API 개발 상황 
+- 4,5번 협의사항 반영, 7번 구현. 및 prod 서버 반영 완료. (6번은 refresh token에 관한것으로 무기한 보류)
+2. 개발 이슈
+- git pull 시 error 메시지 "Your local changes to the following files would be overwritten by merge:" 발생   
+기시감을 느껴 readme.md 등 변경 파일을 확인했더니 변경사항이 잘 반영되었다. 서버를 실행하면서 계속해서 갱신되는 파일이 있어 git 버전과 충돌을 일으키는 것으로 추정되며, 서버 실행에는 문제가 없는듯하다. 따라서 무시하고 빌드를 진행했다.   
+  어떻게든 진행은 하고 있지만 생각치 못한 부분에서 에러가 나는 것이 참 해결하기 난해하고 어렵다.
+- build 시도시 권한 에러 Permission denied 발생. 로컬 환경의 권한이 그대로 적용되어 일어나는 문제. 역시 전체 프로젝트의 권한을 주고 해결. 자동 배포를 위해선 해당 부분을 해결해야할 텐데, 어떤 부분을 어떻게 설정해야하는지 알 수 없어 어렵다.
+  
+  
+
+
 * * *
 
 ## Core 개발 일지
