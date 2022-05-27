@@ -151,4 +151,45 @@ public class RestaurantQuery {
             "WHERE restaurant_id = ? AND hide_flag = 0\n" +
             "ORDER BY image_id ASC;";
 
+    public static String getResKindQuery = "SELECT kind_id,\n" +
+            "       res_kind_name as kind_name\n" +
+            "FROM res_kind\n" +
+            "WHERE restaurant_id = ? AND status = 1\n" +
+            "ORDER BY kind_id ASC;";
+
+    public static String getResKindMenuQuery = "SELECT kind_id,\n" +
+            "       kind_name,\n" +
+            "       RM.menu_id,\n" +
+            "       menu_name,\n" +
+            "       menu_price,\n" +
+            "       menu_description,\n" +
+            "       url as menu_image_url\n" +
+            "FROM (\n" +
+            "    SELECT restaurant_id,\n" +
+            "           res_menu_id,\n" +
+            "           menu_id,\n" +
+            "           name as menu_name,\n" +
+            "           description as menu_description,\n" +
+            "           price as menu_price\n" +
+            "     FROM res_menu\n" +
+            "    WHERE restaurant_id = ?\n" +
+            ") RM\n" +
+            "join (\n" +
+            "    SELECT res_kind_id,\n" +
+            "           menu_id\n" +
+            "    FROM res_menu_kind\n" +
+            ") RMK ON RMK.menu_id = RM.menu_id\n" +
+            "join (\n" +
+            "    SELECT res_kind_id,\n" +
+            "           res_kind_name as kind_name,\n" +
+            "           kind_id\n" +
+            "    FROM res_kind\n" +
+            ") RK ON RMK.res_kind_id = RK.res_kind_id\n" +
+            "left join (\n" +
+            "    SELECT res_menu_id,\n" +
+            "           url\n" +
+            "    FROM res_menu_image\n" +
+            "    WHERE image_id = 1\n" +
+            ") RMI ON RM.res_menu_id = RMI.res_menu_id\n" +
+            "ORDER BY kind_id, menu_id ASC;";
 }

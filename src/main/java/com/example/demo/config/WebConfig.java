@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    //     제외대상 회원가입, 동네 조회, 일반 로그인
+    //     제외대상
     private String[] INTERCEPTOR_WHITE_LIST = {
             "/app/users/sign-up", "/app/users", "/app/users/sign-in", "/app/events/**", "/app/categories/**", "/app/restaurants/**"
     };

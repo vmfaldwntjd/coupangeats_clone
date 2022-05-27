@@ -2,6 +2,8 @@ package com.example.demo.src.restaurant;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.restaurant.model.GetFNRestaurantRes;
+import com.example.demo.src.restaurant.model.GetResKindMenuRes;
+import com.example.demo.src.restaurant.model.GetResKindRes;
 import com.example.demo.src.restaurant.model.GetRestaurantRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
@@ -124,6 +126,26 @@ public class RestaurantProvider {
         try {
             GetRestaurantRes getRestaurantRes = restaurantDao.getRestaurantById(restaurantId, longitude, latitude);
             return getRestaurantRes;
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 각 가게 메인화면 메뉴 리스트
+    public List<GetResKindRes> getResKindList(int restaurantId) throws BaseException {
+        try {
+            List<GetResKindRes> getResKindResList = restaurantDao.getResKindList(restaurantId);
+            return getResKindResList;
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 각 가게 메인화면 종류 별 메뉴 리스트
+    public List<GetResKindMenuRes> getResKindMenuList(int restaurantId) throws  BaseException{
+        try{
+            List<GetResKindMenuRes> getResKindMenuResList = restaurantDao.getResKindMenuList(restaurantId);
+            return getResKindMenuResList;
         } catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }

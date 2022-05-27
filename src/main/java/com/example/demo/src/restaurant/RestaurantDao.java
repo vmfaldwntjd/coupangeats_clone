@@ -1,6 +1,8 @@
 package com.example.demo.src.restaurant;
 
 import com.example.demo.src.restaurant.model.GetFNRestaurantRes;
+import com.example.demo.src.restaurant.model.GetResKindMenuRes;
+import com.example.demo.src.restaurant.model.GetResKindRes;
 import com.example.demo.src.restaurant.model.GetRestaurantRes;
 import com.example.demo.src.restaurant.query.RestaurantQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,5 +131,26 @@ public class RestaurantDao {
         getRestaurantRes.setResImageUrlList(resImageUrlList);
 
         return getRestaurantRes;
+    }
+
+    public List<GetResKindRes> getResKindList(int restaurantId){
+        return this.jdbcTemplate.query(getResKindQuery,
+                (rs, rowNum) -> new GetResKindRes(
+                        rs.getInt("kind_id"),
+                        rs.getString("kind_name")
+                ), restaurantId);
+    }
+
+    public List<GetResKindMenuRes> getResKindMenuList(int restaurantId){
+        return this.jdbcTemplate.query(getResKindMenuQuery,
+                (rs, rowNum) -> new GetResKindMenuRes(
+                        rs.getInt("kind_id"),
+                        rs.getString("kind_name"),
+                        rs.getInt("menu_id"),
+                        rs.getString("menu_name"),
+                        rs.getInt("menu_price"),
+                        rs.getString("menu_image_url"),
+                        rs.getString("menu_description")
+                ), restaurantId);
     }
 }
