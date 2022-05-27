@@ -4,6 +4,8 @@ package com.example.demo.src.restaurant;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.restaurant.model.GetFNRestaurantRes;
+import com.example.demo.src.restaurant.model.GetResKindMenuRes;
+import com.example.demo.src.restaurant.model.GetResKindRes;
 import com.example.demo.src.restaurant.model.GetRestaurantRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
@@ -12,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static com.example.demo.config.BaseResponseStatus.RESTAURANTS_EMPTY_CATEGORY_ID;
 
 @RestController
 @RequestMapping("/app/restaurants")
@@ -67,9 +67,9 @@ public class RestaurantController {
         }
     }
     /**
-     * 8. 상단 광고 배너 리스트 조회 API
+     * 13. 가게 메인 화면 정보 API
      * [GET] /:restaurantId??longitude={longitude}&latitude={latitude}
-     * @return BaseResponse<GetEventTopRes>
+     * @return BaseResponse<GetRestaurantRes>
      *
      */
     @ResponseBody
@@ -83,5 +83,38 @@ public class RestaurantController {
         }
     }
 
+    /**
+     * 14. 가게 메인 화면 메뉴 종류 API
+     * [GET] /:restaurantId/kinds
+     * @return BaseResponse<List<GetResKindRes>>
+     *
+     */
+    @ResponseBody
+    @GetMapping("/{restaurantId}/kinds")
+    public BaseResponse<List<GetResKindRes>> getResKindList(@PathVariable Integer restaurantId){
+        try{
+            List<GetResKindRes> getResKindResList = restaurantProvider.getResKindList(restaurantId);
+            return new BaseResponse<>(getResKindResList);
+        }catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 15. 가게 메인 화면 종류별 메뉴
+     * [GET] /:restaurantId/menus
+     * @return BaseResponse<List<GetResKindMenuRes>
+     *
+     */
+    @ResponseBody
+    @GetMapping("/{restaurantId}/menus")
+    public BaseResponse<List<GetResKindMenuRes>> getResKindMenuList(@PathVariable Integer restaurantId){
+        try {
+            List<GetResKindMenuRes> getResKindMenuList = restaurantProvider.getResKindMenuList(restaurantId);
+            return new BaseResponse<>(getResKindMenuList);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 }
