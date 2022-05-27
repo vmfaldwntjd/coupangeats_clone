@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class GetRestaurantRes {
     private int restaurantId;
     private String resName;
-    private String resImageUrl;
+    private List<String> resImageUrlList;
     private int isCheetah;
     private int deliveryTime;
     private double starPoint;

@@ -50,13 +50,13 @@ public class RestaurantQuery {
 
 
     public static String getRestaurantListByCategoryIdQuery(String sortBy, String orderBy){
-        return getRestaurantSortByQuery + "\n" + joinMainImageQuery + "\n" + joinCategoryIdQuery +"\n"+"WHERE distance < 3000\n" +
+        return getRestaurantSortByQuery + "\n" + joinCategoryIdQuery +"\n"+"WHERE distance < 3000\n" +
                 "ORDER BY "+sortBy+" "+orderBy+"\n" +
                 "LIMIT ?;";
     }
 
     public static String getRestaurantListQuery(String sortBy, String orderBy){
-        return getRestaurantSortByQuery + "\n" + joinMainImageQuery +"\n"+"WHERE distance < 3000\n" +
+        return getRestaurantSortByQuery +"\n"+"WHERE distance < 3000\n" +
                 "ORDER BY "+sortBy+" "+orderBy+"\n" +
                 "LIMIT ?;";
     }
@@ -68,7 +68,6 @@ public class RestaurantQuery {
             "SELECT R.restaurant_id,\n" +
             "       created_at,\n" +
             "       res_name,\n" +
-            "       res_image_url,\n" +
             "       is_cheetah,\n" +
             "       delivery_time,\n" +
             "       IFNULL(star_point, 0) as star_point,\n" +
@@ -112,12 +111,44 @@ public class RestaurantQuery {
 //            "ORDER BY ? ?\n" +
 //            "LIMIT ?;";
 
-    // 대표이미지 조회시 덧붙여 사용
-    public static String joinMainImageQuery = "join (\n" +
-            "    SELECT restaurant_id,\n" +
-            "           url as res_image_url\n" +
-            "    FROM res_image\n" +
-            "    WHERE image_id = 1 \n" +
-            ") I ON R.restaurant_id = I.restaurant_id";
+
+    // 가게별 메인 화면. 가게별 id를 통한 단 하나의 가게 조회.
+    public static String getRestaurantByIdQuery = "SELECT R.restaurant_id,\n" +
+            "                   created_at,\n" +
+            "                   res_name,\n" +
+            "                   is_cheetah,\n" +
+            "                   delivery_time,\n" +
+            "                   IFNULL(star_point, 0) as star_point,\n" +
+            "                   IFNULL(review_count, 0) as review_count,\n" +
+            "                   round(distance/1000, 1) as distance,\n" +
+            "                   min_delivery_fee\n" +
+            "            FROM (\n" +
+            "                SELECT restaurant_id,\n" +
+            "                       created_at,\n" +
+            "                        restaurant_name as res_name,\n" +
+            "                        is_cheetah,\n" +
+            "                        ST_Distance_Sphere(POINT(?,?), POINT(longitude, latitude)) as distance,\n" +
+            "                        delivery_time\n" +
+            "                FROM restaurant\n" +
+            "                WHERE restaurant_id = ?\n" +
+            "            ) R\n" +
+            "            left join (\n" +
+            "                SELECT restaurant_id,\n" +
+            "                       AVG(star_point) as star_point,\n" +
+            "                       COUNT(restaurant_id) as review_count\n" +
+            "                FROM review\n" +
+            "                GROUP BY restaurant_id\n" +
+            "            ) RV ON R.restaurant_id = RV.restaurant_id\n" +
+            "            join (\n" +
+            "                SELECT restaurant_id,\n" +
+            "                    MIN(delivery_fee) as min_delivery_fee\n" +
+            "                FROM res_delivery_fee\n" +
+            "                GROUP BY restaurant_id\n" +
+            "            ) RDF ON R.restaurant_id = RDF.restaurant_id;";
+
+    public static String getResImageUrlByIdQuery = "SELECT url as res_image_Url\n" +
+            "FROM res_image\n" +
+            "WHERE restaurant_id = ? AND hide_flag = 0\n" +
+            "ORDER BY image_id ASC;";
 
 }
