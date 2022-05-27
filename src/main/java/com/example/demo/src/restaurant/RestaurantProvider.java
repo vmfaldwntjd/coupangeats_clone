@@ -1,10 +1,7 @@
 package com.example.demo.src.restaurant;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.restaurant.model.GetFNRestaurantRes;
-import com.example.demo.src.restaurant.model.GetResKindMenuRes;
-import com.example.demo.src.restaurant.model.GetResKindRes;
-import com.example.demo.src.restaurant.model.GetRestaurantRes;
+import com.example.demo.src.restaurant.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,6 +144,25 @@ public class RestaurantProvider {
             List<GetResKindMenuRes> getResKindMenuResList = restaurantDao.getResKindMenuList(restaurantId);
             return getResKindMenuResList;
         } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 각 가게 메뉴별 메뉴 정보 출력
+    public GetResMenuRes getResMenuList(int restaurantId, int menuId) throws BaseException{
+        try {
+            GetResMenuRes getResMenuList = restaurantDao.getResMenuList(restaurantId, menuId);
+            return getResMenuList;
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetResMenuOptionRes> getResMenuOption(int restaurantId, int menuId) throws BaseException{
+        try {
+            List<GetResMenuOptionRes> getResMenuOption = restaurantDao.getResMenuOption(restaurantId, menuId);
+            return getResMenuOption;
+        }catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
     }

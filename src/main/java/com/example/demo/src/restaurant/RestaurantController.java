@@ -3,10 +3,7 @@ package com.example.demo.src.restaurant;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.restaurant.model.GetFNRestaurantRes;
-import com.example.demo.src.restaurant.model.GetResKindMenuRes;
-import com.example.demo.src.restaurant.model.GetResKindRes;
-import com.example.demo.src.restaurant.model.GetRestaurantRes;
+import com.example.demo.src.restaurant.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +100,7 @@ public class RestaurantController {
     /**
      * 15. 가게 메인 화면 종류별 메뉴
      * [GET] /:restaurantId/menus
-     * @return BaseResponse<List<GetResKindMenuRes>
+     * @return BaseResponse<List<GetResKindMenuRes>>
      *
      */
     @ResponseBody
@@ -117,4 +114,38 @@ public class RestaurantController {
         }
     }
 
+
+    /**
+     * 16. 메뉴 정보 API
+     * [GET] /:restaurantId/menus/:menuId
+     * @return BaseResponse<GetResMenuRes>
+     *
+     */
+    @ResponseBody
+    @GetMapping("/{restaurantId}/menus/{menuId}")
+    public BaseResponse<GetResMenuRes> getResMenuList(@PathVariable Integer restaurantId, @PathVariable int menuId){
+        try {
+            GetResMenuRes getResMenuList = restaurantProvider.getResMenuList(restaurantId, menuId);
+            return new BaseResponse<>(getResMenuList);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 17. 메뉴별 옵션 메뉴 API
+     * [GET] /:restaurantId/menus/:menuId/options
+     * @return BaseResponse<
+     * */
+    @ResponseBody
+    @GetMapping("/{restaurantId}/menus/{menuId}/options")
+    public BaseResponse<List<GetResMenuOptionRes>> getResMenuOptionRes(@PathVariable Integer restaurantId, @PathVariable int menuId){
+        try {
+            List<GetResMenuOptionRes> getResMenuOption = restaurantProvider.getResMenuOption(restaurantId, menuId);
+            return new BaseResponse<>(getResMenuOption);
+        } catch (BaseException exception){
+            System.out.println(exception);
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 }

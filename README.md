@@ -176,22 +176,12 @@ refresh token -> access token, refresh token 두가지 저장
   결과적으로 Query문 문자열 사이에 +를 이용해 String 파라미터를 연결시켜줌으로 해결.
 - sudo git commit -m 'messge' 실행 시 Committing is not possible because you have unmerged files. 에러 발생.   
   sudo git commit -am 'message' 실행으로 해결. -a는 별도의 add 명령어를 사용하지 않고 수정된 파일에 대해 add, commit을 한번에 수행.(한번도 add되지 않은 파일은 제외)
+- 인텔리제이 Update(git pull) 직후 Project JDK is not defined 이슈 발생   
+코어의 첫 push로 깃허브에 생긴 변동사항이 영향을 준 것으로 추정된다. 다행히 인텔리제이 안내문의 Setup SDK 클릭으로 해결.
 
-
-### 2022-05-27
+### 2022-05-28
 1. API 개발 상황
-- 8~13번 구현 완료. 12번까지 prod 서버 반영 완료. 12번 반환 객체 구성에 변동사항과 13번 구현 사항은 prod에 반영되지 않았음.
-
-2. 개발 이슈
-- Mysql 문법 오류   
-  jdbcTemplate는 세미 콜론 단위로 Query를 인식하는 듯함. 쿼리 작성중 변수 설정을 위해 SET키워드를 사용, jdbc가 올바른 문법이 아니라는 경고를 출력. 메소드 실행 방식에 대한 이해 부족으로 일어난 문제로, SET 선언을 삭제하고 필요한 부분에 ?를 삽입함으로 해결.
-- jdbcTemplate "Oder By ? ?" String 변수 적용 불가 이슈   
-  url에서 리스트 정렬 기준을 받아와 Query문에 삽입하기 위해 param리스트에 넣었으나, 결과는 정상 실행되면서 파라미터 값이 반영되지않는 오류가 발생. String값의 경우 그 특수성으로 실제 삽입될때 ''으로 감싸여져 들어가며, 이때문에 필드 검색이 아닌 ORDER By 같은 키워드가 들어가는 자리에 배치될경우 오류를 뱉는다.   
-  가장 어려웠던 점은 sortBy, OrderBy 두가지 파라미터가 삽입될때는 이를 무시하고 일반적인 결과를 반환하면서, 하나의 파라미터를 삽입할때 오류를 발생시켰다는 것이다. 문법적으로 어떤 차이가 있는지 적용시 어떻게 이뤄지는지 알 수 없어 애를 먹었다.   
-  결과적으로 Query문 문자열 사이에 +를 이용해 String 파라미터를 연결시켜줌으로 해결.
-- sudo git commit -m 'messge' 실행 시 Committing is not possible because you have unmerged files. 에러 발생.   
-  sudo git commit -am 'message' 실행으로 해결. -a는 별도의 add 명령어를 사용하지 않고 수정된 파일에 대해 add, commit을 한번에 수행.(한번도 add되지 않은 파일은 제외)
-
+- 14~17번 구현 완료. prod 서버는 15번까지 반영 완료.
   
 
 * * *
