@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.example.demo.config.BaseResponseStatus.*;
 
 //Provider : Read의 비즈니스 로직 처리
@@ -66,4 +68,24 @@ public class UserProvider {
         }
     }
 
+    //core 추가
+    public List<GetOrderRes> getOrdersByDeliveryStatus(int user_id, int delivery_status) throws BaseException {
+        try {
+            List<GetOrderRes> getOrderRes = userDao.getOrdersByDeliveryStatus(user_id, delivery_status);
+            return getOrderRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    //core 추가
+    public List<GetReceiptRes> getReceipts(int userId, int orderId) throws BaseException {
+        try {
+            List<GetReceiptRes> getReceiptRes = userDao.getReceipts(userId, orderId);
+            return getReceiptRes;
+        } catch (Exception exception) {
+            System.out.println(exception); //오류 내용 확인용
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

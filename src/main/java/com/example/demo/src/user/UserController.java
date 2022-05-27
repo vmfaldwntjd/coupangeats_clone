@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.List;
+
 import static com.example.demo.config.BaseResponseStatus.*;
 import static com.example.demo.utils.ValidationRegex.*;
 
@@ -182,6 +184,39 @@ public class UserController {
             return new BaseResponse(null);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    // core 추가
+    @ResponseBody   // return되는 자바 객체를 JSON으로 바꿔서 HTTP body에 담는 어노테이션.
+    //  JSON은 HTTP 통신 시, 데이터를 주고받을 때 많이 쓰이는 데이터 포맷.
+    @GetMapping("/{userId}/orders") // (GET) 127.0.0.1:9000/app/users
+    // GET 방식의 요청을 매핑하기 위한 어노테이션
+    public BaseResponse<List<GetOrderRes>> getOrders(@PathVariable("userId") int userId, @RequestParam(required = false) int delivery_status) {
+        //  @RequestParam은, 1개의 HTTP Request 파라미터를 받을 수 있는 어노테이션(?뒤의 값). default로 RequestParam은 반드시 값이 존재해야 하도록 설정되어 있지만, (전송 안되면 400 Error 유발)
+        //  지금 예시와 같이 required 설정으로 필수 값에서 제외 시킬 수 있음
+        //  defaultValue를 통해, 기본값(파라미터가 없는 경우, 해당 파라미터의 기본값 설정)을 지정할 수 있음
+        try {
+            //delivery_status의 존재 유무 확인하는 예외처리는 생략하였습니다.
+            List<GetOrderRes> getOrderRes = userProvider.getOrdersByDeliveryStatus(userId, delivery_status);
+            return new BaseResponse<>(getOrderRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    //core 추가
+    @ResponseBody
+    @GetMapping("/{userId}/orders/{orderId}/receipt")
+    public BaseResponse<List<GetReceiptRes>> getReceipts(@PathVariable("userId") int userId, @PathVariable("orderId") int orderId) {
+        //  @RequestParam은, 1개의 HTTP Request 파라미터를 받을 수 있는 어노테이션(?뒤의 값). default로 RequestParam은 반드시 값이 존재해야 하도록 설정되어 있지만, (전송 안되면 400 Error 유발)
+        //  지금 예시와 같이 required 설정으로 필수 값에서 제외 시킬 수 있음
+        //  defaultValue를 통해, 기본값(파라미터가 없는 경우, 해당 파라미터의 기본값 설정)을 지정할 수 있음
+        try {
+            List<GetReceiptRes> getReceiptRes = userProvider.getReceipts(userId, orderId);
+            return new BaseResponse<>(getReceiptRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
         }
     }
 
