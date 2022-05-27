@@ -38,6 +38,7 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_PASSWORD(false, 2022, "비밀번호 형식을 확인해주세요."),
 
     RESTAURANTS_EMPTY_CATEGORY_ID(false, 2023, "카테고리 번호를 입력해주세요."),
+    RESTAURANTS_INVALID_SORT_BY(false, 2024, "유효하지 않은 정렬 기준입니다."),
 
     /**
      * 3000 : Response 오류
