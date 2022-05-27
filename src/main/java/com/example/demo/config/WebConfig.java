@@ -10,7 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     //     제외대상
     private String[] INTERCEPTOR_WHITE_LIST = {
-            "/app/users/sign-up", "/app/users", "/app/users/sign-in", "/app/events/**", "/app/categories/**", "/app/restaurants/**"
+            "/app/users/sign-up", "/app/users", "/app/users/sign-in", "/app/events/**", "/app/categories/**", "/app/restaurants/**",
+            "/test/log"
     };
 
     @Autowired
