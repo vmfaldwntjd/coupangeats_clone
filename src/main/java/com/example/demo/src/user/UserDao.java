@@ -208,6 +208,7 @@ public class UserDao {
                 getReceiptParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
     }
 
+    //core 추가
     public GetUserAddressDetailRes getUserAddressDetail(int userId, int userAddressId) {
         String getAddressDetailQuery = "select user_address_id, detail_address, doro_name_address, way_guide, kind, address_alias, address_name from user_address\n" +
                 "where user_id = ? and user_address_id = ?;";
