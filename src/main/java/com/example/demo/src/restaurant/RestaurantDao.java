@@ -1,9 +1,6 @@
 package com.example.demo.src.restaurant;
 
-import com.example.demo.src.restaurant.model.GetFNRestaurantRes;
-import com.example.demo.src.restaurant.model.GetResKindMenuRes;
-import com.example.demo.src.restaurant.model.GetResKindRes;
-import com.example.demo.src.restaurant.model.GetRestaurantRes;
+import com.example.demo.src.restaurant.model.*;
 import com.example.demo.src.restaurant.query.RestaurantQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -152,5 +149,53 @@ public class RestaurantDao {
                         rs.getString("menu_image_url"),
                         rs.getString("menu_description")
                 ), restaurantId);
+    }
+
+    public GetResMenuRes getResMenuList(int restaurantId, int menuId){
+        Object[] getResMenuListParam = new Object[]{restaurantId, menuId};
+        GetResMenuRes getResMenuList = this.jdbcTemplate.queryForObject(getResMenuQuery,
+                (rs, rowNum) -> new GetResMenuRes(
+                        rs.getInt("menu_id"),
+                        rs.getString("menu_name"),
+                        rs.getInt("menu_price"),
+                        null,
+                        rs.getString("menu_description")
+                ), getResMenuListParam);
+
+        List<String> menuImageUrlList = this.jdbcTemplate.query(getResMenuImageUrlListQuery,
+                (rs, rowNum) -> rs.getString("menu_image_url"),
+                getResMenuListParam);
+
+        getResMenuList.setMenuImageUrlList(menuImageUrlList);
+
+        return getResMenuList;
+    }
+
+    /** 코드 구성에 재고가 필요합니다.
+     * */
+    public List<GetResMenuOptionRes> getResMenuOption(int restaurantId, int menuId){
+        Object[] getResMenuOptionParam = new Object[]{restaurantId, menuId};
+        List<GetResMenuOptionRes> getResMenuOption = this.jdbcTemplate.query(getResMenuOptionQuery,
+                (rs, rowNum) -> new GetResMenuOptionRes(
+                        rs.getInt("option_id"),
+                        rs.getString("option_name"),
+                        rs.getInt("is_optional") == 1? true : false,
+                        rs.getInt("res_option_id"),
+                        null,
+                        null
+                ), getResMenuOptionParam);
+        for(int i = 0; i < getResMenuOption.size(); i++){
+            GetResMenuOptionRes temp = getResMenuOption.get(i);
+            int resOptionId = temp.getResOptionId();
+            List<String> menuOptionListName = this.jdbcTemplate.query(getResMenuOptionListQuery,
+                    (rs, rowNum) -> rs.getString("option_list_name"),
+                    resOptionId);
+            List<Integer> menuOptionListPrice = this.jdbcTemplate.query(getResMenuOptionListQuery,
+                    (rs, rowNum) -> rs.getInt("option_list_price"),
+                    resOptionId);
+            temp.setOptionListName(menuOptionListName);
+            temp.setOptionListPrice(menuOptionListPrice);
+        }
+        return getResMenuOption;
     }
 }

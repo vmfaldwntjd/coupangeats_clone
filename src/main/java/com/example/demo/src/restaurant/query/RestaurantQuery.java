@@ -192,4 +192,53 @@ public class RestaurantQuery {
             "    WHERE image_id = 1\n" +
             ") RMI ON RM.res_menu_id = RMI.res_menu_id\n" +
             "ORDER BY kind_id, menu_id ASC;";
+
+
+    public static String getResMenuQuery = "SELECT\n" +
+            "menu_id,\n" +
+            "       name as menu_name,\n" +
+            "       price as menu_price,\n" +
+            "       description as menu_description\n" +
+            "From res_menu\n" +
+            "WHERE restaurant_id = ? AND menu_id = ?;\n";
+
+    public static String getResMenuImageUrlListQuery ="SELECT menu_image_url, image_id\n" +
+            "FROM (\n" +
+            "    SELECT res_menu_id\n" +
+            "    FROM res_menu\n" +
+            "    WHERE restaurant_id = ? AND menu_id = ?\n" +
+            "    ) RM\n" +
+            "JOIN (\n" +
+            "    SELECT res_menu_id,\n" +
+            "           image_id,\n" +
+            "           url as menu_image_url\n" +
+            "    FROM res_menu_image\n" +
+            ") RMI ON RM.res_menu_id = RMI.res_menu_id\n" +
+            "ORDER BY image_id";
+
+    public static String getResMenuOptionQuery = "SELECT RO.option_id,\n" +
+            "       option_name,\n" +
+            "       is_optional,\n" +
+            "       res_option_id\n" +
+            "FROM (SELECT res_menu_id\n" +
+            "    FROM res_menu\n" +
+            "    WHERE restaurant_id =? AND menu_id=?\n" +
+            ") RM join\n" +
+            "     ( SELECT res_menu_id,\n" +
+            "              option_id\n" +
+            "       FROM res_menu_option\n" +
+            "     ) RMO ON RM.res_menu_id =RMO.res_menu_id\n" +
+            "join (\n" +
+            "    SELECT res_option_id,\n" +
+            "           option_id,\n" +
+            "    option_name,\n" +
+            "    is_optional\n" +
+            "    FROM res_option\n" +
+            ") RO ON RMO.option_id = RO.option_id;";
+
+    public static String getResMenuOptionListQuery = "SELECT res_option_id,\n" +
+            "       option_list_name,\n" +
+            "       option_price as option_list_price\n" +
+            "FROM res_option_list\n" +
+            "WHERE res_option_id = ?";
 }

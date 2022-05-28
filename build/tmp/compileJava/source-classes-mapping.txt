@@ -1,9 +1,16 @@
+<<<<<<< HEAD
 com/example/demo/src/restaurant/RestaurantDao.java
  com.example.demo.src.restaurant.RestaurantDao
-com/example/demo/utils/SHA256.java
- com.example.demo.utils.SHA256
+=======
+com/example/demo/config/BaseException.java
+ com.example.demo.config.BaseException
+com/example/demo/src/categories/CategoryDao.java
+ com.example.demo.src.categories.CategoryDao
 com/example/demo/src/event/model/GetEventTopRes.java
  com.example.demo.src.event.model.GetEventTopRes
+>>>>>>> 80537dd584267ffb97b088f20e7643342782d204
+com/example/demo/utils/SHA256.java
+ com.example.demo.utils.SHA256
 com/example/demo/config/Constant.java
  com.example.demo.config.Constant
 com/example/demo/src/event/EventDao.java
@@ -16,58 +23,97 @@ com/example/demo/utils/ValidationRegex.java
  com.example.demo.utils.ValidationRegex
 com/example/demo/src/event/EventService.java
  com.example.demo.src.event.EventService
+<<<<<<< HEAD
 com/example/demo/config/WebConfig.java
  com.example.demo.config.WebConfig
 com/example/demo/src/restaurant/query/RestaurantQuery.java
  com.example.demo.src.restaurant.query.RestaurantQuery
 com/example/demo/src/user/model/GetOrderRes.java
  com.example.demo.src.user.model.GetOrderRes
+=======
+com/example/demo/src/restaurant/model/GetResMenuOptionRes.java
+ com.example.demo.src.restaurant.model.GetResMenuOptionRes
+com/example/demo/src/restaurant/query/RestaurantQuery.java
+ com.example.demo.src.restaurant.query.RestaurantQuery
+com/example/demo/src/user/model/PostSignInReq.java
+ com.example.demo.src.user.model.PostSignInReq
+com/example/demo/src/restaurant/model/GetRestaurantRes.java
+ com.example.demo.src.restaurant.model.GetRestaurantRes
+>>>>>>> 80537dd584267ffb97b088f20e7643342782d204
 com/example/demo/src/user/model/PostSignUpInRes.java
  com.example.demo.src.user.model.PostSignUpInRes
 com/example/demo/src/restaurant/model/GetFNRestaurantRes.java
  com.example.demo.src.restaurant.model.GetFNRestaurantRes
+<<<<<<< HEAD
 com/example/demo/src/restaurant/model/GetRestaurantRes.java
  com.example.demo.src.restaurant.model.GetRestaurantRes
+=======
+com/example/demo/src/categories/model/GetCategoryRes.java
+ com.example.demo.src.categories.model.GetCategoryRes
+>>>>>>> 80537dd584267ffb97b088f20e7643342782d204
 com/example/demo/config/BaseResponseStatus.java
  com.example.demo.config.BaseResponseStatus
 com/example/demo/src/user/model/PatchUserReq.java
  com.example.demo.src.user.model.PatchUserReq
+<<<<<<< HEAD
 com/example/demo/src/restaurant/RestaurantProvider.java
  com.example.demo.src.restaurant.RestaurantProvider
+=======
+com/example/demo/config/interceptor/JwtAuthInterceptor.java
+ com.example.demo.config.interceptor.JwtAuthInterceptor
+>>>>>>> 80537dd584267ffb97b088f20e7643342782d204
 com/example/demo/src/user/model/GetEmailUserRes.java
  com.example.demo.src.user.model.GetEmailUserRes
 com/example/demo/src/event/EventProvider.java
  com.example.demo.src.event.EventProvider
-com/example/demo/src/WebSecurityConfig.java
- com.example.demo.src.WebSecurityConfig
+<<<<<<< HEAD
+=======
+com/example/demo/src/user/model/GetSignInJwtRes.java
+ com.example.demo.src.user.model.GetSignInJwtRes
 com/example/demo/src/categories/query/CategoryQuery.java
  com.example.demo.src.categories.query.CategoryQuery
+>>>>>>> 80537dd584267ffb97b088f20e7643342782d204
+com/example/demo/src/WebSecurityConfig.java
+ com.example.demo.src.WebSecurityConfig
 com/example/demo/src/test/TestController.java
  com.example.demo.src.test.TestController
 com/example/demo/src/event/query/EventQuery.java
  com.example.demo.src.event.query.EventQuery
 com/example/demo/src/restaurant/model/GetResKindMenuRes.java
  com.example.demo.src.restaurant.model.GetResKindMenuRes
+<<<<<<< HEAD
 com/example/demo/src/restaurant/model/GetResKindRes.java
  com.example.demo.src.restaurant.model.GetResKindRes
+=======
+>>>>>>> 80537dd584267ffb97b088f20e7643342782d204
 com/example/demo/src/categories/CategoryController.java
  com.example.demo.src.categories.CategoryController
+com/example/demo/src/restaurant/model/GetResKindRes.java
+ com.example.demo.src.restaurant.model.GetResKindRes
 com/example/demo/config/secret/Secret.java
  com.example.demo.config.secret.Secret
 com/example/demo/utils/JwtService.java
  com.example.demo.utils.JwtService
 com/example/demo/src/user/model/GetUserAddressRes.java
  com.example.demo.src.user.model.GetUserAddressRes
+<<<<<<< HEAD
 com/example/demo/src/user/model/PostSignInReq.java
  com.example.demo.src.user.model.PostSignInReq
+=======
+com/example/demo/DemoApplication.java
+ com.example.demo.DemoApplication
+>>>>>>> 80537dd584267ffb97b088f20e7643342782d204
 com/example/demo/src/categories/CategoryProvider.java
  com.example.demo.src.categories.CategoryProvider
 com/example/demo/config/BaseResponse.java
  com.example.demo.config.BaseResponse
+com/example/demo/src/restaurant/model/GetResMenuRes.java
+ com.example.demo.src.restaurant.model.GetResMenuRes
 com/example/demo/src/user/model/PostSignUpReq.java
  com.example.demo.src.user.model.PostSignUpReq
 com/example/demo/src/user/model/User.java
  com.example.demo.src.user.model.User
+<<<<<<< HEAD
 com/example/demo/src/categories/CategoryDao.java
  com.example.demo.src.categories.CategoryDao
 com/example/demo/src/user/model/GetUserRes.java
@@ -84,12 +130,33 @@ com/example/demo/DemoApplication.java
  com.example.demo.DemoApplication
 com/example/demo/src/restaurant/RestaurantController.java
  com.example.demo.src.restaurant.RestaurantController
+=======
+com/example/demo/utils/JwtService.java
+ com.example.demo.utils.JwtService
+com/example/demo/src/user/model/GetUserRes.java
+ com.example.demo.src.user.model.GetUserRes
+com/example/demo/config/WebConfig.java
+ com.example.demo.config.WebConfig
+com/example/demo/src/restaurant/RestaurantDao.java
+ com.example.demo.src.restaurant.RestaurantDao
+com/example/demo/src/user/model/GetOrderRes.java
+ com.example.demo.src.user.model.GetOrderRes
+>>>>>>> 80537dd584267ffb97b088f20e7643342782d204
 com/example/demo/src/user/UserDao.java
  com.example.demo.src.user.UserDao
 com/example/demo/src/user/UserService.java
  com.example.demo.src.user.UserService
+<<<<<<< HEAD
 com/example/demo/src/user/model/GetReceiptRes.java
  com.example.demo.src.user.model.GetReceiptRes
+=======
+com/example/demo/src/restaurant/RestaurantProvider.java
+ com.example.demo.src.restaurant.RestaurantProvider
+com/example/demo/src/user/model/GetReceiptRes.java
+ com.example.demo.src.user.model.GetReceiptRes
+com/example/demo/src/restaurant/RestaurantController.java
+ com.example.demo.src.restaurant.RestaurantController
+>>>>>>> 80537dd584267ffb97b088f20e7643342782d204
 com/example/demo/src/user/UserController.java
  com.example.demo.src.user.UserController
 com/example/demo/src/user/UserProvider.java
