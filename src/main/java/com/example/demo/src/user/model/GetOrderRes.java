@@ -8,9 +8,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class GetOrderRes {
-    private int orderId;
+    private String orderId;
     private int restaurantId;
     private int userId;
+    private String name;
+    private String restaurantName;
     private int deliveryStatus;
     private int orderTotalPrice;
     private String url;

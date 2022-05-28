@@ -162,42 +162,66 @@ public class UserDao {
 
     //core 추가
     public List<GetOrderRes> getOrdersByDeliveryStatus(int user_id, int delivery_status) {
-        String getUsersByNicknameQuery = "select `order`.order_id, `order`.restaurant_id, user_id, delivery_status, order_total_price, url from `order`\n" +
-                "inner join receipt on `order`.order_id = receipt.order_id\n" +
+        String getUsersByNicknameQuery = "select `order`.order_id, `order`.restaurant_id, `order`.user_id, name, restaurant_name, deliveryStatus, order_total_price, url from `order`\n" +
                 "inner join res_image on res_image.restaurant_id = `order`.restaurant_id\n" +
-                "where (user_id = ? and delivery_status = ?);"; // 해당 이메일을 만족하는 유저를 조회하는 쿼리문
+                "inner join res_menu on res_menu.restaurant_id = `order`.restaurant_id\n" +
+                "inner join restaurant on `order`.restaurant_id = restaurant.restaurant_id\n" +
+                "where (`order`.user_id = ? and deliveryStatus = ?);"; // 해당 이메일을 만족하는 유저를 조회하는 쿼리문
         Object[] getOrderParams = new Object[]{user_id, delivery_status};
         return this.jdbcTemplate.query(getUsersByNicknameQuery,
                 (rs, rowNum) -> new GetOrderRes(
-                        rs.getInt("order_id"),
+                        rs.getString("order_id"),
                         rs.getInt("restaurant_id"),
                         rs.getInt("user_id"),
-                        rs.getInt("delivery_status"),
+                        rs.getString("name"),
+                        rs.getString("restaurant_name"),
+                        rs.getInt("deliveryStatus"),
                         rs.getInt("order_total_price"),
                         rs.getString("url")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 getOrderParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
     }
 
     //core 추가
-    public List<GetReceiptRes> getReceipts(int userId, int orderId) {
-        String getReceiptsQuery = "select receipt_id, receipt.order_id, menu_name, pay_info, discount_fee, pay_by, delivery_fee, order_price, delivery_address, order.order_total_price, user.user_id from receipt\n" +
+    public List<GetReceiptRes> getReceipts(int userId, String orderId) {
+        String getReceiptsQuery = "select receipt_id, receipt.order_id, res_menu.name, price, pay_info, restaurant_name, discount_fee, pay_by, delivery_fee, order_price, delivery_address, order.order_total_price, user.user_id from receipt\n" +
                 "inner join `order` on `order`.order_id = receipt.order_id\n" +
                 "inner join user on receipt.user_id = user.user_id\n" +
+                "inner join restaurant on `order`.restaurant_id = restaurant.restaurant_id\n" +
+                "inner join res_menu on restaurant.restaurant_id = res_menu.restaurant_id\n" +
                 "where (user.user_id = ? and `order`.order_id = ?);";
         Object[] getReceiptParams = new Object[]{userId, orderId};
         return this.jdbcTemplate.query(getReceiptsQuery,
                 (rs, rowNum) -> new GetReceiptRes(
                         rs.getInt("receipt_id"),
-                        rs.getInt("order_id"),
-                        rs.getInt("order_total_price"),
-                        rs.getString("menu_name"),
+                        rs.getString("order_id"),
+                        rs.getString("name"),
+                        rs.getInt("price"),
                         rs.getString("pay_info"),
+                        rs.getString("restaurant_name"),
                         rs.getInt("discount_fee"),
                         rs.getString("pay_by"),
                         rs.getInt("delivery_fee"),
                         rs.getInt("order_price"),
                         rs.getString("delivery_address"),
+                        rs.getInt("order_total_price"),
                         rs.getInt("user_id")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 getReceiptParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
+    }
+
+    //core 추가
+    public GetUserAddressDetailRes getUserAddressDetail(int userId, int userAddressId) {
+        String getAddressDetailQuery = "select user_address_id, detail_address, doro_name_address, way_guide, kind, address_alias, address_name from user_address\n" +
+                "where user_id = ? and user_address_id = ?;";
+        Object[] getAddressDetailParams = new Object[]{userId, userAddressId};
+        return this.jdbcTemplate.queryForObject(getAddressDetailQuery,
+                (rs, rowNum) -> new GetUserAddressDetailRes(
+                        rs.getInt("user_address_id"),
+                        rs.getString("detail_address"),
+                        rs.getString("doro_name_address"),
+                        rs.getString("way_guide"),
+                        rs.getInt("kind"),
+                        rs.getString("address_alias"),
+                        rs.getString("address_name")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
+                getAddressDetailParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
     }
 }
