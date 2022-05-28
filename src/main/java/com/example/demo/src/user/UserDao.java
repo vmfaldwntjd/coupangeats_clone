@@ -207,4 +207,20 @@ public class UserDao {
                         rs.getInt("user_id")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 getReceiptParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
     }
+
+    public GetUserAddressDetailRes getUserAddressDetail(int userId, int userAddressId) {
+        String getAddressDetailQuery = "select user_address_id, detail_address, doro_name_address, way_guide, kind, address_alias, address_name from user_address\n" +
+                "where user_id = ? and user_address_id = ?;";
+        Object[] getAddressDetailParams = new Object[]{userId, userAddressId};
+        return this.jdbcTemplate.queryForObject(getAddressDetailQuery,
+                (rs, rowNum) -> new GetUserAddressDetailRes(
+                        rs.getInt("user_address_id"),
+                        rs.getString("detail_address"),
+                        rs.getString("doro_name_address"),
+                        rs.getString("way_guide"),
+                        rs.getInt("kind"),
+                        rs.getString("address_alias"),
+                        rs.getString("address_name")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
+                getAddressDetailParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
+    }
 }

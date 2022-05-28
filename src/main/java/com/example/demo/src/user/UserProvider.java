@@ -2,6 +2,7 @@ package com.example.demo.src.user;
 
 
 import com.example.demo.config.BaseException;
+import com.example.demo.config.BaseResponse;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
@@ -84,6 +85,17 @@ public class UserProvider {
         try {
             List<GetReceiptRes> getReceiptRes = userDao.getReceipts(userId, orderId);
             return getReceiptRes;
+        } catch (Exception exception) {
+            System.out.println(exception); //오류 내용 확인용
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    //core추가
+    public GetUserAddressDetailRes getUserAddressDetail(int userId, int userAddressId) throws BaseException {
+        try {
+            GetUserAddressDetailRes getUserAddressDetailRes = userDao.getUserAddressDetail(userId, userAddressId);
+            return getUserAddressDetailRes;
         } catch (Exception exception) {
             System.out.println(exception); //오류 내용 확인용
             throw new BaseException(DATABASE_ERROR);
