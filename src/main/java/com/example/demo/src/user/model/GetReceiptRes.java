@@ -9,14 +9,16 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GetReceiptRes {
     private int receiptId;
-    private int orderId;
-    private int orderTotalPrice;
-    private String menuName;
+    private String orderId;
+    private String name;
+    private int price;
     private String payInfo;
+    private String restaurantName;
     private int discountFee;
     private String payBy;
     private int deliveryFee;
     private int orderPrice;
     private String deliveryAddress;
+    private int orderTotalPrice;
     private int userId;
 }

@@ -74,12 +74,13 @@ public class UserProvider {
             List<GetOrderRes> getOrderRes = userDao.getOrdersByDeliveryStatus(user_id, delivery_status);
             return getOrderRes;
         } catch (Exception exception) {
+            System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
     //core 추가
-    public List<GetReceiptRes> getReceipts(int userId, int orderId) throws BaseException {
+    public List<GetReceiptRes> getReceipts(int userId, String orderId) throws BaseException {
         try {
             List<GetReceiptRes> getReceiptRes = userDao.getReceipts(userId, orderId);
             return getReceiptRes;
