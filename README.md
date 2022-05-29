@@ -202,6 +202,8 @@ refresh token -> access token, refresh token 두가지 저장
 ### 2022-05-28
 1. API 개발 상황
 - 14~17번 구현 완료. prod 서버는 15번까지 반영 완료.
+2. 개발 이슈
+- 로컬 환경 build 오류. commit 기록 확인 결과 core의 gitignore 미설정 상태의 push 진행. 오류 메시지와 함께 켜진 misc.xml 파일의 변경 내용을 삭제한뒤 빌드는 가능해짐.
 
 ### 2022-05-29
 #### 위클리 스크럼 2차 진행
