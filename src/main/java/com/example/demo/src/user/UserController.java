@@ -185,8 +185,7 @@ public class UserController {
                 GetUserAddressRes getUserAddressRes = userProvider.getUserAddress(userId, isSelected);
                 return new BaseResponse(getUserAddressRes);
             }
-
-            return new BaseResponse(null);
+            return new BaseResponse(null); //core 주석처리
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -240,6 +239,46 @@ public class UserController {
 
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    //core추가
+    @ResponseBody
+    @GetMapping("/{userId}/address-informations")
+    public BaseResponse<List<GetUserAddressInformationRes>> getUserAddressInformation(@PathVariable("userId") int userId) {
+
+        try {
+            int userIdByJwt = jwtService.getUserId();
+            if (userId != userIdByJwt) {
+                return new BaseResponse(INVALID_USER_JWT);
+            }
+            List<GetUserAddressInformationRes> getUserAddressInformationRes = userProvider.getUserAddressInformation(userId);
+            return new BaseResponse<>(getUserAddressInformationRes);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    //core 추가
+    @ResponseBody
+    @PatchMapping("/{userId}/addresses/{userAddressId}")
+    public BaseResponse<String> modifyUserAddressDetail(@PathVariable("userId") int userId, @PathVariable("userAddressId") int userAddressId, @RequestBody UserAddressDetail userAddressDetail) {
+        try {
+            //jwt에서 idx 추출.
+            int userIdByJwt = jwtService.getUserId();
+            //userIdx와 접근한 유저가 같은지 확인
+            if (userId != userIdByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            //같다면 유저네임 변경
+            PatchUserAddressDetailReq patchUserAddressDetailReq = new PatchUserAddressDetailReq(userAddressDetail.getDetailAddress(), userAddressDetail.getWayGuide(), userAddressDetail.getKind(), userAddressDetail.getAddressAlias());
+            userService.modifyUserAddressDetail(userId, userAddressId, patchUserAddressDetailReq);
+
+            String result = "회원정보가 수정되었습니다.";
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
         }
     }
 }

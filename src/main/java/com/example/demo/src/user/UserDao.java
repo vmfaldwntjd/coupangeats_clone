@@ -224,4 +224,28 @@ public class UserDao {
                         rs.getString("address_name")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 getAddressDetailParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
     }
+
+    //core추가
+    public List<GetUserAddressInformationRes> getUserAddressInformation(int userId) {
+        String getUserAddressInformationQuery = "select kind, detail_address, address_name, doro_name_address from user_address\n" +
+                "where user_id = ?;";
+        int getUserInformationParams = userId;
+        return this.jdbcTemplate.query(getUserAddressInformationQuery,
+                (rs, rowNum) -> new GetUserAddressInformationRes(
+                        rs.getInt("kind"),
+                        rs.getString("detail_address"),
+                        rs.getString("address_name"),
+                        rs.getString("doro_name_address")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
+                getUserInformationParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
+    }
+
+    //core 추가
+    public int modifyUserAddressDetail(int userId, int userAddressId, PatchUserAddressDetailReq patchUserAddressDetailReq) {
+        String modifyUserAddressDetailQuery = "update user_address set detail_address = ?, way_guide = ?, kind = ?, address_alias = ? where (user_id = ? and user_address_id = ?);"; // 해당 userIdx를 만족하는 User를 해당 nickname으로 변경한다.
+        Object[] modifyUserAddressDetailParams = new Object[]{patchUserAddressDetailReq.getDetailAddress(), patchUserAddressDetailReq.getWayGuide(), patchUserAddressDetailReq.getKind()
+        , patchUserAddressDetailReq.getAddressAlias(), userId, userAddressId}; // 주입될 값들(nickname, userIdx) 순
+
+        return this.jdbcTemplate.update(modifyUserAddressDetailQuery, modifyUserAddressDetailParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
+    }
+
 }
