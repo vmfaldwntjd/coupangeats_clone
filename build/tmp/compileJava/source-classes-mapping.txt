@@ -98,6 +98,10 @@ com/example/demo/src/user/model/UserAddressDetail.java
  com.example.demo.src.user.model.UserAddressDetail
 com/example/demo/src/user/model/PatchUserAddressDetailReq.java
  com.example.demo.src.user.model.PatchUserAddressDetailReq
+com/example/demo/src/user/model/PostUserAddressRes.java
+ com.example.demo.src.user.model.PostUserAddressRes
+com/example/demo/src/user/model/PostUserAddressReq.java
+ com.example.demo.src.user.model.PostUserAddressReq
 com/example/demo/src/user/UserDao.java
  com.example.demo.src.user.UserDao
 com/example/demo/src/user/UserService.java

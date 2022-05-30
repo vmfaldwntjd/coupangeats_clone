@@ -121,4 +121,16 @@ public class UserService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    //core 추가
+    public PostUserAddressRes createUserAddress(int userId, PostUserAddressReq postUserAddressReq) throws BaseException {
+        try {
+            int userIdx = userDao.createUserAddress(userId, postUserAddressReq);
+            return new PostUserAddressRes(userIdx);
+
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

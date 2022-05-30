@@ -248,4 +248,14 @@ public class UserDao {
         return this.jdbcTemplate.update(modifyUserAddressDetailQuery, modifyUserAddressDetailParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
     }
 
+    //core 추가
+    public int createUserAddress(int userId, PostUserAddressReq postUserAddressReq){
+        String createUserAddressQuery = "insert into user_address (user_id, address_name, doro_name_address, detail_address, way_guide, address_alias, kind) VALUES (?,?,?,?,?,?,?)";
+        Object[] createUserAddressParams = new Object[]{userId, postUserAddressReq.getAddressName(), postUserAddressReq.getDoroNameAddress(), postUserAddressReq.getDetailAddress(),
+                postUserAddressReq.getWayGuide(),postUserAddressReq.getAddressAlias(), postUserAddressReq.getKind()};
+        this.jdbcTemplate.update(createUserAddressQuery, createUserAddressParams);
+
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class);
+    }
 }

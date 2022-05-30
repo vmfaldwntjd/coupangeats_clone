@@ -281,4 +281,20 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    //core 추가
+    @ResponseBody
+    @PostMapping("/{userId}/addresses")
+    public BaseResponse<PostUserAddressRes> createUserAddress(@PathVariable("userId") int userId, @RequestBody PostUserAddressReq postUserAddressReq) {
+        try {
+            int userIdByJwt = jwtService.getUserId();
+            if (userId != userIdByJwt) {
+                return new BaseResponse(INVALID_USER_JWT);
+            }
+            PostUserAddressRes postUserAddressRes = userService.createUserAddress(userId, postUserAddressReq);
+            return new BaseResponse<>(postUserAddressRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }
