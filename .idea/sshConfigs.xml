@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SshConfigs">
-    <configs>
-      <sshConfig connectionConfig="{&quot;serverAliveInterval&quot;:300}" host="15.165.158.38" id="2100e57e-917c-480d-9a41-b70910bb5062" keyPath="C:\Users\teepi\Documents\Rising Camp\rising-test Documents\키페어\dona_rising_test_key.pem" port="22" nameFormat="DESCRIPTIVE" username="ubuntu" />
-    </configs>
-  </component>
-</project>
