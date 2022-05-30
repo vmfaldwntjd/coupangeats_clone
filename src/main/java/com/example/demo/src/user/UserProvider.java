@@ -110,4 +110,15 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    //core추가
+    public List<GetUserAddressInformationRes> getUserAddressInformation(int userId) throws BaseException {
+        try {
+            List<GetUserAddressInformationRes> getUserAddressInformationRes = userDao.getUserAddressInformation(userId);
+            return getUserAddressInformationRes;
+        } catch (Exception exception) {
+            System.out.println(exception); //오류 내용 확인용
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
