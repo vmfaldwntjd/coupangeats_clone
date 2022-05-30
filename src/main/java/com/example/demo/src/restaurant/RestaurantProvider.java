@@ -144,6 +144,7 @@ public class RestaurantProvider {
             List<GetResKindMenuRes> getResKindMenuResList = restaurantDao.getResKindMenuList(restaurantId);
             return getResKindMenuResList;
         } catch (Exception exception){
+            System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
@@ -154,6 +155,7 @@ public class RestaurantProvider {
             GetResMenuRes getResMenuList = restaurantDao.getResMenuList(restaurantId, menuId);
             return getResMenuList;
         } catch (Exception exception){
+            System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
@@ -163,6 +165,7 @@ public class RestaurantProvider {
             List<GetResMenuOptionRes> getResMenuOption = restaurantDao.getResMenuOption(restaurantId, menuId);
             return getResMenuOption;
         }catch (Exception exception){
+            System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

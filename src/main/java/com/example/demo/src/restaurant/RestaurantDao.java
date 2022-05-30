@@ -171,31 +171,29 @@ public class RestaurantDao {
         return getResMenuList;
     }
 
-    /** 코드 구성에 재고가 필요합니다.
-     * */
+
     public List<GetResMenuOptionRes> getResMenuOption(int restaurantId, int menuId){
-        Object[] getResMenuOptionParam = new Object[]{restaurantId, menuId};
-        List<GetResMenuOptionRes> getResMenuOption = this.jdbcTemplate.query(getResMenuOptionQuery,
+        List<GetResMenuOptionRes> getResMenuOption = this.jdbcTemplate.query(getResMenuKindQuery,
                 (rs, rowNum) -> new GetResMenuOptionRes(
-                        rs.getInt("option_id"),
-                        rs.getString("option_name"),
-                        rs.getInt("is_optional") == 1? true : false,
-                        rs.getInt("res_option_id"),
-                        null,
+                        rs.getInt("option_kind_id"),
+                        rs.getString("option_kind_name"),
+                        rs.getInt("is_essential") == 1 ? true : false,
                         null
-                ), getResMenuOptionParam);
+                ), menuId);
+
         for(int i = 0; i < getResMenuOption.size(); i++){
             GetResMenuOptionRes temp = getResMenuOption.get(i);
-            int resOptionId = temp.getResOptionId();
-            List<String> menuOptionListName = this.jdbcTemplate.query(getResMenuOptionListQuery,
-                    (rs, rowNum) -> rs.getString("option_list_name"),
-                    resOptionId);
-            List<Integer> menuOptionListPrice = this.jdbcTemplate.query(getResMenuOptionListQuery,
-                    (rs, rowNum) -> rs.getInt("option_list_price"),
-                    resOptionId);
-            temp.setOptionListName(menuOptionListName);
-            temp.setOptionListPrice(menuOptionListPrice);
+            int kindId = temp.getOptionKindId();
+            Object[] getResOptionParam = new Object[]{restaurantId, kindId};
+            List<OptionInfo> getOptionInfo = this.jdbcTemplate.query(getResMenuOptionQuery,
+                    (rs, rowNum) -> new OptionInfo(
+                            rs.getInt("option_id"),
+                            rs.getString("option_name"),
+                            rs.getInt("option_price")
+                    ), getResOptionParam);
+            temp.setOptionInfoList(getOptionInfo);
         }
+
         return getResMenuOption;
     }
 }

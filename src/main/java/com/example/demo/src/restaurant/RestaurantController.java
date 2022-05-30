@@ -135,7 +135,7 @@ public class RestaurantController {
     /**
      * 17. 메뉴별 옵션 메뉴 API
      * [GET] /:restaurantId/menus/:menuId/options
-     * @return BaseResponse<
+     * @return BaseResponse<List<GetResMenuOptionRes>>
      * */
     @ResponseBody
     @GetMapping("/{restaurantId}/menus/{menuId}/options")

@@ -4,6 +4,7 @@ package com.example.demo.src.user;
 import com.example.demo.src.user.model.*;
 //import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -158,6 +159,17 @@ public class UserDao {
                         rs.getString("address_name")
                 ),
                 getUserAddressParams);
+    }
+
+    public int getUserAddressId(int userId){
+        try {
+            String getUserAddressIdQuery = "select user_address_id from user_address where user_id = ? AND is_selected = 1";
+            return this.jdbcTemplate.queryForObject(getUserAddressIdQuery,
+                    int.class,
+                    userId);
+        } catch (IncorrectResultSetColumnCountException exception){
+            return -1;
+        }
     }
 
     //core 추가

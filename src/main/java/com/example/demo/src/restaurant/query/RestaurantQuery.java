@@ -154,43 +154,49 @@ public class RestaurantQuery {
     public static String getResKindQuery = "SELECT kind_id,\n" +
             "       res_kind_name as kind_name\n" +
             "FROM res_kind\n" +
-            "WHERE restaurant_id = ? AND status = 1\n" +
+            "WHERE restaurant_id = ?\n" +
+            "  AND status = 1\n" +
+            "AND is_option = 0\n" +
             "ORDER BY kind_id ASC;";
 
-    public static String getResKindMenuQuery = "SELECT kind_id,\n" +
+    public static String getResKindMenuQuery = "SELECT RK.kind_id,\n" +
             "       kind_name,\n" +
             "       RM.menu_id,\n" +
             "       menu_name,\n" +
             "       menu_price,\n" +
             "       menu_description,\n" +
             "       url as menu_image_url\n" +
-            "FROM (\n" +
+            "FROM ( # 가게에 등록된 대분류 정보를 불러온다.\n" +
+            "         SELECT restaurant_id,\n" +
+            "                kind_id,\n" +
+            "                kind_name as kind_name\n" +
+            "         FROM res_kind\n" +
+            "         WHERE restaurant_id = ?\n" +
+            "           AND status = 1\n" +
+            "           AND is_option = 0\n" +
+            "         ORDER BY kind_id ASC\n" +
+            "     ) RK\n" +
+            "         join ( # 해당 가게 대분류에 포함되는 menu 정보를 찾는다.\n" +
             "    SELECT restaurant_id,\n" +
-            "           res_menu_id,\n" +
-            "           menu_id,\n" +
-            "           name as menu_name,\n" +
-            "           description as menu_description,\n" +
-            "           price as menu_price\n" +
-            "     FROM res_menu\n" +
-            "    WHERE restaurant_id = ?\n" +
-            ") RM\n" +
-            "join (\n" +
-            "    SELECT res_kind_id,\n" +
+            "           kind_id,\n" +
             "           menu_id\n" +
-            "    FROM res_menu_kind\n" +
-            ") RMK ON RMK.menu_id = RM.menu_id\n" +
-            "join (\n" +
-            "    SELECT res_kind_id,\n" +
-            "           res_kind_name as kind_name,\n" +
-            "           kind_id\n" +
-            "    FROM res_kind\n" +
-            ") RK ON RMK.res_kind_id = RK.res_kind_id\n" +
-            "left join (\n" +
-            "    SELECT res_menu_id,\n" +
+            "    FROM res_kind_menu\n" +
+            ") RKM ON RK.restaurant_id = RKM.restaurant_id AND RK.kind_id = RKM.kind_id\n" +
+            "         join ( # 각 메뉴에 해당하는 상세 정보를 찾는다.\n" +
+            "    SELECT restaurant_id,\n" +
+            "           menu_id,\n" +
+            "           name        as menu_name,\n" +
+            "           description as menu_description,\n" +
+            "           price       as menu_price\n" +
+            "    FROM res_menu\n" +
+            ") RM ON RK.restaurant_id = RM.restaurant_id AND RKM.menu_id = RM.menu_id\n" +
+            "         left join ( # 각 메뉴에 해당하는 대표 이미지를 찾는다.\n" +
+            "    SELECT restaurant_id,\n" +
+            "           menu_id,\n" +
             "           url\n" +
             "    FROM res_menu_image\n" +
             "    WHERE image_id = 1\n" +
-            ") RMI ON RM.res_menu_id = RMI.res_menu_id\n" +
+            ") RMI ON RK.restaurant_id = RMI.restaurant_id AND RKM.menu_id = RMI.menu_id\n" +
             "ORDER BY kind_id, menu_id ASC;";
 
 
@@ -202,43 +208,44 @@ public class RestaurantQuery {
             "From res_menu\n" +
             "WHERE restaurant_id = ? AND menu_id = ?;\n";
 
-    public static String getResMenuImageUrlListQuery ="SELECT menu_image_url, image_id\n" +
-            "FROM (\n" +
-            "    SELECT res_menu_id\n" +
-            "    FROM res_menu\n" +
-            "    WHERE restaurant_id = ? AND menu_id = ?\n" +
-            "    ) RM\n" +
-            "JOIN (\n" +
-            "    SELECT res_menu_id,\n" +
-            "           image_id,\n" +
-            "           url as menu_image_url\n" +
-            "    FROM res_menu_image\n" +
-            ") RMI ON RM.res_menu_id = RMI.res_menu_id\n" +
+    public static String getResMenuImageUrlListQuery ="SELECT url as menu_image_url,\n" +
+            "       image_id       \n" +
+            "FROM res_menu_image\n" +
+            "WHERE restaurant_id = ? AND menu_id = ?\n" +
             "ORDER BY image_id";
 
-    public static String getResMenuOptionQuery = "SELECT RO.option_id,\n" +
-            "       option_name,\n" +
-            "       is_optional,\n" +
-            "       res_option_id\n" +
-            "FROM (SELECT res_menu_id\n" +
-            "    FROM res_menu\n" +
-            "    WHERE restaurant_id =? AND menu_id=?\n" +
-            ") RM join\n" +
-            "     ( SELECT res_menu_id,\n" +
-            "              option_id\n" +
-            "       FROM res_menu_option\n" +
-            "     ) RMO ON RM.res_menu_id =RMO.res_menu_id\n" +
-            "join (\n" +
-            "    SELECT res_option_id,\n" +
-            "           option_id,\n" +
-            "    option_name,\n" +
-            "    is_optional\n" +
-            "    FROM res_option\n" +
-            ") RO ON RMO.option_id = RO.option_id;";
+    public static String getResMenuKindQuery = "SELECT \n" +
+            "       RK.kind_id as option_kind_id,\n" +
+            "       kind_name as option_kind_name,\n" +
+            "       is_essential\n" +
+            "FROM ( # 현재 선택한 특정 메뉴를 참조하는 모든 옵션 kind를 찾는다.\n" +
+            "    SELECT parent_menu_id as menu_id,\n" +
+            "           kind_id\n" +
+            "    FROM res_menu_option_kind\n" +
+            "    WHERE parent_menu_id = ?\n" +
+            ") RMOK\n" +
+            "join ( # 각 kind에 대해 이름과 필수 여부를 찾는다.\n" +
+            "    SELECT kind_id,\n" +
+            "           kind_name,\n" +
+            "           is_essential\n" +
+            "    FROM res_kind\n" +
+            ") RK ON RK.kind_id = RMOK.kind_id;";
 
-    public static String getResMenuOptionListQuery = "SELECT res_option_id,\n" +
-            "       option_list_name,\n" +
-            "       option_price as option_list_price\n" +
-            "FROM res_option_list\n" +
-            "WHERE res_option_id = ?";
+
+    public static String getResMenuOptionQuery = "SELECT option_id,\n" +
+            "       option_name,\n" +
+            "       option_price\n" +
+            "FROM (SELECT restaurant_id,\n" +
+            "             menu_id\n" +
+            "      FROM res_kind_menu\n" +
+            "      WHERE restaurant_id = ?\n" +
+            "        AND kind_id = ?\n" +
+            "     ) RKM\n" +
+            "         join (\n" +
+            "    SELECT restaurant_id,\n" +
+            "           menu_id as option_id,\n" +
+            "           name  as option_name,\n" +
+            "           price as option_price\n" +
+            "    FROM res_menu\n" +
+            ") RM ON RKM.restaurant_id = RM.restaurant_id AND RKM.menu_id = RM.option_id;";
 }

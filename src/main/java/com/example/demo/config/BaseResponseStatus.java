@@ -40,6 +40,12 @@ public enum BaseResponseStatus {
     RESTAURANTS_EMPTY_CATEGORY_ID(false, 2023, "카테고리 번호를 입력해주세요."),
     RESTAURANTS_INVALID_SORT_BY(false, 2024, "유효하지 않은 정렬 기준입니다."),
 
+    //[POST] /carts
+    POST_CARTS_ANOTHER_RESTAURANT_ID_EXISTS(false, 2025, "다른 가게에 대한 카트 정보가 이미 존재합니다."),
+    POST_CARTS_EMPTY_ESSENTIAL_OPTION(false, 2026, "필수 옵션을 설정하지 않았습니다."),
+
+
+
     /**
      * 3000 : Response 오류
      */

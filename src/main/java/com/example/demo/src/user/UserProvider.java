@@ -69,6 +69,15 @@ public class UserProvider {
         }
     }
 
+    public int getUserAddressId(int userId) throws BaseException {
+        try {
+            return userDao.getUserAddressId(userId);
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     //core 추가
     public List<GetOrderRes> getOrdersByDeliveryStatus(int user_id, int delivery_status) throws BaseException {
         try {
