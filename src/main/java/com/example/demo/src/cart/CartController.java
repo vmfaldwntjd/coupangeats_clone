@@ -2,7 +2,7 @@ package com.example.demo.src.cart;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.cart.model.GetCartRes;
+import com.example.demo.src.cart.model.GetTotalPriceRes;
 import com.example.demo.src.cart.model.PostCartReq;
 import com.example.demo.src.cart.model.PostCartRes;
 import com.example.demo.utils.JwtService;
@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/app/carts")
@@ -55,11 +53,19 @@ public class CartController {
      */
     @ResponseBody
     @GetMapping("/{cartId}/totalPrice")
-    public BaseResponse<GetCartRes> getTotalPrice(@PathVariable Integer cartId){
+    public BaseResponse<GetTotalPriceRes> getTotalPrice(@PathVariable Integer cartId){
         try{
-            return new BaseResponse<>(new GetCartRes(cartProvider.getTotalPrice(cartId)));
+            return new BaseResponse<>(new GetTotalPriceRes(cartProvider.getTotalPrice(cartId)));
         } catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    /**
+//     * 17. 카트 화면 조회 API
+//     * [GET]
+//     * @retrun BaseResponse<GetCart
+//     * */
+//    @ResponseBody
+//    @GetMapping("")
 }
