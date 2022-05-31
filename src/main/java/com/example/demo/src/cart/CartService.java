@@ -1,9 +1,7 @@
 package com.example.demo.src.cart;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.cart.model.OptionKindInfo;
-import com.example.demo.src.cart.model.PostCartReq;
-import com.example.demo.src.cart.model.PostCartRes;
+import com.example.demo.src.cart.model.*;
 import com.example.demo.src.user.UserProvider;
 import com.example.demo.utils.JwtService;
 import io.jsonwebtoken.Jwt;
@@ -12,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 
 import java.util.List;
@@ -49,12 +48,13 @@ public class CartService {
         int cartId = cartProvider.getCartIdByUserId(userId);
         int resIdByUserId = cartProvider.getResIdByUserId(userId);
 
-        System.out.println("cartId : "+cartId +"  resId : "+resIdByUserId);
 
         // 카트가 존재하면서 res id가 다르다면 Request error
         if(cartId > 0 && restaurantId != resIdByUserId){
             throw new BaseException(POST_CARTS_ANOTHER_RESTAURANT_ID_EXISTS);
         }
+
+
 
         // 필수 선택 옵션을 선택하지 않았다면 Request error
         for(OptionKindInfo oki : postCartReq.getOptionKindInfoList()){
@@ -63,19 +63,70 @@ public class CartService {
             }
         }
 
-        int sum = 0;
+
         try {
+            // 카트가 없다면 1, 있다면 그 다음의 order값.
+            int menuOrder = cartDao.getLastMenuOrder(cartId) + 1;
+            int menuId = postCartReq.getMenuId();
             // 카트가 없다면 카트 생성
             if(cartId == -1) {
                 // 선택된 주소 정보를 기입합니다.
+
                 Integer userAddressId = userProvider.getUserAddressId(postCartReq.getUserId());
                 if(userAddressId == -1) userAddressId = null;
                 cartId = cartDao.createCart(postCartReq, userAddressId);
+            } else { // 카트 정보가 있다면 현재 메뉴가 중복되는지 검사합니다.
+                // 현재 카트에, 현재 메뉴에 대해 존재하는 옵션이 현재 요청 메뉴의 옵션과 겹치는지.
+                List<OptionKindInfo> optionKindInfoList = postCartReq.getOptionKindInfoList();
+                StringBuilder sb = new StringBuilder();
+                int sum = postCartReq.getMenuPrice();
+
+                // 현재 요청 메뉴 옵션 문자열로 전환
+                for(OptionKindInfo optionKindInfo : optionKindInfoList){
+                    List<OptionInfo> optionInfoList = optionKindInfo.getOptionInfoList();
+                    for(OptionInfo optionInfo : optionInfoList){
+                        sb.append(optionInfo.getOptionName()).append(optionInfo.getOptionPrice() > 0 ? "(+"+optionInfo.getOptionPrice()+"원), " : "");
+                        sum += optionInfo.getOptionPrice();
+                    }
+                }
+                sum = sum*postCartReq.getMenuCount();
+
+                String optionInfoNow = sb.toString();
+                optionInfoNow = optionInfoNow.substring(optionInfoNow.length() - 2).contentEquals(", ") ?
+                        optionInfoNow.substring(0, optionInfoNow.length() - 2) : optionInfoNow;
+
+
+
+                // 현재 메뉴를 단락 메뉴로 가지는 모든 주문에 대해
+                List<Integer> menuOrderListInCart = cartDao.getCartMenuOption(cartId, menuId);
+                for(int menuOrderInCart : menuOrderListInCart){
+
+                    String optionInfoInCart = cartDao.getOptionInfoString(cartId, menuId, menuOrderInCart);
+
+                    // 동일한 옵션 정보를 가지는 단락메뉴 주문이 존재한다면
+                    if(optionInfoInCart.contentEquals(optionInfoNow)){
+
+                        // 해당 수를 주문 개수만큼 증가시키고 총 주문금액을 업데이트 한 뒤 종료한다.
+                        int t = cartDao.increaseMenuCount(cartId, menuId, postCartReq.getMenuCount());
+                        if(t != 1){
+                            throw new BaseException(DATABASE_ERROR);
+                        }
+
+                        // 총 주문 금액 합산.
+                        int test = cartDao.sumTotalPrice(cartId, sum);
+                        if(test != 1){
+                            throw new BaseException(DATABASE_ERROR);
+                        }
+
+                        int totalPrice = cartProvider.getTotalPrice(cartId);
+                        return new PostCartRes(userId, cartId, totalPrice);
+                    }
+                }
+
             }
 
-
-            sum = cartDao.createCartMenu(cartId, postCartReq);
-            int t = cartDao.setTotalPrice(cartId, sum);
+            int sum = cartDao.createCartMenu(cartId, menuOrder, postCartReq);
+            int t = cartDao.sumTotalPrice(cartId, sum);
 
             if(t != 1){
                 throw new BaseException(DATABASE_ERROR);
@@ -85,7 +136,7 @@ public class CartService {
 
             return new PostCartRes(userId, cartId, totalPrice);
         } catch(Exception exception){
-            System.out.println(exception);
+
             throw new BaseException(DATABASE_ERROR);
         }
     }

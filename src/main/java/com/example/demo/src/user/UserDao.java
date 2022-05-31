@@ -4,6 +4,7 @@ package com.example.demo.src.user;
 import com.example.demo.src.user.model.*;
 //import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -168,6 +169,8 @@ public class UserDao {
                     int.class,
                     userId);
         } catch (IncorrectResultSetColumnCountException exception){
+            return -1;
+        } catch (EmptyResultDataAccessException exception){ // userId에 대해 결과 없음
             return -1;
         }
     }

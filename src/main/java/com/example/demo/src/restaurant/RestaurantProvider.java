@@ -169,4 +169,5 @@ public class RestaurantProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
 }
