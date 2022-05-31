@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.List;
 
+import static com.example.demo.src.event.query.EventQuery.getEventMiddleListQuery;
 import static com.example.demo.src.event.query.EventQuery.getEventTopListQuery;
 
 @Repository
@@ -29,7 +30,7 @@ public class EventDao {
     }
 
     public List<GetEventBannerRes> getEventMiddleList(){
-        return this.jdbcTemplate.query(getEventTopListQuery,
+        return this.jdbcTemplate.query(getEventMiddleListQuery,
                 (rs,rowNum) -> new GetEventBannerRes(
                         rs.getInt("event_id"),
                         rs.getString("event_image_url")

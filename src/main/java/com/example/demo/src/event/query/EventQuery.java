@@ -13,7 +13,7 @@ public class EventQuery {
             "           image_id,\n" +
             "           url as event_image_url\n" +
             "    FROM event_image\n" +
-            "    WHERE image_id = 2\n" +
+            "    WHERE image_id = 1\n" +
             ") EI on E.event_id = EI.event_id;";
 
     public static String getEventMiddleListQuery = "select E.event_id, event_image_url\n" +
