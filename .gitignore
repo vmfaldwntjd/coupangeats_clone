@@ -179,3 +179,6 @@ Secret.java
 #.gradle, build디렉토리 추가(core)
 .gradle/
 build/
+
+#.idea 디렉토리 추가(core)
+.idea/
