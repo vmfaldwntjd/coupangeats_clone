@@ -11,7 +11,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetResMenuRes {
-    private ResMenuInfo resMenuInfo;
-    private List<ResMenuOption> resMenuOptionList;
+public class ResMenuInfo {
+    private int menuId;
+    private String menuName;
+    private int menuPrice;
+    private List<String> menuImageUrlList;
+    private String menuDescription;
 }

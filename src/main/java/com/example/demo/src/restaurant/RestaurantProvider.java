@@ -144,25 +144,28 @@ public class RestaurantProvider {
             List<GetResKindMenuRes> getResKindMenuResList = restaurantDao.getResKindMenuList(restaurantId);
             return getResKindMenuResList;
         } catch (Exception exception){
+            System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
     // 각 가게 메뉴별 메뉴 정보 출력
-    public GetResMenuRes getResMenuList(int restaurantId, int menuId) throws BaseException{
+    public ResMenuInfo getResMenuInfo (int restaurantId, int menuId) throws BaseException{
         try {
-            GetResMenuRes getResMenuList = restaurantDao.getResMenuList(restaurantId, menuId);
-            return getResMenuList;
+            ResMenuInfo getResMenuInfo = restaurantDao.getResMenuInfo(restaurantId, menuId);
+            return getResMenuInfo;
         } catch (Exception exception){
+            System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public List<GetResMenuOptionRes> getResMenuOption(int restaurantId, int menuId) throws BaseException{
+    public List<ResMenuOption> getResMenuOption(int restaurantId, int menuId) throws BaseException{
         try {
-            List<GetResMenuOptionRes> getResMenuOption = restaurantDao.getResMenuOption(restaurantId, menuId);
-            return getResMenuOption;
+            List<ResMenuOption> resMenuOption = restaurantDao.getResMenuOption(restaurantId, menuId);
+            return resMenuOption;
         }catch (Exception exception){
+            System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

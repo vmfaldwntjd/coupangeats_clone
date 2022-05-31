@@ -1,4 +1,5 @@
-package com.example.demo.src.restaurant.model;
+package com.example.demo.src.cart.model;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +12,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetResMenuRes {
-    private ResMenuInfo resMenuInfo;
-    private List<ResMenuOption> resMenuOptionList;
+public class OptionKindInfo {
+    private int optionKindId;
+    private Boolean isEssential;
+    private List<OptionInfo> optionInfoList;
 }

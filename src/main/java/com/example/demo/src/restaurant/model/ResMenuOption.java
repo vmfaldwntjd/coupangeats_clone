@@ -11,7 +11,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetResMenuRes {
-    private ResMenuInfo resMenuInfo;
-    private List<ResMenuOption> resMenuOptionList;
+public class ResMenuOption {
+    private int optionKindId;
+    private String optionKindName;
+    private Boolean isEssential;
+    private List<OptionInfo> optionInfoList;
 }

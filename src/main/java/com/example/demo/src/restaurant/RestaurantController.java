@@ -125,27 +125,13 @@ public class RestaurantController {
     @GetMapping("/{restaurantId}/menus/{menuId}")
     public BaseResponse<GetResMenuRes> getResMenuList(@PathVariable Integer restaurantId, @PathVariable int menuId){
         try {
-            GetResMenuRes getResMenuList = restaurantProvider.getResMenuList(restaurantId, menuId);
-            return new BaseResponse<>(getResMenuList);
+            ResMenuInfo resMenuInfo = restaurantProvider.getResMenuInfo(restaurantId, menuId);
+            List<ResMenuOption> resMenuOptionList = restaurantProvider.getResMenuOption(restaurantId, menuId);
+            GetResMenuRes getResMenu = new GetResMenuRes(resMenuInfo, resMenuOptionList);
+            return new BaseResponse<>(getResMenu);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
     }
 
-    /**
-     * 17. 메뉴별 옵션 메뉴 API
-     * [GET] /:restaurantId/menus/:menuId/options
-     * @return BaseResponse<
-     * */
-    @ResponseBody
-    @GetMapping("/{restaurantId}/menus/{menuId}/options")
-    public BaseResponse<List<GetResMenuOptionRes>> getResMenuOptionRes(@PathVariable Integer restaurantId, @PathVariable int menuId){
-        try {
-            List<GetResMenuOptionRes> getResMenuOption = restaurantProvider.getResMenuOption(restaurantId, menuId);
-            return new BaseResponse<>(getResMenuOption);
-        } catch (BaseException exception){
-            System.out.println(exception);
-            return new BaseResponse<>(exception.getStatus());
-        }
-    }
 }
