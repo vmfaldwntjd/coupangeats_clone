@@ -2,7 +2,7 @@ package com.example.demo.src.event;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.event.model.GetEventTopRes;
+import com.example.demo.src.event.model.GetEventBannerRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +37,23 @@ public class EventController {
  */
     @ResponseBody
     @GetMapping("/top")
-    public BaseResponse<List<GetEventTopRes>> getEventsTop(){
+    public BaseResponse<List<GetEventBannerRes>> getEventsTop(){
         try{
-            List<GetEventTopRes> getEventTopRes = eventProvider.getEventTopList();
-            return new BaseResponse<List<GetEventTopRes>>(getEventTopRes);
+            List<GetEventBannerRes> getEventBannerRes = eventProvider.getEventTopList();
+            return new BaseResponse<List<GetEventBannerRes>>(getEventBannerRes);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
     }
 
+    @ResponseBody
+    @GetMapping("/middle")
+    public BaseResponse<List<GetEventBannerRes>> getEventsMiddle(){
+        try{
+            List<GetEventBannerRes> getEventBannerRes = eventProvider.getEventMiddleList();
+            return new BaseResponse<List<GetEventBannerRes>>(getEventBannerRes);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 }

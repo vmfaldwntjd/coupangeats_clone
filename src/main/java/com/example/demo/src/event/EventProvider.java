@@ -1,8 +1,7 @@
 package com.example.demo.src.event;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.event.model.GetEventTopRes;
-import com.example.demo.src.user.UserDao;
+import com.example.demo.src.event.model.GetEventBannerRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +26,20 @@ public class EventProvider {
         this.jwtService = jwtService;
     }
 
-    public List<GetEventTopRes> getEventTopList() throws BaseException{
+    public List<GetEventBannerRes> getEventTopList() throws BaseException{
         try{
-            List<GetEventTopRes> getEventTopList = eventDao.getEventTopList();
+            List<GetEventBannerRes> getEventTopList = eventDao.getEventTopList();
             return getEventTopList;
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+
+    public List<GetEventBannerRes> getEventMiddleList() throws BaseException{
+        try{
+            List<GetEventBannerRes> getEventMiddleList = eventDao.getEventMiddleList();
+            return getEventMiddleList;
         } catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }

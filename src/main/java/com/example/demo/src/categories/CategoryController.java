@@ -3,7 +3,6 @@ package com.example.demo.src.categories;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.categories.model.GetCategoryRes;
-import com.example.demo.src.event.model.GetEventTopRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

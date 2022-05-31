@@ -1,6 +1,6 @@
 package com.example.demo.src.event;
 
-import com.example.demo.src.event.model.GetEventTopRes;
+import com.example.demo.src.event.model.GetEventBannerRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,9 +20,17 @@ public class EventDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<GetEventTopRes> getEventTopList(){
+    public List<GetEventBannerRes> getEventTopList(){
         return this.jdbcTemplate.query(getEventTopListQuery,
-                (rs,rowNum) -> new GetEventTopRes(
+                (rs,rowNum) -> new GetEventBannerRes(
+                        rs.getInt("event_id"),
+                        rs.getString("event_image_url")
+                ));
+    }
+
+    public List<GetEventBannerRes> getEventMiddleList(){
+        return this.jdbcTemplate.query(getEventTopListQuery,
+                (rs,rowNum) -> new GetEventBannerRes(
                         rs.getInt("event_id"),
                         rs.getString("event_image_url")
                 ));
