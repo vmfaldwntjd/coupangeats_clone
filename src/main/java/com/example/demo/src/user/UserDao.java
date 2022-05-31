@@ -174,11 +174,11 @@ public class UserDao {
 
     //core 추가
     public List<GetOrderRes> getOrdersByDeliveryStatus(int user_id, int delivery_status) {
-        String getUsersByNicknameQuery = "select `order`.order_id, `order`.restaurant_id, `order`.user_id, name, restaurant_name, deliveryStatus, order_total_price, url from `order`\n" +
+        String getUsersByNicknameQuery = "select `order`.order_id, `order`.restaurant_id, `order`.user_id, name, restaurant_name, delivery_status, order_total_price, url from `order`\n" +
                 "inner join res_image on res_image.restaurant_id = `order`.restaurant_id\n" +
                 "inner join res_menu on res_menu.restaurant_id = `order`.restaurant_id\n" +
                 "inner join restaurant on `order`.restaurant_id = restaurant.restaurant_id\n" +
-                "where (`order`.user_id = ? and deliveryStatus = ?);"; // 해당 이메일을 만족하는 유저를 조회하는 쿼리문
+                "where (`order`.user_id = ? and delivery_status = ? and res_image.image_id = 1);"; // 해당 이메일을 만족하는 유저를 조회하는 쿼리문
         Object[] getOrderParams = new Object[]{user_id, delivery_status};
         return this.jdbcTemplate.query(getUsersByNicknameQuery,
                 (rs, rowNum) -> new GetOrderRes(
@@ -187,7 +187,7 @@ public class UserDao {
                         rs.getInt("user_id"),
                         rs.getString("name"),
                         rs.getString("restaurant_name"),
-                        rs.getInt("deliveryStatus"),
+                        rs.getInt("delivery_status"),
                         rs.getInt("order_total_price"),
                         rs.getString("url")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 getOrderParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
@@ -260,4 +260,14 @@ public class UserDao {
         return this.jdbcTemplate.update(modifyUserAddressDetailQuery, modifyUserAddressDetailParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
     }
 
+    //core 추가
+    public int createUserAddress(int userId, PostUserAddressReq postUserAddressReq){
+        String createUserAddressQuery = "insert into user_address (user_id, address_name, doro_name_address, detail_address, way_guide, address_alias, kind) VALUES (?,?,?,?,?,?,?)";
+        Object[] createUserAddressParams = new Object[]{userId, postUserAddressReq.getAddressName(), postUserAddressReq.getDoroNameAddress(), postUserAddressReq.getDetailAddress(),
+                postUserAddressReq.getWayGuide(),postUserAddressReq.getAddressAlias(), postUserAddressReq.getKind()};
+        this.jdbcTemplate.update(createUserAddressQuery, createUserAddressParams);
+
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class);
+    }
 }
