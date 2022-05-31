@@ -35,6 +35,9 @@ public class CartService {
         this.userProvider = userProvider;
     }
 
+    /* 현재 구조는 똑같은 메뉴를 추가해도 새로운 레코드를 삽입하는 구조.
+    *  똑같은 메뉴를 추가하면 menuCount를 + 1 해야한다. -> 어려움
+    * */
     @Transactional(rollbackOn = Exception.class)
     public PostCartRes createCart(PostCartReq postCartReq) throws BaseException{
         // 필수 옵션을 선택하지 않은경우 카트를 비운 후 insert가 반려된다.
@@ -60,9 +63,7 @@ public class CartService {
             }
         }
 
-        System.out.println("분기 test");
-
-        int totalPrice = 0;
+        int sum = 0;
         try {
             // 카트가 없다면 카트 생성
             if(cartId == -1) {
@@ -72,14 +73,15 @@ public class CartService {
                 cartId = cartDao.createCart(postCartReq, userAddressId);
             }
 
-            System.out.println("카트 생성까지 완료");
 
-            totalPrice = cartDao.createCartMenu(cartId, postCartReq);
-            int t = cartDao.setTotalPrice(cartId, totalPrice);
+            sum = cartDao.createCartMenu(cartId, postCartReq);
+            int t = cartDao.setTotalPrice(cartId, sum);
 
             if(t != 1){
                 throw new BaseException(DATABASE_ERROR);
             }
+
+            int totalPrice = cartProvider.getTotalPrice(cartId);
 
             return new PostCartRes(userId, cartId, totalPrice);
         } catch(Exception exception){

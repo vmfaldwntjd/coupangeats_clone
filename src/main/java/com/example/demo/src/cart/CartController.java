@@ -2,6 +2,7 @@ package com.example.demo.src.cart;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.cart.model.GetCartRes;
 import com.example.demo.src.cart.model.PostCartReq;
 import com.example.demo.src.cart.model.PostCartRes;
 import com.example.demo.utils.JwtService;
@@ -41,6 +42,22 @@ public class CartController {
         try{
             PostCartRes postCartRes = cartService.createCart(postCartReq);
             return new BaseResponse<>(postCartRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 49. 카트 총 금액 조회 API
+     * [POST]
+     * @return BaseResponse<GetCartRes>
+     *
+     */
+    @ResponseBody
+    @GetMapping("/{cartId}/totalPrice")
+    public BaseResponse<GetCartRes> getTotalPrice(@PathVariable Integer cartId){
+        try{
+            return new BaseResponse<>(new GetCartRes(cartProvider.getTotalPrice(cartId)));
         } catch(BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }

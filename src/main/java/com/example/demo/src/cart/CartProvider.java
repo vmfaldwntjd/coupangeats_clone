@@ -40,4 +40,13 @@ public class CartProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public int getTotalPrice(int cartId) throws BaseException {
+        try {
+            return cartDao.getTotalPrice(cartId);
+        } catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

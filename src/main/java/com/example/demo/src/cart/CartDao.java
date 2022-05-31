@@ -86,6 +86,10 @@ public class CartDao {
     }
 
     public int setTotalPrice(int cartId, int totalPrice){
-        return this.jdbcTemplate.update("UPDATE cart SET total_price = ? WHERE cart_id = ?", totalPrice, cartId);
+        return this.jdbcTemplate.update("UPDATE cart SET total_price = total_price + ? WHERE cart_id = ?", totalPrice, cartId);
+    }
+
+    public int getTotalPrice(int cartId){
+        return this.jdbcTemplate.queryForObject("SELECT total_price FROM cart WHERE cart_id = ?", int.class, cartId);
     }
 }

@@ -151,10 +151,10 @@ public class RestaurantDao {
                 ), restaurantId);
     }
 
-    public GetResMenuRes getResMenuList(int restaurantId, int menuId){
+    public ResMenuInfo getResMenuInfo(int restaurantId, int menuId){
         Object[] getResMenuListParam = new Object[]{restaurantId, menuId};
-        GetResMenuRes getResMenuList = this.jdbcTemplate.queryForObject(getResMenuQuery,
-                (rs, rowNum) -> new GetResMenuRes(
+        ResMenuInfo getResMenuList = this.jdbcTemplate.queryForObject(getResMenuQuery,
+                (rs, rowNum) -> new ResMenuInfo(
                         rs.getInt("menu_id"),
                         rs.getString("menu_name"),
                         rs.getInt("menu_price"),
@@ -172,17 +172,17 @@ public class RestaurantDao {
     }
 
 
-    public List<GetResMenuOptionRes> getResMenuOption(int restaurantId, int menuId){
-        List<GetResMenuOptionRes> getResMenuOption = this.jdbcTemplate.query(getResMenuKindQuery,
-                (rs, rowNum) -> new GetResMenuOptionRes(
+    public List<ResMenuOption> getResMenuOption(int restaurantId, int menuId){
+        List<ResMenuOption> resMenuOption = this.jdbcTemplate.query(getResMenuKindQuery,
+                (rs, rowNum) -> new ResMenuOption(
                         rs.getInt("option_kind_id"),
                         rs.getString("option_kind_name"),
                         rs.getInt("is_essential") == 1 ? true : false,
                         null
                 ), menuId);
 
-        for(int i = 0; i < getResMenuOption.size(); i++){
-            GetResMenuOptionRes temp = getResMenuOption.get(i);
+        for(int i = 0; i < resMenuOption.size(); i++){
+            ResMenuOption temp = resMenuOption.get(i);
             int kindId = temp.getOptionKindId();
             Object[] getResOptionParam = new Object[]{restaurantId, kindId};
             List<OptionInfo> getOptionInfo = this.jdbcTemplate.query(getResMenuOptionQuery,
@@ -194,6 +194,6 @@ public class RestaurantDao {
             temp.setOptionInfoList(getOptionInfo);
         }
 
-        return getResMenuOption;
+        return resMenuOption;
     }
 }
