@@ -35,7 +35,7 @@
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
 # since they will be recreated, and may cause churn.  Uncomment if using
-auto-import.
+# auto-import.
 .idea/artifacts
 .idea/compiler.xml
 .idea/jarRepositories.xml
@@ -175,3 +175,12 @@ application-local.yml
 
 #secret 키 제외
 Secret.java
+
+
+#.gradle, build디렉토리 추가(core)
+.gradle/
+build/
+
+#.idea 디렉토리 추가(core)
+.idea/
+
