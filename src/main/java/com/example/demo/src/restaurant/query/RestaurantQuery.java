@@ -113,6 +113,7 @@ public class RestaurantQuery {
 
 
     // 가게별 메인 화면. 가게별 id를 통한 단 하나의 가게 조회.
+    // 계산된 거리에 따라서 delivery_time 재계산이 필요함...
     public static String getRestaurantByIdQuery = "SELECT R.restaurant_id,\n" +
             "       created_at,\n" +
             "       res_name,\n" +
@@ -120,7 +121,6 @@ public class RestaurantQuery {
             "       delivery_time,\n" +
             "       IFNULL(star_point, 0)      as star_point,\n" +
             "       IFNULL(review_count, 0)    as review_count,\n" +
-            "       round(distance / 1000, 1)  as distance,\n" +
             "       min_delivery_fee,\n" +
             "       IFNULL(min_order_price, 0) as min_order_price\n" +
             "FROM (\n" +

@@ -55,7 +55,7 @@ public class RestaurantProvider {
     }
 
     // 카테고리별 가게 리스트
-    public List<GetRestaurantRes> getRestaurantListByCategoryId(int categoryId, Double longitude, Double latitude, String sortBy) throws BaseException{
+    public List<GetRestaurantByCategoryIdRes> getRestaurantListByCategoryId(int categoryId, Double longitude, Double latitude, String sortBy) throws BaseException{
         // 기본값 설정. 둘 중 하나라도 null이면 기본값 설정.
         if(longitude == null || latitude == null) {
             latitude = 37.4638409;
@@ -76,7 +76,7 @@ public class RestaurantProvider {
             throw new BaseException(RESTAURANTS_INVALID_SORT_BY);
         }
         try {
-            List<GetRestaurantRes> getRestaurantList = restaurantDao.getRestaurantListByCategoryId(categoryId, longitude, latitude, sortBy, orderBy);
+            List<GetRestaurantByCategoryIdRes> getRestaurantList = restaurantDao.getRestaurantListByCategoryId(categoryId, longitude, latitude, sortBy, orderBy);
             return getRestaurantList;
         } catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
@@ -84,7 +84,7 @@ public class RestaurantProvider {
     }
 
     // 골라먹는 맛집 리스트
-    public List<GetRestaurantRes> getRestaurantList(Double longitude, Double latitude, String sortBy) throws BaseException{
+    public List<GetRestaurantByCategoryIdRes> getRestaurantList(Double longitude, Double latitude, String sortBy) throws BaseException{
         // 기본값 설정. 둘 중 하나라도 null이면 기본값 설정.
         if(longitude == null || latitude == null) {
             latitude = 37.4638409;
@@ -106,7 +106,7 @@ public class RestaurantProvider {
         }
 
         try {
-            List<GetRestaurantRes> getRestaurantList = restaurantDao.getRestaurantList(longitude, latitude, sortBy, orderBy);
+            List<GetRestaurantByCategoryIdRes> getRestaurantList = restaurantDao.getRestaurantList(longitude, latitude, sortBy, orderBy);
             return getRestaurantList;
         } catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
@@ -114,14 +114,14 @@ public class RestaurantProvider {
     }
 
     // 각 가게별 메인화면
-    public GetRestaurantRes getRestaurantById(int restaurantId, Double longitude, Double latitude) throws BaseException {
+    public GetRestaurantByIdRes getRestaurantById(int restaurantId, Double longitude, Double latitude) throws BaseException {
         // 기본값 설정. 둘 중 하나라도 null이면 기본값 설정.
         if(longitude == null || latitude == null) {
             latitude = 37.4638409;
             longitude = 126.9526383;
         }
         try {
-            GetRestaurantRes getRestaurantRes = restaurantDao.getRestaurantById(restaurantId, longitude, latitude);
+            GetRestaurantByIdRes getRestaurantRes = restaurantDao.getRestaurantById(restaurantId, longitude, latitude);
             return getRestaurantRes;
         } catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);

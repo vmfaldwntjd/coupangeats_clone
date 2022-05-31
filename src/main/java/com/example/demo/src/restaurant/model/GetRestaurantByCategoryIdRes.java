@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class GetRestaurantRes {
+public class GetRestaurantByCategoryIdRes {
     private int restaurantId;
     private String resName;
     private List<String> resImageUrlList;

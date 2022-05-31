@@ -46,14 +46,14 @@ public class RestaurantDao {
 
 
     // 카테고리별 가게 리스트
-    public List<GetRestaurantRes> getRestaurantListByCategoryId(int categoryId, Double longitude, Double latitude, String sortBy, String orderBy){
+    public List<GetRestaurantByCategoryIdRes> getRestaurantListByCategoryId(int categoryId, Double longitude, Double latitude, String sortBy, String orderBy){
 
         // String의 특수성에 의해 orderBy 옵션 적용은 String 이어붙이기로 구현.
         String getRestaurantListByCategoryIdQuery = getRestaurantListByCategoryIdQuery(sortBy, orderBy);
 
         Object[] getRestaurantListParams = new Object[]{longitude, latitude, categoryId, 100};
-        List<GetRestaurantRes> getRestaurantResList = this.jdbcTemplate.query(getRestaurantListByCategoryIdQuery,
-                (rs, rowNum) -> new GetRestaurantRes(
+        List<GetRestaurantByCategoryIdRes> getRestaurantResList = this.jdbcTemplate.query(getRestaurantListByCategoryIdQuery,
+                (rs, rowNum) -> new GetRestaurantByCategoryIdRes(
                         rs.getInt("restaurant_id"),
                         rs.getString("res_name"),
                         null,
@@ -65,7 +65,7 @@ public class RestaurantDao {
                         rs.getInt("min_delivery_fee")
                 ), getRestaurantListParams);
 
-        for(GetRestaurantRes getRestaurantRes : getRestaurantResList){
+        for(GetRestaurantByCategoryIdRes getRestaurantRes : getRestaurantResList){
             int restaurantId = getRestaurantRes.getRestaurantId();
             List<String> resImageUrlList = this.jdbcTemplate.query(getResImageUrlByIdQuery,
                     (rs, rowNum) -> new String(
@@ -77,12 +77,12 @@ public class RestaurantDao {
     }
 
     // (기본) 골라먹는 맛집
-    public List<GetRestaurantRes> getRestaurantList(Double longitude, Double latitude, String sortBy, String orderBy){
+    public List<GetRestaurantByCategoryIdRes> getRestaurantList(Double longitude, Double latitude, String sortBy, String orderBy){
 
         String getRestaurantListQuery = getRestaurantListQuery(sortBy, orderBy);
         Object[] getRestaurantListParams = new Object[]{longitude, latitude, 45};
-        List<GetRestaurantRes> getRestaurantResList = this.jdbcTemplate.query(getRestaurantListQuery,
-                (rs, rowNum) -> new GetRestaurantRes(
+        List<GetRestaurantByCategoryIdRes> getRestaurantResList = this.jdbcTemplate.query(getRestaurantListQuery,
+                (rs, rowNum) -> new GetRestaurantByCategoryIdRes(
                         rs.getInt("restaurant_id"),
                         rs.getString("res_name"),
                         null,
@@ -94,7 +94,7 @@ public class RestaurantDao {
                         rs.getInt("min_delivery_fee")
                 ), getRestaurantListParams);
 
-        for(GetRestaurantRes getRestaurantRes : getRestaurantResList){
+        for(GetRestaurantByCategoryIdRes getRestaurantRes : getRestaurantResList){
             int restaurantId = getRestaurantRes.getRestaurantId();
             List<String> resImageUrlList = this.jdbcTemplate.query(getResImageUrlByIdQuery,
                     (rs, rowNum) -> new String(
@@ -105,11 +105,11 @@ public class RestaurantDao {
         return getRestaurantResList;
     }
 
-    public GetRestaurantRes getRestaurantById(int restaurantId, Double longitude, Double latitude){
+    public GetRestaurantByIdRes getRestaurantById(int restaurantId, Double longitude, Double latitude){
         String getRestaurantByIdQuery = RestaurantQuery.getRestaurantByIdQuery;
         Object[] getRestaurantByIdParams = new Object[]{longitude, latitude, restaurantId};
-        GetRestaurantRes getRestaurantRes = this.jdbcTemplate.queryForObject(getRestaurantByIdQuery,
-                (rs, rowNum) -> new GetRestaurantRes(
+        GetRestaurantByIdRes getRestaurantRes = this.jdbcTemplate.queryForObject(getRestaurantByIdQuery,
+                (rs, rowNum) -> new GetRestaurantByIdRes(
                         rs.getInt("restaurant_id"),
                         rs.getString("res_name"),
                         null,
@@ -117,8 +117,8 @@ public class RestaurantDao {
                         rs.getInt("delivery_time"),
                         rs.getDouble("star_point"),
                         rs.getInt("review_count"),
-                        rs.getDouble("distance"),
-                        rs.getInt("min_delivery_fee")
+                        rs.getInt("min_delivery_fee"),
+                        rs.getInt("min_order_price")
                 ), getRestaurantByIdParams);
 
         List<String> resImageUrlList = this.jdbcTemplate.query(getResImageUrlByIdQuery,

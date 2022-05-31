@@ -50,14 +50,14 @@ public class RestaurantController {
 
     @ResponseBody
     @GetMapping("")
-    public BaseResponse<List<GetRestaurantRes>> getRestaurantListByCategoryId(@RequestParam Integer categoryId, @RequestParam(required = false) Double longitude, @RequestParam(required = false) Double latitude, @RequestParam(required = false) String sortBy){
+    public BaseResponse<List<GetRestaurantByCategoryIdRes>> getRestaurantListByCategoryId(@RequestParam Integer categoryId, @RequestParam(required = false) Double longitude, @RequestParam(required = false) Double latitude, @RequestParam(required = false) String sortBy){
         try{
             if(categoryId == null){ // 12번 API 골라먹는 맛집
-                List<GetRestaurantRes> getRestaurantResList = restaurantProvider.getRestaurantList(longitude, latitude, sortBy);
+                List<GetRestaurantByCategoryIdRes> getRestaurantResList = restaurantProvider.getRestaurantList(longitude, latitude, sortBy);
                 return new BaseResponse<>(getRestaurantResList);
             }
             // 10번 카테고리별 가게 리스트
-            List<GetRestaurantRes> getRestaurantResList = restaurantProvider.getRestaurantListByCategoryId(categoryId, longitude, latitude, sortBy);
+            List<GetRestaurantByCategoryIdRes> getRestaurantResList = restaurantProvider.getRestaurantListByCategoryId(categoryId, longitude, latitude, sortBy);
             return new BaseResponse<>(getRestaurantResList);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
@@ -71,9 +71,9 @@ public class RestaurantController {
      */
     @ResponseBody
     @GetMapping("/{restaurantId}")
-    public BaseResponse<GetRestaurantRes> getRestaurantById(@PathVariable Integer restaurantId, @RequestParam(required = false) Double longitude, @RequestParam(required = false) Double latitude){
+    public BaseResponse<GetRestaurantByIdRes> getRestaurantById(@PathVariable Integer restaurantId, @RequestParam(required = false) Double longitude, @RequestParam(required = false) Double latitude){
         try{
-            GetRestaurantRes getRestaurantRes = restaurantProvider.getRestaurantById(restaurantId, longitude, latitude);
+            GetRestaurantByIdRes getRestaurantRes = restaurantProvider.getRestaurantById(restaurantId, longitude, latitude);
             return new BaseResponse<>(getRestaurantRes);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
