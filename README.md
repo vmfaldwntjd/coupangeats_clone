@@ -389,3 +389,8 @@ Home 음식점 API 연동 진행중, Store 세부 정보 UI 구현 진행중
 ### 2022-05-30
 1. api 명세서 26번 작성완료
 2. 이슈: 인텔리제이를 다시 시작할 때 sdk 설정이 'NO SDK'로 자동 설정되는 이슈가 발생하였는데 .gitignore 파일 설정 및 .idea/modules 디렉토리 안에 있는 misc.xml의 내용 수정으로 해결
+
+### 2022-05-31
+1. api 명세서 31번 작성 -> 40%
+2. 이슈: git coupangeats_server_core_dona 레퍼지토리에서 dev -> main으로 merge 시도하려는 중 충돌 문제가 발생
+.gitignore에 해당 충돌 파일들을 추가를 함으로써 문제 해결 
