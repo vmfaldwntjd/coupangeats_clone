@@ -14,6 +14,7 @@ import java.util.List;
 public class ResMenuOption {
     private int optionKindId;
     private String optionKindName;
+    private int optionKindMaxCount;
     private Boolean isEssential;
     private List<OptionInfo> optionInfoList;
 }

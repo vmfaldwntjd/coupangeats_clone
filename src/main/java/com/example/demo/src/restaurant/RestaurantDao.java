@@ -177,6 +177,7 @@ public class RestaurantDao {
                 (rs, rowNum) -> new ResMenuOption(
                         rs.getInt("option_kind_id"),
                         rs.getString("option_kind_name"),
+                        rs.getInt("option_kind_max_count"),
                         rs.getInt("is_essential") == 1 ? true : false,
                         null
                 ), menuId);

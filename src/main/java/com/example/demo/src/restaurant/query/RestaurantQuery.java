@@ -214,20 +214,21 @@ public class RestaurantQuery {
             "WHERE restaurant_id = ? AND menu_id = ?\n" +
             "ORDER BY image_id";
 
-    public static String getResMenuKindQuery = "SELECT \n" +
-            "       RK.kind_id as option_kind_id,\n" +
-            "       kind_name as option_kind_name,\n" +
+    public static String getResMenuKindQuery = "SELECT RK.kind_id as option_kind_id,\n" +
+            "       kind_name  as option_kind_name,\n" +
+            "       max_count as option_kind_max_count,\n" +
             "       is_essential\n" +
-            "FROM ( # 현재 선택한 특정 메뉴를 참조하는 모든 옵션 kind를 찾는다.\n" +
-            "    SELECT parent_menu_id as menu_id,\n" +
-            "           kind_id\n" +
-            "    FROM res_menu_option_kind\n" +
-            "    WHERE parent_menu_id = ?\n" +
-            ") RMOK\n" +
-            "join ( # 각 kind에 대해 이름과 필수 여부를 찾는다.\n" +
+            "FROM ( # 현재 선택한 특정 메뉴를 참조하는 모든 옵션 kind를 찾는다. \n" +
+            "         SELECT parent_menu_id as menu_id,\n" +
+            "                kind_id\n" +
+            "         FROM res_menu_option_kind\n" +
+            "         WHERE parent_menu_id = ?\n" +
+            "     ) RMOK\n" +
+            "         join ( # 각 kind에 대해 이름과 필수 여부를 찾는다. \n" +
             "    SELECT kind_id,\n" +
             "           kind_name,\n" +
-            "           is_essential\n" +
+            "           is_essential,\n" +
+            "           max_count\n" +
             "    FROM res_kind\n" +
             ") RK ON RK.kind_id = RMOK.kind_id;";
 
