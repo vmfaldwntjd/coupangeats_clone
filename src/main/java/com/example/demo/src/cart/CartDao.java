@@ -1,9 +1,7 @@
 package com.example.demo.src.cart;
 
-import com.example.demo.src.cart.model.OptionInfo;
-import com.example.demo.src.cart.model.OptionKindInfo;
-import com.example.demo.src.cart.model.PostCartReq;
-import com.example.demo.src.cart.model.PostCartRes;
+import com.example.demo.src.cart.model.*;
+import com.example.demo.src.event.model.GetEventBannerRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
@@ -60,14 +58,21 @@ public class CartDao {
         return this.jdbcTemplate.queryForObject("select last_insert_id()", int.class);
     }
 
-    public int createCartMenu(int cartId, PostCartReq postCartReq){
+    // 카트 내에서 마지막 순서값 반환.
+    public int getLastMenuOrder(int cartId){
+        Integer lastMenuOrder = this.jdbcTemplate.queryForObject("SELECT MAX(menu_order) FROM cart_menu WHERE cart_id = ?", int.class, cartId);
+        return lastMenuOrder == null ? 0 : lastMenuOrder;
+    }
+
+    public int createCartMenu(int cartId, int menuOrder, PostCartReq postCartReq){
         int sum = postCartReq.getMenuPrice(); // 현재 들어온 메뉴에 대한모든 값을 저장하고 반환합니다.
+
         // 매개변수값이 너무 많아서 확인차 이곳에 쿼리 작성.
         String createCartMenuQuery = "INSERT INTO cart_menu (cart_id, menu_id, price, " +
-                "count, menu_name, parent_menu_id)\n" +
-                "VALUES(?, ?, ?, ?, ?, ?);";
+                "count, menu_name, parent_menu_id, menu_order)\n" +
+                "VALUES(?, ?, ?, ?, ?, ?, ?);";
         Object[] createCartMenuParam = new Object[]{cartId, postCartReq.getMenuId(), postCartReq.getMenuPrice(),
-        postCartReq.getMenuCount(), postCartReq.getMenuName(), postCartReq.getMenuId()};
+        postCartReq.getMenuCount(), postCartReq.getMenuName(), postCartReq.getMenuId(), menuOrder};
         this.jdbcTemplate.update(createCartMenuQuery, createCartMenuParam);
 
         List<OptionKindInfo> optionKindInfoList = postCartReq.getOptionKindInfoList();
@@ -77,19 +82,59 @@ public class CartDao {
                 sum += oi.getOptionPrice();
                 // 옵션은 수가 단 하나
                 createCartMenuParam = new Object[]{cartId, oi.getOptionId(), oi.getOptionPrice(),
-                        1, oi.getOptionName(), postCartReq.getMenuId()};
+                        1, oi.getOptionName(), postCartReq.getMenuId(), menuOrder};
                 this.jdbcTemplate.update(createCartMenuQuery, createCartMenuParam);
             }
         }
+//        System.out.println("단위 메뉴당 합계 : "+sum);
+//        System.out.println("단위 메뉴 개수 : "+postCartReq.getMenuCount());
 
        return sum*postCartReq.getMenuCount();
     }
 
-    public int setTotalPrice(int cartId, int totalPrice){
-        return this.jdbcTemplate.update("UPDATE cart SET total_price = total_price + ? WHERE cart_id = ?", totalPrice, cartId);
+    public int sumTotalPrice(int cartId, int totalPrice){
+        return this.jdbcTemplate.update("UPDATE cart SET order_price = order_price + ? WHERE cart_id = ?", totalPrice, cartId);
     }
 
     public int getTotalPrice(int cartId){
-        return this.jdbcTemplate.queryForObject("SELECT total_price FROM cart WHERE cart_id = ?", int.class, cartId);
+        return this.jdbcTemplate.queryForObject("SELECT order_price FROM cart WHERE cart_id = ?", int.class, cartId);
+    }
+
+//    //cart 정보 조회
+//    public ResOrderMenuInfo getOrderMenuInfo(int cartId){
+//
+//    }
+
+    // 한 단위 메뉴에 해당되는 모든 옵션정보를 문자열로 전환한다.
+    public String getOptionInfoString(int cartId, int menuId, int menuOrder){
+        StringBuilder sb = new StringBuilder();
+        List<OptionInfo> optionInfoList = this.jdbcTemplate.query("SELECT price as option_price, menu_name as option_name FROM cart_menu WHERE cart_id = ?" +
+                        " AND parent_menu_id = ? AND menu_id != ? AND menu_order = ?;",
+                (rs,rowNum) -> new OptionInfo(
+                        -1, // 임시로 넣어두는 가짜값. 필요없음.
+                        rs.getInt("option_price"),
+                        rs.getString("option_name")
+                ),
+                new Object[]{cartId, menuId, menuId, menuOrder});
+        for(OptionInfo optionInfo : optionInfoList){
+            sb.append(optionInfo.getOptionName()).append(optionInfo.getOptionPrice() > 0 ? "(+"+optionInfo.getOptionPrice()+"원), " : "");
+        }
+        String optionInfo = sb.toString();
+
+        // 마지막 쉼표 삭제
+        optionInfo = optionInfo.substring(optionInfo.length() - 2).contentEquals(", ") ?
+                optionInfo.substring(0, optionInfo.length() - 2) : optionInfo;
+
+        return optionInfo;
+    }
+
+    // 현재 메뉴에 대해서 이미 들어와있는 단락 메뉴 리스트 정보를 가져온다.
+    public List<Integer> getCartMenuOption(int cartId, int menuId){
+        return this.jdbcTemplate.query("SELECT menu_order FROM cart_menu WHERE cart_id =? AND menu_id = ?",
+                (rs, rowNum) -> rs.getInt("menu_order"), new Object[]{cartId, menuId});
+    }
+
+    public int increaseMenuCount(int cartId, int menuId, int menuCount){
+        return this.jdbcTemplate.update("UPDATE cart_menu SET count = count + ? WHERE cart_id = ? AND menu_id = ?", menuCount, cartId, menuId);
     }
 }

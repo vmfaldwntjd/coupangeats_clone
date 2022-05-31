@@ -1,6 +1,7 @@
 package com.example.demo.src.cart;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.cart.model.ResOrderMenuInfo;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,24 @@ public class CartProvider {
         try {
             return cartDao.getTotalPrice(cartId);
         } catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // cart_menu에 있는 메뉴 정보를 불러온다.
+//    public ResOrderMenuInfo getOrderMenuInfo(int cartId) throws BaseException {
+//        try{
+//            return cartDao.getOrderMenuInfo(cartId);
+//        } catch(Exception exception){
+//            System.out.println(exception);
+//            throw new BaseException(DATABASE_ERROR);
+//        }
+//    }
+    public String getOptionInfoString(int cartId, int menuId, int menuOrder) throws BaseException {
+        try {
+            return cartDao.getOptionInfoString(cartId, menuId,  menuOrder);
+        } catch (Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
