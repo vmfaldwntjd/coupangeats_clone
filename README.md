@@ -289,6 +289,12 @@ refresh token -> access token, refresh token 두가지 저장
 - 쿠팡 캐시 정보 테이블 cash 테이블 추가 -> 관련 도메인 Payment
 - cart 테이블 total_price -> order_price 필드명 변경
 
+
+### 2022-06-01
+1. 개발 이슈
+ - git pull 시  "Please enter a commit message to explain why this merge is necessary, especially if it merges an updated upstream into a topic branch" 발생.   
+무시하고 대상 파일 변경 확인, 빌드 및 실행 진행했으나 변경사항이 반영되지 않는 오류 발생.
+
 * * *
 
 ## Core 개발 일지
