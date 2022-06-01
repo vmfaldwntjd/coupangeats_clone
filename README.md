@@ -406,3 +406,8 @@ Home 음식점 API 연동 진행중, Store 세부 정보 UI 구현 진행중
 1. api 명세서 31번 작성 -> 40%
 2. 이슈: git coupangeats_server_core_dona 레퍼지토리에서 dev -> main으로 merge 시도하려는 중 충돌 문제가 발생
 .gitignore에 해당 충돌 파일들을 추가를 함으로써 문제 해결 
+
+### 2022-05-31
+1. Order관련 도메인 명세서 20, 21번과 Address관련 도메인 23 ~ 26번 명세서 서버 반영 완료.
+2. Favorite관련 도메인 명세서 31 ~ 33번 명세서 작성 및 서버 반영 완료
+3. Payment관련 도메인 명세서 34, 35번 작성 완료
