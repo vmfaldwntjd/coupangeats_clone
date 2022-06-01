@@ -317,14 +317,14 @@ public class UserDao {
     }
 
     //core추가 -> cart도메인에 필요한 메소드
-    public List<GetUserAddressCartRes> getUserAddressInfo(int userId){
+    public GetUserAddressCartRes getUserAddressInfo(int userId){
         String createUserAddressCartQuery = "select user_address.user_address_id, address_name, doro_name_address, latitude, longitude from user_address\n" +
                 "inner join cart on user_address.user_address_id = cart.user_address_id\n" +
                 "where is_selected = 1 and user_address.user_id = ?;";
         int getUserAddressCartParams = userId;
         this.jdbcTemplate.update(createUserAddressCartQuery, getUserAddressCartParams);
 
-        return this.jdbcTemplate.query(createUserAddressCartQuery,
+        return this.jdbcTemplate.queryForObject(createUserAddressCartQuery,
                 (rs, rowNum) -> new GetUserAddressCartRes(
                         rs.getInt("user_address_id"),
                         rs.getString("address_name"),
@@ -333,5 +333,4 @@ public class UserDao {
                         rs.getDouble("longitude")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 getUserAddressCartParams);
     }
-
 }
