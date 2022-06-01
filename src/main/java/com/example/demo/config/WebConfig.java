@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
     //     제외대상
     private String[] INTERCEPTOR_WHITE_LIST = {
             "/app/users/sign-up", "/app/users", "/app/users/sign-in", "/app/events/**", "/app/categories/**", "/app/restaurants/**",
-            "/test/log", "/images/**"
+            "/test/log", "/images/**", "/app/users/{userId}/addresses"
     };
 
     @Autowired

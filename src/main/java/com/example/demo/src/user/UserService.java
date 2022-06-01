@@ -5,7 +5,6 @@ package com.example.demo.src.user;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
-import com.example.demo.utils.SHA256;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,17 +94,18 @@ public class UserService {
     }
 
     public GetSignInJwtRes signInByJwt() throws BaseException{
+        int userId = jwtService.getUserId();
+        if(userDao.checkId(userId) != 1){ // 존재하지 않는 유저 정보의 jwt
+            throw new BaseException(NOT_EXIST_USER_ID_BY_JWT);
+        }
+
         try{
-            int userId = jwtService.getUserId();
-            if(userDao.checkId(userId) != 1){ // 존재하지 않는 유저 정보의 jwt
-                throw new BaseException(FAILED_TO_LOGIN_BY_JWT);
-            }
             //String jwt = jwtService.createJwt(userId);
             String jwt = userDao.getUserAccessToken(userId);
             return new GetSignInJwtRes(userId, jwt);
         }
         catch (Exception exception){
-            throw new BaseException(FAILED_TO_LOGIN);
+            throw new BaseException(DATABASE_ERROR);
         }
     }
 

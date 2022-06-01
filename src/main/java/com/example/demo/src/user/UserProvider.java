@@ -8,6 +8,7 @@ import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,9 +61,16 @@ public class UserProvider {
 
 
     public GetUserAddressRes getUserAddress(int userId, Boolean isSelected) throws BaseException{
+        if(userDao.checkId(userId) != 1){ // 존재하지 않는 유저 정보의 jwt
+            System.out.println(userDao.checkId(userId));
+            throw new BaseException(NOT_EXIST_USER_ID_BY_JWT);
+        }
+
         try {
             GetUserAddressRes getUserAddressRes = userDao.getUserAddress(userId, isSelected);
             return getUserAddressRes;
+        } catch (EmptyResultDataAccessException exception){ // userId에 대해 결과 없음
+            throw new BaseException(NOT_EXIST_SELECTED_USER_ADDRESS);
         } catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
