@@ -43,6 +43,7 @@ public enum BaseResponseStatus {
     //[POST] /carts
     POST_CARTS_ANOTHER_RESTAURANT_ID_EXISTS(false, 2025, "다른 가게에 대한 카트 정보가 이미 존재합니다."),
     POST_CARTS_EMPTY_ESSENTIAL_OPTION(false, 2026, "필수 옵션을 설정하지 않았습니다."),
+    GET_CARTS_TOO_MUCH_LONG_DISTANCE(false, 2027, "유효한 배달 거리가 아닙니다."),
 
 
 

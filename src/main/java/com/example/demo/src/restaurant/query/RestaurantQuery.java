@@ -251,4 +251,45 @@ public class RestaurantQuery {
             "           price as option_price\n" +
             "    FROM res_menu\n" +
             ") RM ON RKM.restaurant_id = RM.restaurant_id AND RKM.menu_id = RM.option_id;";
+
+    public static String getResDistance = "SELECT ST_Distance_Sphere(POINT(?,?), POINT(longitude, latitude)) as distance\n" +
+            "FROM restaurant R join (\n" +
+            "             SELECT restaurant_id\n" +
+            "             FROM cart\n" +
+            "             WHERE cart_id = ?\n" +
+            ") C ON R.restaurant_id = C.restaurant_id";
+
+    // cart에 존재하는 res에 대해, 주문 금액에 따라 배달비 산출, 거리에 따라 배달 시간 조절.
+    public static String getRestaurantInfoQuery = "SELECT C.restaurant_id,\n" +
+            "       restaurant_name,\n" +
+            "       is_cheetah,\n" +
+            "       is_packable,\n" +
+            "       delivery_time,\n" +
+            "       packaging_time,\n" +
+            "       delivery_fee,\n" +
+            "       min_order_price\n" +
+            "FROM (\n" +
+            "    SELECT restaurant_id\n" +
+            "    FROM cart\n" +
+            "    WHERE cart_id = ? #cart_id\n" +
+            "    ) C join\n" +
+            "(\n" +
+            "    SELECT restaurant_id,\n" +
+            "       restaurant_name,\n" +
+            "       is_cheetah,\n" +
+            "       is_packable,\n" +
+            "       IF( ? > 3000, delivery_time+5, delivery_time) as delivery_time, # distance\n" +
+            "       packaging_time\n" +
+            "FROM restaurant\n" +
+            ")  R ON C.restaurant_id = R.restaurant_id\n" +
+            "join (\n" +
+            "SELECT restaurant_id,\n" +
+            "       delivery_fee\n" +
+            "FROM res_delivery_fee\n" +
+            "WHERE ? BETWEEN min_price AND max_price #orderPrice\n" +
+            ")  RDF ON C.restaurant_id = RDF.restaurant_id\n" +
+            "join (\n" +
+            "    SELECT MIN(min_price) as min_order_price\n" +
+            "    FROM res_delivery_fee\n" +
+            ") RDF2;";
 }

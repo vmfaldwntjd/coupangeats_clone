@@ -197,4 +197,39 @@ public class RestaurantDao {
 
         return resMenuOption;
     }
+
+    public Double getResDistance(int cartId, Double latitude, Double longitude){
+        return this.jdbcTemplate.queryForObject(getResDistance, Double.class,
+                new Object[]{longitude, latitude, cartId});
+    }
+
+    //카트 조회용 가게 정보 로드
+    public RestaurantInfo getRestaurantInfo(int cartId, int orderPrice, Double distance){
+
+        return this.jdbcTemplate.queryForObject(getRestaurantInfoQuery,
+                (rs, rowNum) -> new RestaurantInfo(
+                        rs.getInt("restaurant_id"),
+                        rs.getString("restaurant_name"),
+                        rs.getInt("is_cheetah") == 1 ? true : false,
+                        rs.getInt("is_packable") == 1 ? true : false,
+                        rs.getInt("delivery_time"),
+                        rs.getInt("packaging_time"),
+                        rs.getInt("delivery_fee"),
+                        rs.getInt("min_order_price"),
+                        null
+                        ), new Object[]{cartId, distance, orderPrice});
+
+    }
+
+    // 함께 주문하면 좋을 메뉴 출력. 임의로 만원미만 전체 메뉴 출력으로 결정.
+    public List<RecommendMenuInfo> getRecommendMenuList(int restaurantId) {
+        return this.jdbcTemplate.query("SELECT menu_id, price as menu_price, name as menu_name FROM res_menu \n" +
+                "WHERE restaurant_id = ? AND price BETWEEN 1 AND 10000 LIMIT 10",
+                (rs, rowNum) -> new RecommendMenuInfo(
+                        rs.getInt("menu_id"),
+                        rs.getInt("menu_price"),
+                        rs.getString("menu_name")
+                ), restaurantId);
+    }
+
 }

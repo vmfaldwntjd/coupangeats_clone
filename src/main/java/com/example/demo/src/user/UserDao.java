@@ -322,7 +322,7 @@ public class UserDao {
                 "inner join cart on user_address.user_address_id = cart.user_address_id\n" +
                 "where is_selected = 1 and user_address.user_id = ?;";
         int getUserAddressCartParams = userId;
-        this.jdbcTemplate.update(createUserAddressCartQuery, getUserAddressCartParams);
+//        this.jdbcTemplate.update(createUserAddressCartQuery, getUserAddressCartParams);
 
         return this.jdbcTemplate.queryForObject(createUserAddressCartQuery,
                 (rs, rowNum) -> new GetUserAddressCartRes(

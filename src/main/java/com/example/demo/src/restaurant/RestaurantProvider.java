@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
-import static com.example.demo.config.BaseResponseStatus.RESTAURANTS_INVALID_SORT_BY;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class RestaurantProvider {
@@ -165,6 +164,35 @@ public class RestaurantProvider {
             List<ResMenuOption> resMenuOption = restaurantDao.getResMenuOption(restaurantId, menuId);
             return resMenuOption;
         }catch (Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 카트 조회용 가게정보 로드
+    public RestaurantInfo getResInfo(int cartId, int orderPrice, Double latitude, Double longitude) throws BaseException{
+        try{
+            Double distance = restaurantDao.getResDistance(cartId,  latitude, longitude);
+            //validation처리가 각 테이블 provider인지 cartProvider에서 해야하는지 확인할 것.
+            if(distance > 5000){
+                throw new BaseException(GET_CARTS_TOO_MUCH_LONG_DISTANCE);
+            }
+
+            System.out.println("distance : "+  distance);
+
+            RestaurantInfo restaurantInfo = restaurantDao.getRestaurantInfo(cartId, orderPrice, distance);
+            return restaurantInfo;
+        } catch (Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 함께 주문하면 좋을 메뉴 리스트 출력
+    public List<RecommendMenuInfo> getRecommendMenuList(int restaurantId) throws BaseException{
+        try {
+            return restaurantDao.getRecommendMenuList(restaurantId);
+        } catch (Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }

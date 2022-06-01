@@ -9,11 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResOrderMenuInfo {
-    private int menuId;
-    private int menuPrice;
-    private int menuCount;
-    private String menuName;
-    private int menuOrder;
-    private String optionInfo;
+public class DiscountInfo {
+    private int couponCount;
+    private int couponDiscount;
+    private int cashDiscount;
+    private int totalPrice;
 }

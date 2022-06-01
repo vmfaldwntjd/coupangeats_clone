@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class GetTotalPriceRes {
-    private int total_price;
+public class GetOrderPriceRes {
+    private int cartId;
+    private int orderPrice;
 }

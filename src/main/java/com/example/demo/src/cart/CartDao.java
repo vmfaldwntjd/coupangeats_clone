@@ -1,7 +1,6 @@
 package com.example.demo.src.cart;
 
 import com.example.demo.src.cart.model.*;
-import com.example.demo.src.event.model.GetEventBannerRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
@@ -12,6 +11,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 import static com.example.demo.src.cart.query.CartQuery.createCartQuery;
+import static com.example.demo.src.cart.query.CartQuery.getMenuListFromCartQuery;
 
 @Repository
 public class CartDao {
@@ -96,14 +96,13 @@ public class CartDao {
         return this.jdbcTemplate.update("UPDATE cart SET order_price = order_price + ? WHERE cart_id = ?", totalPrice, cartId);
     }
 
-    public int getTotalPrice(int cartId){
-        return this.jdbcTemplate.queryForObject("SELECT order_price FROM cart WHERE cart_id = ?", int.class, cartId);
+    public GetOrderPriceRes getOrderPrice(int userId){
+        return this.jdbcTemplate.queryForObject("SELECT cart_id, order_price FROM cart WHERE user_id = ?",
+                (rs, rowNum) -> new GetOrderPriceRes(
+                        rs.getInt("cart_id"),
+                        rs.getInt("order_price")
+                ), userId);
     }
-
-//    //cart 정보 조회
-//    public ResOrderMenuInfo getOrderMenuInfo(int cartId){
-//
-//    }
 
     // 한 단위 메뉴에 해당되는 모든 옵션정보를 문자열로 전환한다.
     public String getOptionInfoString(int cartId, int menuId, int menuOrder){
@@ -128,7 +127,7 @@ public class CartDao {
         return optionInfo;
     }
 
-    // 현재 메뉴에 대해서 이미 들어와있는 단락 메뉴 리스트 정보를 가져온다.
+    // 현재 메뉴와 같은 메뉴인, 이미 들어와있는 단락 메뉴 리스트 정보를 가져온다.
     public List<Integer> getCartMenuOption(int cartId, int menuId){
         return this.jdbcTemplate.query("SELECT menu_order FROM cart_menu WHERE cart_id =? AND menu_id = ?",
                 (rs, rowNum) -> rs.getInt("menu_order"), new Object[]{cartId, menuId});
@@ -136,5 +135,49 @@ public class CartDao {
 
     public int increaseMenuCount(int cartId, int menuId, int menuCount){
         return this.jdbcTemplate.update("UPDATE cart_menu SET count = count + ? WHERE cart_id = ? AND menu_id = ?", menuCount, cartId, menuId);
+    }
+
+
+    public List<ResOrderMenuInfo> getResOrderMenuInfo(int cartId){
+        List<ResOrderMenuInfo> resOrderMenuInfoList = this.jdbcTemplate.query(getMenuListFromCartQuery,
+                (rs, rowNum) -> new ResOrderMenuInfo(
+                        rs.getInt("menu_id"),
+                        rs.getInt("menu_price"),
+                        rs.getInt("menu_count"),
+                        rs.getString("menu_name"),
+                        rs.getInt("menu_order"),
+                        null
+                ), cartId);
+
+        for(ResOrderMenuInfo resOrderMenuInfo : resOrderMenuInfoList){
+            resOrderMenuInfo.setOptionInfo(getOptionInfoString(cartId, resOrderMenuInfo.getMenuId(), resOrderMenuInfo.getMenuOrder()));
+            System.out.println("optionInfo Test : "+resOrderMenuInfo.getOptionInfo());
+        }
+        return resOrderMenuInfoList;
+    }
+
+    // 가게 요청사항 정보
+    public RequestMessageInfo getRequestMessageInfo(int cartId) {
+        return this.jdbcTemplate.queryForObject("SELECT res_message, is_need_disposable, del_message FROM cart WHERE cart_id = ?",
+                (rs, rowNum) -> new RequestMessageInfo(
+                        rs.getString("res_message"),
+                        rs.getInt("is_need_disposable"),
+                        rs.getString("del_message")
+                ), cartId);
+    }
+
+    // 카트 할인 정보
+    public DiscountInfo getDiscountInfo(int cartId) {
+        return this.jdbcTemplate.queryForObject("SELECT coupon_discount,\n" +
+                        "       cash_discount,\n" +
+                        "coupon_discount+cart.cash_discount as total_price\n" +
+                        "FROM cart\n" +
+                        "WHERE cart_id = ?",
+                (rs, rowNum) -> new DiscountInfo(
+                        0,
+                        rs.getInt("coupon_discount"),
+                        rs.getInt("cash_discount"),
+                        rs.getInt("total_price") // 아직 총 결재금액이 아님! 아직은 할인 가격 합산!
+                ), cartId);
     }
 }

@@ -4,13 +4,11 @@ import com.example.demo.config.BaseException;
 import com.example.demo.src.cart.model.*;
 import com.example.demo.src.user.UserProvider;
 import com.example.demo.utils.JwtService;
-import io.jsonwebtoken.Jwt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 
 import java.util.List;
@@ -118,7 +116,7 @@ public class CartService {
                             throw new BaseException(DATABASE_ERROR);
                         }
 
-                        int totalPrice = cartProvider.getTotalPrice(cartId);
+                        int totalPrice = cartProvider.getOrderPrice(userId).getOrderPrice();
                         return new PostCartRes(userId, cartId, totalPrice);
                     }
                 }
@@ -132,7 +130,7 @@ public class CartService {
                 throw new BaseException(DATABASE_ERROR);
             }
 
-            int totalPrice = cartProvider.getTotalPrice(cartId);
+            int totalPrice = cartProvider.getOrderPrice(userId).getOrderPrice();
 
             return new PostCartRes(userId, cartId, totalPrice);
         } catch(Exception exception){

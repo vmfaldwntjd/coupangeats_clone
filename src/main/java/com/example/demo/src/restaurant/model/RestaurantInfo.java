@@ -6,14 +6,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RestaurantMenuInfo {
+public class RestaurantInfo {
     private int restaurantId;
     private String restaurantName;
     private boolean isCheetah;
-//    private List<ResOrderMenuInfo> resOrderMenuInfo;
-
+    private boolean isPackable;
+    private int deliveryTime;
+    private int packagingTIme;
+    private int deliveryFee;
+    private int minOrderPrice; // 가게별 최소 주문 금액
+    private List<ResOrderMenuInfo> resOrderMenuInfo;
 }

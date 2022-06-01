@@ -1,12 +1,17 @@
 package com.example.demo.src.cart;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.cart.model.DiscountInfo;
+import com.example.demo.src.cart.model.GetOrderPriceRes;
+import com.example.demo.src.cart.model.RequestMessageInfo;
 import com.example.demo.src.cart.model.ResOrderMenuInfo;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
@@ -42,24 +47,15 @@ public class CartProvider {
         }
     }
 
-    public int getTotalPrice(int cartId) throws BaseException {
+    public GetOrderPriceRes getOrderPrice(int userId) throws BaseException {
         try {
-            return cartDao.getTotalPrice(cartId);
+            return cartDao.getOrderPrice(userId);
         } catch(Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    // cart_menu에 있는 메뉴 정보를 불러온다.
-//    public ResOrderMenuInfo getOrderMenuInfo(int cartId) throws BaseException {
-//        try{
-//            return cartDao.getOrderMenuInfo(cartId);
-//        } catch(Exception exception){
-//            System.out.println(exception);
-//            throw new BaseException(DATABASE_ERROR);
-//        }
-//    }
     public String getOptionInfoString(int cartId, int menuId, int menuOrder) throws BaseException {
         try {
             return cartDao.getOptionInfoString(cartId, menuId,  menuOrder);
@@ -68,4 +64,29 @@ public class CartProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public List<ResOrderMenuInfo> getResOrderMenuInfo(int cartId) throws BaseException {
+        try {
+            return cartDao.getResOrderMenuInfo(cartId);
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public RequestMessageInfo getRequestMessageInfo(int cartId) throws BaseException{
+        try {
+            return cartDao.getRequestMessageInfo(cartId);
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public DiscountInfo getDiscountInfo(int cartId) throws BaseException {
+        try {
+            return cartDao.getDiscountInfo(cartId);
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 }

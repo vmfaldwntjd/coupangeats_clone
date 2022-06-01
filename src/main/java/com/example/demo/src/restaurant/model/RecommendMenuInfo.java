@@ -1,4 +1,4 @@
-package com.example.demo.src.cart.model;
+package com.example.demo.src.restaurant.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResOrderMenuInfo {
+public class RecommendMenuInfo {
     private int menuId;
     private int menuPrice;
-    private int menuCount;
     private String menuName;
-    private int menuOrder;
-    private String optionInfo;
 }
