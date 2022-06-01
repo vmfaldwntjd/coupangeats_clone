@@ -291,9 +291,15 @@ refresh token -> access token, refresh token 두가지 저장
 
 
 ### 2022-06-01
-1. 개발 이슈
+1. API 구현 상황
+ - 카트화면 조회 17번 개발 완료. 일부 코어 담당 도메인의 경우 임시 데이터를 사용.
+ - 더미데이터 작성 중.
+
+2. 개발 이슈
  - git pull 시  "Please enter a commit message to explain why this merge is necessary, especially if it merges an updated upstream into a topic branch" 발생.   
 무시하고 대상 파일 변경 확인, 빌드 및 실행 진행했으나 변경사항이 반영되지 않는 오류 발생.
+- 열린 파일이 nano편집기라는 것을 깨닫고 관련 키워드 검색, 메세지 작성후 ctr+O, enter로 저장, ctr+X로 나가기로 해결. 이후 pull할때마다 계속해서 같은 화면이 출력됨.
+
 
 * * *
 
@@ -400,3 +406,8 @@ Home 음식점 API 연동 진행중, Store 세부 정보 UI 구현 진행중
 1. api 명세서 31번 작성 -> 40%
 2. 이슈: git coupangeats_server_core_dona 레퍼지토리에서 dev -> main으로 merge 시도하려는 중 충돌 문제가 발생
 .gitignore에 해당 충돌 파일들을 추가를 함으로써 문제 해결 
+
+### 2022-06-01
+1. Order관련 도메인 명세서 20, 21번과 Address관련 도메인 23 ~ 26번 명세서 서버 반영 완료.
+2. Favorite관련 도메인 명세서 31 ~ 33번 명세서 작성 및 서버 반영 완료
+3. Payment관련 도메인 명세서 34, 35번 작성 완료
