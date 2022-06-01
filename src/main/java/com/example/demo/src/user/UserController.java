@@ -298,5 +298,53 @@ public class UserController {
         }
     }
 
+    //core 추가
+    @ResponseBody
+    @GetMapping("/{userId}/favorites")
+    public BaseResponse<List<GetUserFavoriteRes>> getUserFavorite(@PathVariable("userId") int userId) {
 
+        try {
+            int userIdByJwt = jwtService.getUserId();
+            if (userId != userIdByJwt) {
+                return new BaseResponse(INVALID_USER_JWT);
+            }
+            List<GetUserFavoriteRes> getUserFavoriteRes = userProvider.getUserFavorite(userId);
+            return new BaseResponse<>(getUserFavoriteRes);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    //core추가
+    @ResponseBody
+    @DeleteMapping("/{userId}/favorites/{restaurantId}")
+    public BaseResponse<Boolean> deleteUserFavorite(@PathVariable("userId") int userId, @PathVariable("restaurantId") int restaurantId) {
+        try {
+            int userIdByJwt = jwtService.getUserId();
+            if (userId != userIdByJwt) {
+                return new BaseResponse(INVALID_USER_JWT);
+            }
+            boolean deleteUserFavoriteRes = userService.deleteUserFavorite(userId, restaurantId);
+            return new BaseResponse<>(deleteUserFavoriteRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    //core추가
+    @ResponseBody
+    @PostMapping("/{userId}/favorites/{restaurantId}")
+    public BaseResponse<PostUserFavoriteRes> createUserFavorite(@PathVariable("userId") int userId, @PathVariable("restaurantId") int restaurantId) {
+        try {
+            int userIdByJwt = jwtService.getUserId();
+            if (userId != userIdByJwt) {
+                return new BaseResponse(INVALID_USER_JWT);
+            }
+            PostUserFavoriteRes postUserFavoriteRes = userService.createUserFavorite(userId, restaurantId);
+            return new BaseResponse<>(postUserFavoriteRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }

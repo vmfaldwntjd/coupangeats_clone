@@ -242,11 +242,12 @@ public class UserDao {
 
     //core추가
     public List<GetUserAddressInformationRes> getUserAddressInformation(int userId) {
-        String getUserAddressInformationQuery = "select kind, detail_address, address_name, doro_name_address from user_address\n" +
+        String getUserAddressInformationQuery = "select user_address_id, kind, detail_address, address_name, doro_name_address from user_address\n" +
                 "where user_id = ?;";
         int getUserInformationParams = userId;
         return this.jdbcTemplate.query(getUserAddressInformationQuery,
                 (rs, rowNum) -> new GetUserAddressInformationRes(
+                        rs.getInt("user_address_id"),
                         rs.getInt("kind"),
                         rs.getString("detail_address"),
                         rs.getString("address_name"),
@@ -269,6 +270,47 @@ public class UserDao {
         Object[] createUserAddressParams = new Object[]{userId, postUserAddressReq.getAddressName(), postUserAddressReq.getDoroNameAddress(), postUserAddressReq.getDetailAddress(),
                 postUserAddressReq.getWayGuide(),postUserAddressReq.getAddressAlias(), postUserAddressReq.getKind()};
         this.jdbcTemplate.update(createUserAddressQuery, createUserAddressParams);
+
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class);
+    }
+
+    //core추가
+    public List<GetUserFavoriteRes> getUserFavorite(int userId) {
+        String getUserFavoriteQuery = "select favorite_id, favorite.restaurant_id, image_id, restaurant_name, is_cheetah, star_point, delivery_time, delivery_fee, is_packable from favorite\n" +
+                "inner join restaurant on favorite.restaurant_id = restaurant.restaurant_id\n" +
+                "inner join res_image on restaurant.restaurant_id = res_image.restaurant_id\n" +
+                "inner join review on restaurant.restaurant_id = review.restaurant_id\n" +
+                "inner join res_delivery_fee on restaurant.restaurant_id = res_delivery_fee.restaurant_id\n" +
+                "where favorite.user_id = ? and res_image.image_id = 1;";
+        int getUserFavoriteParams = userId;
+        return this.jdbcTemplate.query(getUserFavoriteQuery,
+                (rs, rowNum) -> new GetUserFavoriteRes(
+                        rs.getInt("favorite_id"),
+                        rs.getInt("restaurant_id"),
+                        rs.getInt("image_id"),
+                        rs.getString("restaurant_name"),
+                        rs.getInt("is_cheetah"),
+                        rs.getInt("star_point"),
+                        rs.getInt("delivery_time"),
+                        rs.getInt("delivery_fee"),
+                        rs.getInt("is_packable")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
+                getUserFavoriteParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
+    }
+
+    //core추가
+    public boolean deleteUserFavorite(int userId, int restaurantId) {
+        String deleteUserQuery = "delete from favorite where user_id = ? and restaurant_id = ?";
+        Object[] args = new Object[] {userId, restaurantId};
+
+        return jdbcTemplate.update(deleteUserQuery, args) == 1;
+    }
+
+    //core 추가
+    public int createUserFavorite(int userId, int restaurantId){
+        String createUserFavoriteQuery = "INSERT INTO coupangeats.favorite (restaurant_id, user_id) VALUES (?, ?);";
+        Object[] createUserFavoriteParams = new Object[]{restaurantId, userId};
+        this.jdbcTemplate.update(createUserFavoriteQuery, createUserFavoriteParams);
 
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class);

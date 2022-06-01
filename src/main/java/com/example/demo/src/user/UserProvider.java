@@ -121,4 +121,15 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    //core추가
+    public List<GetUserFavoriteRes> getUserFavorite(int userId) throws BaseException {
+        try {
+            List<GetUserFavoriteRes> getUserFavoriteRes = userDao.getUserFavorite(userId);
+            return getUserFavoriteRes;
+        } catch (Exception exception) {
+            System.out.println(exception); //오류 내용 확인용
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

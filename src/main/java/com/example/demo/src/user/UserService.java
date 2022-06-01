@@ -133,4 +133,26 @@ public class UserService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    //core 추가
+    public boolean deleteUserFavorite(int userId, int restaurantId) throws BaseException {
+        try {
+            boolean deleteUserFavoriteRes = userDao.deleteUserFavorite(userId, restaurantId);
+            return deleteUserFavoriteRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    //core 추가
+    public PostUserFavoriteRes createUserFavorite(int userId, int restaurantId) throws BaseException {
+        try {
+            int favoriteId = userDao.createUserFavorite(userId, restaurantId);
+            return new PostUserFavoriteRes(favoriteId);
+
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

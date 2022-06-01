@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class GetUserAddressInformationRes {
+    private int userAddressId;
     private int kind;
     private String detailAddress;
     private String addressName;
