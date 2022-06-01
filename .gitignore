@@ -183,3 +183,5 @@ build/
 #.idea 디렉토리 추가(core)
 .idea/
 
+#static 디렉토리 추가
+static/

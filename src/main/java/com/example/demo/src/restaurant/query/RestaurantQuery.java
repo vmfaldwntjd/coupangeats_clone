@@ -154,11 +154,11 @@ public class RestaurantQuery {
             "ORDER BY image_id ASC;";
 
     public static String getResKindQuery = "SELECT kind_id,\n" +
-            "       res_kind_name as kind_name\n" +
+            "       kind_name \n" +
             "FROM res_kind\n" +
             "WHERE restaurant_id = ?\n" +
             "  AND status = 1\n" +
-            "AND is_option = 0\n" +
+            "  AND is_option = 0\n" +
             "ORDER BY kind_id ASC;";
 
     public static String getResKindMenuQuery = "SELECT RK.kind_id,\n" +
