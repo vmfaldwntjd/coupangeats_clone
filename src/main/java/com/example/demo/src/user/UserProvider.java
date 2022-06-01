@@ -132,4 +132,16 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    //core추가 -> cart도메인에 필요한 메소드
+    public List<GetUserAddressCartRes> getUserAddressInfo(int userId) throws BaseException {
+        try {
+            List<GetUserAddressCartRes> getUserAddressCartRes = userDao.getUserAddressInfo(userId);
+            return getUserAddressCartRes;
+        } catch (Exception exception) {
+            System.out.println(exception); //오류 내용 확인용
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 }
