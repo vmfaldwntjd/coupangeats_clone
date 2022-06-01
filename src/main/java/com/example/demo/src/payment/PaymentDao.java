@@ -44,4 +44,12 @@ public class PaymentDao {
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class);
     }
+
+    //결제 관리에서 카드 삭제 메소드
+    public boolean deleteUserPayment(int userId, int cardId) {
+        String deleteUserPaymentQuery = "delete from card where user_id = ? and card_id = ?;";
+        Object[] args = new Object[] {userId, cardId};
+
+        return jdbcTemplate.update(deleteUserPaymentQuery, args) == 1;
+    }
 }

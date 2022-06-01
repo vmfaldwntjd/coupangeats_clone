@@ -31,7 +31,7 @@ public class PaymentController {
     @Autowired
     private final PaymentService paymentService;
 
-    public PaymentController(JwtService jwtService, PaymentProvider paymentProvider, PaymentService paymentService){
+    public PaymentController(JwtService jwtService, PaymentProvider paymentProvider, PaymentService paymentService) {
         this.jwtService = jwtService;
         this.paymentProvider = paymentProvider;
         this.paymentService = paymentService;
@@ -65,6 +65,22 @@ public class PaymentController {
             }
             PostUserPaymentRes postUserPaymentRes = paymentService.createUserPayment(userId, postUserPaymentReq);
             return new BaseResponse<>(postUserPaymentRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    //결제 관리에서 카드 삭제하기 메소드
+    @ResponseBody
+    @DeleteMapping("/{userId}/{cardId}")
+    public BaseResponse<Boolean> deleteUserPayment(@PathVariable("userId") int userId, @PathVariable("cardId") int cardId) {
+        try {
+            int userIdByJwt = jwtService.getUserId();
+            if (userId != userIdByJwt) {
+                return new BaseResponse(INVALID_USER_JWT);
+            }
+            boolean deleteUserPaymentRes = paymentService.deleteUserPayment(userId, cardId);
+            return new BaseResponse<>(deleteUserPaymentRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

@@ -40,4 +40,14 @@ public class PaymentService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    //유저 결제 관리에서 카드 삭제 하기
+    public boolean deleteUserPayment(int userId, int cardId) throws BaseException {
+        try {
+            boolean deleteUserPaymentRes = paymentDao.deleteUserPayment(userId, cardId);
+            return deleteUserPaymentRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
