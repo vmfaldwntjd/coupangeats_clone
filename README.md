@@ -291,9 +291,15 @@ refresh token -> access token, refresh token 두가지 저장
 
 
 ### 2022-06-01
-1. 개발 이슈
+1. API 구현 상황
+ - 카트화면 조회 17번 개발 완료. 일부 코어 담당 도메인의 경우 임시 데이터를 사용.
+ - 더미데이터 작성 중.
+
+2. 개발 이슈
  - git pull 시  "Please enter a commit message to explain why this merge is necessary, especially if it merges an updated upstream into a topic branch" 발생.   
 무시하고 대상 파일 변경 확인, 빌드 및 실행 진행했으나 변경사항이 반영되지 않는 오류 발생.
+- 열린 파일이 nano편집기라는 것을 깨닫고 관련 키워드 검색, 메세지 작성후 ctr+O, enter로 저장, ctr+X로 나가기로 해결. 이후 pull할때마다 계속해서 같은 화면이 출력됨.
+
 
 * * *
 
