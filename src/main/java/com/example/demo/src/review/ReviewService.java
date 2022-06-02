@@ -53,4 +53,14 @@ public class ReviewService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    //리뷰 삭제 메소드
+    public boolean deleteReview(int reviewId, int userId) throws BaseException {
+        try {
+            boolean deleteReviewRes = reviewDao.deleteReview(reviewId, userId);
+            return deleteReviewRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

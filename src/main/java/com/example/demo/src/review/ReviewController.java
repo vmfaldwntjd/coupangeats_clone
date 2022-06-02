@@ -71,5 +71,16 @@ public class ReviewController {
         }
     }
 
+    //리뷰 관리에서 내가 작성한 리뷰 삭제 메소드
+    @ResponseBody
+    @DeleteMapping("/{reviewId}/{userId}")
+    public BaseResponse<Boolean> deleteReview(@PathVariable("reviewId") int reviewId, @PathVariable("userId") int userId) {
+        try {
+            boolean deleteReviewRes = reviewService.deleteReview(reviewId, userId);
+            return new BaseResponse<>(deleteReviewRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
 }

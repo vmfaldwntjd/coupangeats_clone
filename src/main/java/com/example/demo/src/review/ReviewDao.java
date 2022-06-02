@@ -36,4 +36,12 @@ public class ReviewDao {
 
         return this.jdbcTemplate.update(patchReviewQuery, patchReviewParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
     }
+
+    //리뷰 삭제 메소드
+    public boolean deleteReview(int reviewId, int userId) {
+        String deleteReviewQuery = "DELETE FROM coupangeats.review WHERE review_id = ? AND user_id = ?";
+        Object[] args = new Object[] {reviewId, userId};
+
+        return jdbcTemplate.update(deleteReviewQuery, args) == 1;
+    }
 }
