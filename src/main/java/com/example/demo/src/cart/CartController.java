@@ -8,9 +8,9 @@ import com.example.demo.src.restaurant.model.RecommendMenuInfo;
 import com.example.demo.src.restaurant.model.RestaurantInfo;
 import com.example.demo.src.user.UserProvider;
 import com.example.demo.src.user.model.GetUserAddressCartRes;
-import com.example.demo.src.user.model.User;
 import com.example.demo.utils.JwtService;
-import org.hibernate.sql.Delete;
+import com.fasterxml.jackson.databind.ser.Serializers;
+import org.hibernate.sql.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,16 +133,32 @@ public class CartController {
 
 
     /**
-     //     * 48. 카트 삭제(장바구니 비우기)API
-     //     * [GET]
-     //     * @return
-     //     * */
+     * 48. 카트 삭제(장바구니 비우기)API
+     * [GET]
+     * @return BaseResponse<UpdateCartRes>
+     * */
     @ResponseBody
     @DeleteMapping("/{cartId}")
-    public BaseResponse<DeleteCartRes> deleteCart(@PathVariable int cartId){
+    public BaseResponse<UpdateCartRes> deleteCart(@PathVariable int cartId){
         try {
-            DeleteCartRes deleteCartRes = cartService.deleteCart(cartId);
+            UpdateCartRes deleteCartRes = cartService.deleteCart(cartId);
             return new BaseResponse<>(deleteCartRes);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 49. 카트 정보 수정 API
+     * [GET]
+     * @return BaseResponse<UpdateCartRes>
+     * */
+    @ResponseBody
+    @PatchMapping("/{cartId}/menus")
+    public BaseResponse<UpdateCartRes> updateCart(@PathVariable int cartId, @RequestBody PatchCartMenuReq patchCartMenuReq){
+        try {
+            UpdateCartRes updateCartRes = cartService.updateCart(cartId, patchCartMenuReq);
+            return new BaseResponse<>(updateCartRes);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }

@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class DeleteCartRes {
+public class UpdateCartRes {
     private int cartId;
 }

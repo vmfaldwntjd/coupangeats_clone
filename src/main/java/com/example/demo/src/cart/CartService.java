@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.transaction.Transactional;
 
@@ -111,7 +113,7 @@ public class CartService {
                         }
 
                         // 총 주문 금액 합산.
-                        int test = cartDao.sumTotalPrice(cartId, sum);
+                        int test = cartDao.addTotalPrice(cartId, sum);
                         if(test != 1){
                             throw new BaseException(DATABASE_ERROR);
                         }
@@ -124,7 +126,7 @@ public class CartService {
             }
 
             int sum = cartDao.createCartMenu(cartId, menuOrder, postCartReq);
-            int t = cartDao.sumTotalPrice(cartId, sum);
+            int t = cartDao.addTotalPrice(cartId, sum);
 
             if(t != 1){
                 throw new BaseException(DATABASE_ERROR);
@@ -140,15 +142,43 @@ public class CartService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public DeleteCartRes deleteCart(int cartId) throws BaseException {
-           try {
-               int result = cartDao.deleteCart(cartId);
-               if(result == 0){
-                   throw new BaseException(NOT_EXIST_CART_ID); // 삭제된 카트 정보가 없음.
-               }
-               return new DeleteCartRes(cartId);
-           } catch (Exception exception){
-               throw new BaseException(DATABASE_ERROR);
-           }
+    public UpdateCartRes deleteCart(int cartId) throws BaseException {
+        int result;
+        try {
+            result = cartDao.deleteCart(cartId);
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+        if(result == 0){
+            throw new BaseException(NO_UPDATED_CART_INFO); // 삭제된 카트 정보가 없음.
+        }
+        return new UpdateCartRes(cartId);
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    public UpdateCartRes updateCart(@PathVariable int cartId, @RequestBody PatchCartMenuReq patchCartMenuReq) throws BaseException{
+        int result;
+        try {
+            result = cartDao.updateCart(cartId, patchCartMenuReq);
+        } catch (Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+        if(result == 0){
+            throw new BaseException(NO_UPDATED_CART_INFO); // 업데이트된 카트 정보가 없음.
+        }
+
+        try {
+            result = cartDao.updateCartOrderPrice(cartId, patchCartMenuReq);
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+        if(result == 0){
+            throw new BaseException(NO_UPDATED_CART_INFO); // 업데이트된 카트 정보가 없음.
+        }
+
+        return new UpdateCartRes(cartId);
+
     }
 }

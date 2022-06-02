@@ -92,7 +92,7 @@ public class CartDao {
        return sum*postCartReq.getMenuCount();
     }
 
-    public int sumTotalPrice(int cartId, int totalPrice){
+    public int addTotalPrice(int cartId, int totalPrice){
         return this.jdbcTemplate.update("UPDATE cart SET order_price = order_price + ? WHERE cart_id = ?", totalPrice, cartId);
     }
 
@@ -170,7 +170,7 @@ public class CartDao {
     public DiscountInfo getDiscountInfo(int cartId) {
         return this.jdbcTemplate.queryForObject("SELECT coupon_discount,\n" +
                         "       cash_discount,\n" +
-                        "coupon_discount+cart.cash_discount as total_price\n" +
+                        "       (coupon_discount + cart.cash_discount) * -1 as total_price\n" +
                         "FROM cart\n" +
                         "WHERE cart_id = ?",
                 (rs, rowNum) -> new DiscountInfo(
@@ -184,5 +184,32 @@ public class CartDao {
     public int deleteCart(int cartId){
         String deleteCartQuery = "DELETE FROM cart WHERE cart_id = ?";
         return this.jdbcTemplate.update(deleteCartQuery, cartId);
+    }
+
+    public int updateCart(int cartId, PatchCartMenuReq patchCartMenuReq){
+        String updateCartQuery = "UPDATE cart_menu SET count = ? WHERE cart_id = ? AND menu_order = ? AND menu_id = ?;";
+        Object[] updateCartParam = new Object[]{patchCartMenuReq.getMenuCount(), cartId, patchCartMenuReq.getMenuOrder(), patchCartMenuReq.getMenuId()};
+        return this.jdbcTemplate.update(updateCartQuery, updateCartParam);
+    }
+
+    public int updateCartOrderPrice(int cartId, PatchCartMenuReq patchCartMenuReq){
+        String getSumQuery = "SELECT sum(price) as sum FROM cart_menu WHERE cart_id = ? AND menu_order = ?;";
+        String getCountQuery = "SELECT count FROM cart_menu WHERE cart_id = ? AND menu_order = ? AND menu_id = ?;";
+        List<Integer> sumList = this.jdbcTemplate.query(getSumQuery,
+                (rs, rowNum) -> rs.getInt("sum"),
+                new Object[]{cartId, patchCartMenuReq.getMenuOrder()});
+        List<Integer> countList = this.jdbcTemplate.query(getCountQuery,
+                (rs, rowNum) -> rs.getInt("count"),
+                new Object[]{cartId, patchCartMenuReq.getMenuOrder(), patchCartMenuReq.getMenuId()});
+
+        int orderPrice = 0;
+        for(int i = 0; i < sumList.size(); i++){
+            orderPrice += sumList.get(i)*countList.get(i);
+        }
+
+        return this.setOrderPrice(cartId, orderPrice);
+    }
+    public int setOrderPrice(int cartId, int orderPrice){
+        return this.jdbcTemplate.update("UPDATE cart SET order_price = ? WHERE cart_id = ?", orderPrice, cartId);
     }
 }

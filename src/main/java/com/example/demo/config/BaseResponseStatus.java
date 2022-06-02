@@ -61,8 +61,9 @@ public enum BaseResponseStatus {
     NOT_EXIST_USER_ID_BY_JWT(false, 3015, "존재하지 않는 user id의 jwt입니다."),
     NOT_EXIST_SELECTED_USER_ADDRESS(false, 3016, "현재 유저의 선택된 주소가 존재하지 않습니다."),
 
-    // [DELETE] /cart/{cardId}
-    NOT_EXIST_CART_ID(false, 3017, "없는 카트 id입니다."),
+    // [DELETE] /cart/{cartId}
+    // [PATCH] /cart/{cartId}/menus
+    NO_UPDATED_CART_INFO(false, 3017, "변경된 카트 정보가 없습니다."),
 
     /**
      * 4000 : Database, Server 오류
