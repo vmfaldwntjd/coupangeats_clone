@@ -2,6 +2,7 @@ package com.example.demo.src.review;
 
 import com.example.demo.src.payment.model.GetUserPaymentRes;
 import com.example.demo.src.payment.model.PostUserPaymentReq;
+import com.example.demo.src.review.model.GetAllReviewRes;
 import com.example.demo.src.review.model.GetReviewRes;
 import com.example.demo.src.review.model.PatchReviewReq;
 import com.example.demo.src.review.model.PostReviewReq;
@@ -63,5 +64,21 @@ public class ReviewDao {
                         rs.getString("content"),
                         rs.getString("menu_name")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 args); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
+    }
+
+    //리뷰 목록 조회 메소드
+    public List<GetAllReviewRes> getReview() {
+        String getReviewQuery = "select restaurant_name, name, star_point, url, menu_name from review\n" +
+                "inner join restaurant r on review.restaurant_id = r.restaurant_id\n" +
+                "inner join user on review.user_id = user.user_id\n" +
+                "inner join review_image ri on review.review_id = ri.review_id;";
+        return this.jdbcTemplate.query(getReviewQuery,
+                (rs, rowNum) -> new GetAllReviewRes(
+                        rs.getString("restaurant_name"),
+                        rs.getString("name"),
+                        rs.getInt("star_point"),
+                        rs.getString("url"),
+                        rs.getString("menu_name")) // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
+                ); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
     }
 }

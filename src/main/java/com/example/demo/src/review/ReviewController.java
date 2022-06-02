@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.example.demo.config.BaseResponseStatus.INVALID_USER_JWT;
 
 @RestController
@@ -89,6 +91,19 @@ public class ReviewController {
             }
             GetReviewRes getReviewRes = reviewProvider.getUserReview(reviewId, userId);
             return new BaseResponse<>(getReviewRes);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    //리뷰 목록 조회 메소드
+    @ResponseBody
+    @GetMapping("")
+    public BaseResponse<List<GetAllReviewRes>> getReview() {
+        try {
+            List<GetAllReviewRes> getAllReviewRes = reviewProvider.getReview();
+            return new BaseResponse<>(getAllReviewRes);
 
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
