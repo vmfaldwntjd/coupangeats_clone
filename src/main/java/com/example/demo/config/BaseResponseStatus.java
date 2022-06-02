@@ -61,13 +61,16 @@ public enum BaseResponseStatus {
     NOT_EXIST_USER_ID_BY_JWT(false, 3015, "존재하지 않는 user id의 jwt입니다."),
     NOT_EXIST_SELECTED_USER_ADDRESS(false, 3016, "현재 유저의 선택된 주소가 존재하지 않습니다."),
 
+    // [DELETE] /cart/{cardId}
+    NOT_EXIST_CART_ID(false, 3017, "없는 카트 id입니다."),
+
     /**
      * 4000 : Database, Server 오류
      */
     DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
     SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
 
-    //[PATCH] /users/{userIdx}
+    //[PATCH] /users/{userId}
     MODIFY_FAIL_USERNAME(false,4014,"유저네임 수정 실패"),
     MODIFY_FAIL_REVIEW(false, 4015, "리뷰 수정 실패"),
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),

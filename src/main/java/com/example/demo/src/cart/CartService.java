@@ -139,4 +139,16 @@ public class CartService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
+    public DeleteCartRes deleteCart(int cartId) throws BaseException {
+           try {
+               int result = cartDao.deleteCart(cartId);
+               if(result == 0){
+                   throw new BaseException(NOT_EXIST_CART_ID); // 삭제된 카트 정보가 없음.
+               }
+               return new DeleteCartRes(cartId);
+           } catch (Exception exception){
+               throw new BaseException(DATABASE_ERROR);
+           }
+    }
 }

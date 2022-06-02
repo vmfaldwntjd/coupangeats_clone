@@ -10,6 +10,7 @@ import com.example.demo.src.user.UserProvider;
 import com.example.demo.src.user.model.GetUserAddressCartRes;
 import com.example.demo.src.user.model.User;
 import com.example.demo.utils.JwtService;
+import org.hibernate.sql.Delete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +79,7 @@ public class CartController {
     /**
 //     * 17. 카트 화면 조회 API
 //     * [GET]
-//     * @retrun BaseResponse<GetCartRes>
+//     * @return BaseResponse<GetCartRes>
 //     * */
     @ResponseBody
     @GetMapping("/{cartId}")
@@ -125,6 +126,23 @@ public class CartController {
                     requestMessageInfo,
                     paymentInfo
             ));
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+
+    /**
+     //     * 48. 카트 삭제(장바구니 비우기)API
+     //     * [GET]
+     //     * @return
+     //     * */
+    @ResponseBody
+    @DeleteMapping("/{cartId}")
+    public BaseResponse<DeleteCartRes> deleteCart(@PathVariable int cartId){
+        try {
+            DeleteCartRes deleteCartRes = cartService.deleteCart(cartId);
+            return new BaseResponse<>(deleteCartRes);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }

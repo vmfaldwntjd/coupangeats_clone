@@ -180,4 +180,9 @@ public class CartDao {
                         rs.getInt("total_price") // 아직 총 결재금액이 아님! 아직은 할인 가격 합산!
                 ), cartId);
     }
+
+    public int deleteCart(int cartId){
+        String deleteCartQuery = "DELETE FROM cart WHERE cart_id = ?";
+        return this.jdbcTemplate.update(deleteCartQuery, cartId);
+    }
 }
