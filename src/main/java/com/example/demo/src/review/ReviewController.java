@@ -2,17 +2,17 @@ package com.example.demo.src.review;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.payment.model.GetUserPaymentRes;
 import com.example.demo.src.payment.model.PostUserPaymentReq;
 import com.example.demo.src.payment.model.PostUserPaymentRes;
-import com.example.demo.src.review.model.PatchReviewReq;
-import com.example.demo.src.review.model.PostReviewReq;
-import com.example.demo.src.review.model.PostReviewRes;
-import com.example.demo.src.review.model.Review;
+import com.example.demo.src.review.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.INVALID_USER_JWT;
 
@@ -80,6 +80,23 @@ public class ReviewController {
             return new BaseResponse<>(deleteReviewRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    //내가 작성한 리뷰 하나 조회 메소드
+    @ResponseBody
+    @GetMapping("/{reviewId}/{userId}")
+    public BaseResponse<GetReviewRes> getUserReview(@PathVariable("reviewId") int reviewId, @PathVariable("userId") int userId) {
+        try {
+            int userIdByJwt = jwtService.getUserId();
+            if (userId != userIdByJwt) {
+                return new BaseResponse(INVALID_USER_JWT);
+            }
+            GetReviewRes getReviewRes = reviewProvider.getUserReview(reviewId, userId);
+            return new BaseResponse<>(getReviewRes);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
         }
     }
 

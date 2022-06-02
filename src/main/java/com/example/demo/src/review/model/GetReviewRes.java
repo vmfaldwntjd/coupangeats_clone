@@ -8,5 +8,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class GetReviewRes {
-
+    private int reviewId;
+    private int userId;
+    private String restaurantName;
+    private int starPoint;
+    private String content;
+    private String menuName;
 }
