@@ -48,6 +48,9 @@ public enum BaseResponseStatus {
     //[POST] /coupons
     POST_COUPONS_EXISTS_COUPON_NUM(false, 2028, "유효하지 않은 쿠폰 번호입니다."),
     POST_COUPONS_CORRECT_COUPON_NUM(false, 2029, "8자리 또는 16자리 쿠폰 번호를 입력해주세요."),
+
+    //[POST] /cards
+    POST_CARDS_EXISTS_CARD_NUM(false, 2030, "이미 등록한 카드 번호입니다."),
     /**
      * 3000 : Response 오류
      */

@@ -52,4 +52,13 @@ public class PaymentDao {
 
         return jdbcTemplate.update(deleteUserPaymentQuery, args) == 1;
     }
+
+    //카드 번호 중복 여부 체크
+    public int checkCardNum(String cardNum){
+        String checkCardNumQuery = "select exists(select card_num from card where card_num = ?)";
+        String checkCardNumParams = cardNum;
+        return this.jdbcTemplate.queryForObject(checkCardNumQuery,
+                int.class,
+                checkCardNumParams);
+    }
 }

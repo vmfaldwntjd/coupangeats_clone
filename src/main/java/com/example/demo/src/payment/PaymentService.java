@@ -3,15 +3,13 @@ package com.example.demo.src.payment;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.payment.model.PostUserPaymentReq;
 import com.example.demo.src.payment.model.PostUserPaymentRes;
-import com.example.demo.src.user.model.PostUserAddressReq;
-import com.example.demo.src.user.model.PostUserAddressRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class PaymentService {
@@ -31,6 +29,11 @@ public class PaymentService {
 
     //유저 결제 관리에서 카드 추가 하기
     public PostUserPaymentRes createUserPayment(int userId, PostUserPaymentReq postUserPaymentReq) throws BaseException {
+
+        //중복 체크
+        if (paymentProvider.checkCardNum(postUserPaymentReq.getCardNum()) == 1) {
+            throw new BaseException(POST_CARDS_EXISTS_CARD_NUM);
+        }
         try {
             int cardId = paymentDao.createUserPayment(userId, postUserPaymentReq);
             return new PostUserPaymentRes(cardId);

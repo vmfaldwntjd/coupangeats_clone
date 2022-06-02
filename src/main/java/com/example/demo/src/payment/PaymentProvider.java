@@ -38,4 +38,14 @@ public class PaymentProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    //카드 존재 여부 체크
+    public int checkCardNum(String cardNum) throws BaseException{
+        try{
+            return paymentDao.checkCardNum(cardNum);
+        } catch (Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
