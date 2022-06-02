@@ -3,6 +3,7 @@ package com.example.demo.src.coupon;
 import com.example.demo.src.coupon.model.GetCouponRes;
 import com.example.demo.src.coupon.model.PostCouponReq;
 import com.example.demo.src.review.model.GetReviewRes;
+import com.example.demo.src.review.model.PatchReviewReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -43,4 +44,13 @@ public class CouponDao {
                         rs.getString("content")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 userParams); // 해당 닉네임을 갖는 모든 User 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
     }
+
+    //쿠폰 사용 관련 메소드
+    public int useCoupon(int couponId, int userId) {
+        String useCouponQuery = "UPDATE coupangeats.coupon t SET t.status = 0 WHERE t.coupon_id = ? AND t.user_id = ?;"; // 해당 userIdx를 만족하는 User를 해당 nickname으로 변경한다.
+        Object[] useCouponParams = new Object[]{couponId, userId}; // 주입될 값들(nickname, userIdx) 순
+
+        return this.jdbcTemplate.update(useCouponQuery, useCouponParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
+    }
+
 }

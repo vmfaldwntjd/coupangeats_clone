@@ -2,10 +2,10 @@ package com.example.demo.src.coupon;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.coupon.model.GetCouponRes;
-import com.example.demo.src.coupon.model.PostCouponReq;
-import com.example.demo.src.coupon.model.PostCouponRes;
+import com.example.demo.src.coupon.model.*;
 import com.example.demo.src.review.model.GetReviewRes;
+import com.example.demo.src.review.model.PatchReviewReq;
+import com.example.demo.src.review.model.Review;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +64,27 @@ public class CouponController {
 
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    //쿠폰 사용 메소드
+    @ResponseBody
+    @PatchMapping("/{couponId}/{userId}")
+    public BaseResponse<String> useCoupon(@PathVariable("couponId") int couponId, @PathVariable("userId") int userId) {
+        try {
+            //jwt에서 idx 추출.
+            int userIdByJwt = jwtService.getUserId();
+            //userIdx와 접근한 유저가 같은지 확인
+            if (userId != userIdByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            PatchCouponReq patchCouponReq = new PatchCouponReq(couponId, userId);
+            couponService.useCoupon(couponId, userId);
+
+            String result = "쿠폰이 적용되었습니다.";
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
         }
     }
 }
