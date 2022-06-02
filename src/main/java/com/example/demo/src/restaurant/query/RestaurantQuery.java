@@ -120,7 +120,7 @@ public class RestaurantQuery {
             "       delivery_time,\n" +
             "       IFNULL(star_point, 0)      as star_point,\n" +
             "       IFNULL(review_count, 0)    as review_count,\n" +
-            "       IFNULL(min_delivery_fee, 0) as min_delivery_fee # 배달비 설정이 되어있지 않다면 무료배달로 간주\n" +
+            "       IFNULL(min_delivery_fee, 0) as min_delivery_fee, # 배달비 설정이 되어있지 않다면 무료배달로 간주 \n" +
             "       IFNULL(min_order_price, 0) as min_order_price\n" +
             "FROM (\n" +
             "         SELECT restaurant_id,\n" +
