@@ -180,7 +180,7 @@ public class RestaurantDao {
                         rs.getInt("option_kind_max_count"),
                         rs.getInt("is_essential") == 1 ? true : false,
                         null
-                ), menuId);
+                ), restaurantId, menuId);
 
         for(int i = 0; i < resMenuOption.size(); i++){
             ResMenuOption temp = resMenuOption.get(i);

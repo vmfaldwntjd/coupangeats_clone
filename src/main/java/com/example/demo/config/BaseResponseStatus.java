@@ -30,8 +30,8 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
 
-    POST_USERS_EMPTY_PHONE(false, 2018, "핸드폰 번호를 입력해주세요."),
-    POST_USERS_INVALID_PHONE(false, 2019, "핸드폰 번호 형식을 확인해주세요."),
+    USERS_EMPTY_PHONE(false, 2018, "핸드폰 번호를 입력해주세요."),
+    USERS_INVALID_PHONE(false, 2019, "핸드폰 번호 형식을 확인해주세요."),
     POST_USERS_EXISTS_PHONE(false, 2020, "중복된 핸드폰 번호입니다."),
 
     POST_USERS_EMPTY_PASSWORD(false, 2021, "비밀번호를 입력해주세요."),
@@ -58,7 +58,8 @@ public enum BaseResponseStatus {
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
 
     // [POST] /users/sign-in/jwt
-    FAILED_TO_LOGIN_BY_JWT(false, 3015, "존재하지 않는 user id의 jwt입니다."),
+    NOT_EXIST_USER_ID_BY_JWT(false, 3015, "존재하지 않는 user id의 jwt입니다."),
+    NOT_EXIST_SELECTED_USER_ADDRESS(false, 3016, "현재 유저의 선택된 주소가 존재하지 않습니다."),
 
     /**
      * 4000 : Database, Server 오류

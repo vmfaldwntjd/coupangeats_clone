@@ -55,10 +55,10 @@ public class UserController {
 
         //핸드폰 번호
         if (postSignUpReq.getPhone() == null) {
-            return new BaseResponse<>(POST_USERS_EMPTY_PHONE);
+            return new BaseResponse<>(USERS_EMPTY_PHONE);
         }
         if (!isRegexPhone(postSignUpReq.getPhone())) {
-            return new BaseResponse<>(POST_USERS_INVALID_PHONE);
+            return new BaseResponse<>(USERS_INVALID_PHONE);
         }
 
         //비밀번호
@@ -94,6 +94,11 @@ public class UserController {
     public BaseResponse checkUserByPhone(@RequestParam(required = false) String phone, @RequestParam(required = false) String email) {
         try {
             if (email != null) {
+                //validation 처리
+                if (!isRegexEmail(email)) {
+                    return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+                }
+
                 GetEmailUserRes getEmailUserRes = new GetEmailUserRes(userProvider.checkEmail(email) == 1 ? true : false);
                 return new BaseResponse<>(getEmailUserRes);
             }
@@ -102,13 +107,17 @@ public class UserController {
                 if (userProvider.checkPhone(phone) == 0) {
                     return new BaseResponse(new GetPhoneUserRes(false, null));
                 }
+
+                if (!isRegexPhone(phone)) {
+                    return new BaseResponse<>(USERS_INVALID_PHONE);
+                }
+
                 GetPhoneUserRes getPhoneUserRes = userProvider.getUserByPhone(phone);
                 return new BaseResponse<>(getPhoneUserRes);
             }
 
-            // 쿼리스트링이 아무것도 없을 때... 전체 유저를 조회해야할 듯. 다음은 수정이 필요합니다.
             System.out.println("users - 쿼리 스트링이 없습니다.");
-            return new BaseResponse<>(REQUEST_ERROR);
+            return new BaseResponse<>(REQUEST_ERROR); // empty email, empty phone을 포함함.
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -161,7 +170,7 @@ public class UserController {
     }
 
     /**
-     * 6. 현재 유저 대표 주소 조회 API
+     * 7. 현재 유저 대표 주소 조회 API
      * [GET] /users/:userId/addresses?isSelected=true
      *
      * @return BaseResponse<GetUserAddresseRes>
@@ -176,9 +185,17 @@ public class UserController {
     public BaseResponse getUserAddress(@PathVariable int userId, @RequestParam(required = false) Boolean isSelected) {
 
         try {
+            //validation 처리
             int userIdByJwt = jwtService.getUserId();
             if (userId != userIdByJwt) {
                 return new BaseResponse(INVALID_USER_JWT);
+            }
+            String jwt = jwtService.getJwt();
+            if(jwt == null){
+                return new BaseResponse(EMPTY_JWT);
+            }
+            if(!jwtService.validateToken(jwt)){
+                return new BaseResponse(INVALID_JWT);
             }
 
             if (isSelected != null) {

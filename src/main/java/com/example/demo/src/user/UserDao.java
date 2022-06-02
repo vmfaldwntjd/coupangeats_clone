@@ -151,15 +151,17 @@ public class UserDao {
     }
 
     public GetUserAddressRes getUserAddress(int userId, Boolean isSelected){
-        String getUserAddressQuery = "select user_id, address_name from user_address where user_id = ? AND is_selected = ?";
 
-        Object[] getUserAddressParams = new Object[]{userId, isSelected};
-        return this.jdbcTemplate.queryForObject(getUserAddressQuery,
-                (rs, rowNum) -> new GetUserAddressRes(
-                        rs.getInt("user_id"),
-                        rs.getString("address_name")
-                ),
-                getUserAddressParams);
+            String getUserAddressQuery = "select user_id, address_name from user_address where user_id = ? AND is_selected = ?";
+
+            Object[] getUserAddressParams = new Object[]{userId, isSelected};
+            return this.jdbcTemplate.queryForObject(getUserAddressQuery,
+                    (rs, rowNum) -> new GetUserAddressRes(
+                            rs.getInt("user_id"),
+                            rs.getString("address_name")
+                    ),
+                    getUserAddressParams);
+
     }
 
     public int getUserAddressId(int userId){
