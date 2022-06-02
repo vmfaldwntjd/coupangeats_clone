@@ -64,35 +64,34 @@ public class RestaurantQuery {
 
     // 현재 위치를 기준으로 세네번째 파라미터에 들어가는 string 값에 따라 최대 상위 45개의 값 출력.
     // 가까운순(distance, ASC), 별점 높은 순(star_point, DESC), 신규 매장순(created_at, DESC).
-    public static String getRestaurantSortByQuery =
-            "SELECT R.restaurant_id,\n" +
+    public static String getRestaurantSortByQuery ="SELECT R.restaurant_id,\n" +
             "       created_at,\n" +
             "       res_name,\n" +
             "       is_cheetah,\n" +
             "       delivery_time,\n" +
-            "       IFNULL(star_point, 0) as star_point,\n" +
-            "       IFNULL(review_count, 0) as review_count,\n" +
-            "       round(distance/1000, 1) as distance,\n" +
-            "       min_delivery_fee\n" +
+            "       IFNULL(star_point, 0)       as star_point,\n" +
+            "       IFNULL(review_count, 0)     as review_count,\n" +
+            "       round(distance / 1000, 1)   as distance,\n" +
+            "       IFNULL(min_delivery_fee, 0) as min_delivery_fee # 배달비 설정이 되어있지 않다면 무료배달로 간주\n" +
             "FROM (\n" +
+            "         SELECT restaurant_id,\n" +
+            "                created_at,\n" +
+            "                restaurant_name                                             as res_name,\n" +
+            "                is_cheetah,\n" +
+            "                ST_Distance_Sphere(POINT(?, ?), POINT(longitude, latitude)) as distance,\n" +
+            "                delivery_time\n" +
+            "         FROM restaurant\n" +
+            "     ) R\n" +
+            "         left join (\n" +
             "    SELECT restaurant_id,\n" +
-            "           created_at,\n" +
-            "            restaurant_name as res_name,\n" +
-            "            is_cheetah,\n" +
-            "            ST_Distance_Sphere(POINT(?,?), POINT(longitude, latitude)) as distance,\n" +
-            "            delivery_time\n" +
-            "    FROM restaurant\n" +
-            ") R\n" +
-            "left join (\n" +
-            "    SELECT restaurant_id,\n" +
-            "           AVG(star_point) as star_point,\n" +
+            "           AVG(star_point)      as star_point,\n" +
             "           COUNT(restaurant_id) as review_count\n" +
             "    FROM review\n" +
             "    GROUP BY restaurant_id\n" +
             ") RV ON R.restaurant_id = RV.restaurant_id\n" +
-            "join (\n" +
+            "         left join ( \n" +
             "    SELECT restaurant_id,\n" +
-            "        MIN(delivery_fee) as min_delivery_fee\n" +
+            "           MIN(delivery_fee) as min_delivery_fee\n" +
             "    FROM res_delivery_fee\n" +
             "    GROUP BY restaurant_id\n" +
             ") RDF ON R.restaurant_id = RDF.restaurant_id";

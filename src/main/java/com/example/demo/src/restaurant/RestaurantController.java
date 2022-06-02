@@ -47,12 +47,17 @@ public class RestaurantController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
+    /**
+     * 12. 현재 위치 및 조건에 따른 카테고리별 가게 리스트 API
+     * [GET] ?categoryId={categoryId}&longitude={longitude}&latitude={latitude}
+     * @return BaseResponse<List<GetRestaurantByCategoryIdRes>>
+     *
+     */
     @ResponseBody
     @GetMapping("")
-    public BaseResponse<List<GetRestaurantByCategoryIdRes>> getRestaurantListByCategoryId(@RequestParam Integer categoryId, @RequestParam(required = false) Double longitude, @RequestParam(required = false) Double latitude, @RequestParam(required = false) String sortBy){
+    public BaseResponse<List<GetRestaurantByCategoryIdRes>> getRestaurantListByCategoryId(@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) Double longitude, @RequestParam(required = false) Double latitude, @RequestParam(required = false) String sortBy){
         try{
-            if(categoryId == null){ // 12번 API 골라먹는 맛집
+            if(categoryId == null){ // 골라먹는 맛집
                 List<GetRestaurantByCategoryIdRes> getRestaurantResList = restaurantProvider.getRestaurantList(longitude, latitude, sortBy);
                 return new BaseResponse<>(getRestaurantResList);
             }
