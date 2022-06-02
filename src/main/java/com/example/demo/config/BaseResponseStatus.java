@@ -48,6 +48,10 @@ public enum BaseResponseStatus {
     //[POST] /coupons
     POST_COUPONS_EXISTS_COUPON_NUM(false, 2028, "유효하지 않은 쿠폰 번호입니다."),
     POST_COUPONS_CORRECT_COUPON_NUM(false, 2029, "8자리 또는 16자리 쿠폰 번호를 입력해주세요."),
+
+    NO_CART_FOR_USER_ID(false, 2030, "해당 유저에대한 카트정보가 없습니다."),
+    INVALID_CART_ID(false, 2031, "존재하지 않는 cartId입니다."),
+
     /**
      * 3000 : Response 오류
      */
@@ -79,6 +83,7 @@ public enum BaseResponseStatus {
     MODIFY_FAIL_REVIEW(false, 4015, "리뷰 수정 실패"),
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다.");
+
 
 
     // 5000 : 필요시 만들어서 쓰세요

@@ -176,7 +176,6 @@ public class RestaurantProvider {
     public RestaurantInfo getResInfo(int cartId, int orderPrice, Double latitude, Double longitude) throws BaseException{
         try{
             Double distance = restaurantDao.getResDistance(cartId,  latitude, longitude);
-            //validation처리가 각 테이블 provider인지 cartProvider에서 해야하는지 확인할 것.
             if(distance > 5000){
                 throw new BaseException(GET_CARTS_TOO_MUCH_LONG_DISTANCE);
             }
@@ -185,7 +184,9 @@ public class RestaurantProvider {
 
             RestaurantInfo restaurantInfo = restaurantDao.getRestaurantInfo(cartId, orderPrice, distance);
             return restaurantInfo;
-        } catch (Exception exception){
+        } catch(EmptyResultDataAccessException exception) {
+            throw new BaseException(INVALID_CART_ID);
+        }catch (Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }

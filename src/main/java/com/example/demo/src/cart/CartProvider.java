@@ -9,6 +9,7 @@ import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,6 +51,8 @@ public class CartProvider {
     public GetOrderPriceRes getOrderPrice(int userId) throws BaseException {
         try {
             return cartDao.getOrderPrice(userId);
+        } catch(EmptyResultDataAccessException exception) {
+            throw new BaseException(NO_CART_FOR_USER_ID);
         } catch(Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);

@@ -84,10 +84,11 @@ public class CartController {
     @ResponseBody
     @GetMapping("/{cartId}")
     public BaseResponse<GetCartRes> getCartRes(@PathVariable int cartId){
-        // 고민중. 아래 다수의 외부 도메인 참조는 carProvider에서 해야하는가???
+
         try{
             int userId = jwtService.getUserId();
             GetOrderPriceRes getOrderPrice = cartProvider.getOrderPrice(userId);
+
 
             // 현재 유저의 선택된 주소 정보를 가져온다. 메소드 core 작성.
             GetUserAddressCartRes getUserAddressCartRes = userProvider.getUserAddressInfo(userId);
