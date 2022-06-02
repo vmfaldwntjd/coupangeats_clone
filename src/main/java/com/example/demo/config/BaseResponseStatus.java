@@ -45,8 +45,9 @@ public enum BaseResponseStatus {
     POST_CARTS_EMPTY_ESSENTIAL_OPTION(false, 2026, "필수 옵션을 설정하지 않았습니다."),
     GET_CARTS_TOO_MUCH_LONG_DISTANCE(false, 2027, "유효한 배달 거리가 아닙니다."),
 
-
-
+    //[POST] /coupons
+    POST_COUPONS_EXISTS_COUPON_NUM(false, 2028, "유효하지 않은 쿠폰 번호입니다."),
+    POST_COUPONS_CORRECT_COUPON_NUM(false, 2029, "8자리 또는 16자리 쿠폰 번호를 입력해주세요."),
     /**
      * 3000 : Response 오류
      */
@@ -73,6 +74,8 @@ public enum BaseResponseStatus {
 
     //[PATCH] /users/{userId}
     MODIFY_FAIL_USERNAME(false,4014,"유저네임 수정 실패"),
+
+    //[PATCH] /reviews/{reviewId}/{userId}
     MODIFY_FAIL_REVIEW(false, 4015, "리뷰 수정 실패"),
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다.");

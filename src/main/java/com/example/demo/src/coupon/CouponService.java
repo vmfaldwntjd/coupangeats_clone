@@ -10,8 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
-import static com.example.demo.config.BaseResponseStatus.MODIFY_FAIL_REVIEW;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class CouponService {
@@ -31,6 +30,14 @@ public class CouponService {
 
     //쿠폰 생성 관련 메소드
     public PostCouponRes createCoupon(int userId, PostCouponReq postCouponReq) throws BaseException {
+        if (couponProvider.checkCouponNum(postCouponReq.getCouponNum()) == 1) {
+            throw new BaseException(POST_COUPONS_EXISTS_COUPON_NUM);
+        }
+
+        //추가
+        if (postCouponReq.getCouponNum().length() != 8 || postCouponReq.getCouponNum().length() != 16) {
+            throw new BaseException(POST_COUPONS_CORRECT_COUPON_NUM);
+        }
         try {
             int couponId = couponDao.createCoupon(userId, postCouponReq);
             return new PostCouponRes(couponId);

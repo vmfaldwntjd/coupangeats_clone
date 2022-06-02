@@ -36,4 +36,14 @@ public class CouponProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    //쿠폰 번호 중복 여부 체크
+    public int checkCouponNum(String couponNum) throws BaseException{
+        try{
+            return couponDao.checkCouponNum(couponNum);
+        } catch (Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

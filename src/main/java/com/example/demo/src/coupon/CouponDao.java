@@ -53,4 +53,13 @@ public class CouponDao {
         return this.jdbcTemplate.update(useCouponQuery, useCouponParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
     }
 
+    //쿠폰 중복 여부 체크
+    public int checkCouponNum(String couponNum){
+        String checkCouponNumQuery = "select exists(select coupon_num from coupon where coupon_num = ?)";
+        String checkCouponNumParams = couponNum;
+        return this.jdbcTemplate.queryForObject(checkCouponNumQuery,
+                int.class,
+                checkCouponNumParams);
+    }
+
 }
