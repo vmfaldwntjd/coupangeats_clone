@@ -120,7 +120,7 @@ public class RestaurantQuery {
             "       delivery_time,\n" +
             "       IFNULL(star_point, 0)      as star_point,\n" +
             "       IFNULL(review_count, 0)    as review_count,\n" +
-            "       min_delivery_fee,\n" +
+            "       IFNULL(min_delivery_fee, 0) as min_delivery_fee # 배달비 설정이 되어있지 않다면 무료배달로 간주\n" +
             "       IFNULL(min_order_price, 0) as min_order_price\n" +
             "FROM (\n" +
             "         SELECT restaurant_id,\n" +
@@ -139,7 +139,7 @@ public class RestaurantQuery {
             "    FROM review\n" +
             "    GROUP BY restaurant_id\n" +
             ") RV ON R.restaurant_id = RV.restaurant_id\n" +
-            "         join (\n" +
+            "         left join (\n" +
             "    SELECT restaurant_id,\n" +
             "           MIN(delivery_fee) as min_delivery_fee,\n" +
             "           MIN(min_price)    as min_order_price\n" +
@@ -268,7 +268,7 @@ public class RestaurantQuery {
             "       is_packable,\n" +
             "       delivery_time,\n" +
             "       packaging_time,\n" +
-            "       delivery_fee,\n" +
+            "       IFNULL(min_delivery_fee, 0) as min_delivery_fee # 배달비 설정이 되어있지 않다면 무료배달로 간주\n" +
             "       min_order_price\n" +
             "FROM (\n" +
             "    SELECT restaurant_id\n" +
@@ -284,7 +284,7 @@ public class RestaurantQuery {
             "       packaging_time\n" +
             "FROM restaurant\n" +
             ")  R ON C.restaurant_id = R.restaurant_id\n" +
-            "join (\n" +
+            "left join (\n" +
             "SELECT restaurant_id,\n" +
             "       delivery_fee\n" +
             "FROM res_delivery_fee\n" +
