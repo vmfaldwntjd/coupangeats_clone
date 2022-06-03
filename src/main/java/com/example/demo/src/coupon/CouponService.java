@@ -35,7 +35,7 @@ public class CouponService {
         }
 
         //추가
-        if (postCouponReq.getCouponNum().length() != 8 || postCouponReq.getCouponNum().length() != 16) {
+        if (!(postCouponReq.getCouponNum().length() == 8 || postCouponReq.getCouponNum().length() == 16)) {
             throw new BaseException(POST_COUPONS_CORRECT_COUPON_NUM);
         }
         try {
