@@ -27,7 +27,7 @@
 ![ERD Diagram](https://user-images.githubusercontent.com/33932851/198862318-f803146c-5b69-4b04-b1d2-582668198680.png)
 
 ## 4. 시스템 아키텍처 소개
-![System Architecture](https://github.com/vmfaldwntjd/coupangeats_clone/assets/75198221/f296b27b-3a1e-42c0-9ea0-ccb0b5ffe88c)
+![System Architecture](https://github.com/vmfaldwntjd/coupangeats_clone/assets/75198221/f99cc02e-b91b-4264-92ba-adabde0afabd)
 
 ## 5. 핵심 구현 기능 및 결과 영상
 배달 메뉴 선택 및 주문
